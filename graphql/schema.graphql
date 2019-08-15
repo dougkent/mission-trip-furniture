@@ -1,0 +1,42 @@
+type Tool {
+	id: ID!
+	name: string!
+}
+
+type Material {
+	id: ID!
+	name: string!
+}
+
+type User {
+	id: ID!
+	#TODO: Add other fields
+}
+
+type Plan {
+	id: ID!
+	name: string!
+	description: string!
+	imageUrl: string!
+	pdfUrl: string!
+	toolsRequired: [Tool!]!
+	materialsRequired: [Material!]!
+	favoritedBy:[User!]!
+	created: Date!
+	createdBy: User!
+}
+
+type Query {
+	plans: [Plan!]!
+	tools: [Tools!]!
+	materials: [Materials!]!
+}
+
+type Mutation {
+	plan(input: Plan!): Plan!
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+}
