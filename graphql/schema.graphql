@@ -1,22 +1,21 @@
-type Tool @model {
+type Tool @model(queries: { get: "getTools" }, mutations: null, subscriptions: null) {
 	id: ID!
 	name: String!
 }
 
-type Material @model {
+type Material @model(queries: { get: "getMaterials" }, mutations: null, subscriptions: null) {
 	id: ID!
 	name: String!
 }
 
-type User @model {
+type User @model @model(queries: { get: "getUser" }, mutations: null, subscriptions: null) {
 	id: ID!
-	email: String!
-	name: String!
+	username: String!
 	favoritedPlans: [Plan!]! @connection(name: "UserFavoritedPlans")
 	createdPlans: [Plan!]! @connection(name: "UserCreatedPlans")
 }
 
-type S3Info @model {
+type S3Info {
 	key: String!
 	widht: Int!
 	height: Int!
