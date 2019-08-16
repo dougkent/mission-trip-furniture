@@ -1,42 +1,36 @@
-type Tool {
+type Tool @model {
 	id: ID!
-	name: string!
+	name: String!
 }
 
-type Material {
+type Material @model {
 	id: ID!
-	name: string!
+	name: String!
 }
 
-type User {
+type User @model {
 	id: ID!
-	#TODO: Add other fields
+	email: String!
+	name: String!
+	favoritedPlans: [Plan!]! @connection(name: "UserFavoritedPlans")
+	createdPlans: [Plan!]! @connection(name: "UserCreatedPlans")
 }
 
-type Plan {
+type S3Info @model {
+	key: String!
+	widht: Int!
+	height: Int!
+}
+
+type Plan @model @searchable {
 	id: ID!
-	name: string!
-	description: string!
-	imageUrl: string!
-	pdfUrl: string!
-	toolsRequired: [Tool!]!
-	materialsRequired: [Material!]!
-	favoritedBy:[User!]!
+	name: String!
+	description: String!
+	imageS3Info: S3Info!
+	pdfS3Info: S3Info!
+	toolsRequired: [Tool!]! @connection(name: "PlanTools")
+	materialsRequired: [Material!]! @connection (name: "PlanMaterials")
+	favoritedBy:[User!]! @connection (name: "UserFavoritedPlans")
 	created: Date!
-	createdBy: User!
-}
-
-type Query {
-	plans: [Plan!]!
-	tools: [Tools!]!
-	materials: [Materials!]!
-}
-
-type Mutation {
-	plan(input: Plan!): Plan!
-}
-
-schema {
-	query: Query
-	mutation: Mutation
+	createdBy: User! @connection(name: "UserCreatedPlans")
 }
