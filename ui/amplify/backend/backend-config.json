@@ -1,1 +1,9 @@
-{}
+{
+	"auth": {
+		"mtforg87fba5a8": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}
