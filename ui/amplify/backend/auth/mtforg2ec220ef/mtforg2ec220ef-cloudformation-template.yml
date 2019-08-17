@@ -9,6 +9,18 @@ Parameters:
     Type: String
   
   
+  
+  
+  functionmtforg2ec220efCustomMessageArn: 
+    Type: String
+    Default: functionmtforg2ec220efCustomMessageArn
+  
+  functionmtforg2ec220efCustomMessageName: 
+    Type: String
+    Default: functionmtforg2ec220efCustomMessageName
+  
+  
+  
 
     
   identityPoolName:
@@ -85,6 +97,9 @@ Parameters:
               
   triggers:
     Type: String
+              
+  verificationBucketName:
+    Type: String
                     
   parentStack:
     Type: String
@@ -100,13 +115,34 @@ Conditions:
 
 Resources:
   
+  CustomMessageConfirmationBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: "Retain"
+    Properties:
+      BucketName:  !If [ShouldNotCreateEnvResources, !Ref verificationBucketName, !Join ['',[!Ref verificationBucketName, '-', !Ref env]]]
+      AccessControl: "Private"
+      WebsiteConfiguration:
+        IndexDocument: "index.html"
+        ErrorDocument: "index.html"
+      CorsConfiguration:
+        CorsRules:
+          - 
+            AllowedHeaders:
+              - "Authorization" 
+              - "Content-Length"
+            AllowedMethods:
+              - "GET"
+            AllowedOrigins:
+              - "*"
+            MaxAge: 3000
+  
   
   # BEGIN SNS ROLE RESOURCE
   SNSRole: 
   # Created to allow the UserPool SMS Config to publish via the Simple Notification Service during MFA Process
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, 'mtforg2d041e67_sns-role', !Join ['',['mtforg2d041e67_sns-role', '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, 'mtforg2ec220ef_sns-role', !Join ['',['mtforg2ec220ef_sns-role', '-', !Ref env]]]
       AssumeRolePolicyDocument: 
         Version: "2012-10-17"
         Statement: 
@@ -118,10 +154,10 @@ Resources:
               - "sts:AssumeRole"
             Condition: 
               StringEquals:
-                sts:ExternalId: mtforg2d041e67_role_external_id
+                sts:ExternalId: mtforg2ec220ef_role_external_id
       Policies: 
         - 
-          PolicyName: mtforg2d041e67-sns-policy
+          PolicyName: mtforg2ec220ef-sns-policy
           PolicyDocument: 
             Version: "2012-10-17"
             Statement: 
@@ -153,6 +189,18 @@ Resources:
         
       
       
+      LambdaConfig:
+        
+        
+          CustomMessage: !Ref functionmtforg2ec220efCustomMessageArn
+        
+        
+        
+        
+        
+        
+        
+      
       
       AutoVerifiedAttributes: !Ref autoVerifiedAttributes
       
@@ -172,10 +220,19 @@ Resources:
       SmsVerificationMessage: !Ref smsVerificationMessage
       SmsConfiguration: 
         SnsCallerArn: !GetAtt SNSRole.Arn
-        ExternalId: mtforg2d041e67_role_external_id
+        ExternalId: mtforg2ec220ef_role_external_id
     
   
     
+  
+  UserPoolCustomMessageLambdaInvokePermission: 
+    Type: "AWS::Lambda::Permission"
+    DependsOn: UserPool
+    Properties: 
+      Action: "lambda:invokeFunction"
+      Principal: "cognito-idp.amazonaws.com"
+      FunctionName: !Ref functionmtforg2ec220efCustomMessageName
+      SourceArn: !GetAtt UserPool.Arn
     
   
     
@@ -191,7 +248,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: mtforg2d041e67_app_clientWeb
+      ClientName: mtforg2ec220ef_app_clientWeb
       
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
@@ -201,7 +258,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: mtforg2d041e67_app_client
+      ClientName: mtforg2ec220ef_app_client
       
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
@@ -266,7 +323,7 @@ Resources:
   # Marked as depending on UserPoolClientRole for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: mtforg2d041e67_userpoolclient_lambda_iam_policy
+      PolicyName: mtforg2ec220ef_userpoolclient_lambda_iam_policy
       Roles: 
         - !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',[!Ref userpoolClientLambdaRole, '-', !Ref env]]]
       PolicyDocument:
@@ -283,7 +340,7 @@ Resources:
   # Marked as depending on UserPoolClientLambdaPolicy for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: mtforg2d041e67_userpoolclient_lambda_log_policy
+      PolicyName: mtforg2ec220ef_userpoolclient_lambda_log_policy
       Roles: 
         - !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',[!Ref userpoolClientLambdaRole, '-', !Ref env]]]
       PolicyDocument:
@@ -323,7 +380,7 @@ Resources:
   # Always created
     Type: AWS::Cognito::IdentityPool
     Properties: 
-      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'mtforg2d041e67_identitypool_2d041e67', !Join ['',['mtforg2d041e67_identitypool_2d041e67', '__', !Ref env]]]
+      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'mtforg2ec220ef_identitypool_2ec220ef', !Join ['',['mtforg2ec220ef_identitypool_2ec220ef', '__', !Ref env]]]
       
       CognitoIdentityProviders:
         - ClientId:  !Ref UserPoolClient

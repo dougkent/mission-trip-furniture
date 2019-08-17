@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "mtforg2d041e67_identitypool_2d041e67",
+    "identityPoolName": "mtforg2ec220ef_identitypool_2ec220ef",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "mtforg2d041e67",
-    "userPoolName": "mtforg2d041e67_userpool_2d041e67",
+    "resourceNameTruncated": "mtforg2ec220ef",
+    "userPoolName": "mtforg2ec220ef_userpool_2ec220ef",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -29,9 +29,9 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "mtforg2d041e67_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "mtforg2ec220ef_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "resourceName": "mtforg2d041e67",
+    "resourceName": "mtforg2ec220ef",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -46,10 +46,21 @@
         ]
     },
     "useDefault": "default",
-    "triggers": "{}",
+    "triggers": "{\"CustomMessage\":[\"verification-link\"]}",
+    "verificationBucketName": "mtforg2ec220efverificationbucket",
     "parentStack": {
         "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "dependsOn": []
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "mtforg2ec220efCustomMessage",
+            "triggerProvider": "Cognito",
+            "attributes": [
+                "Arn",
+                "Name"
+            ]
+        }
+    ]
 }

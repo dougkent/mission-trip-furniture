@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "verification-link"
+    ],
+    "parentResource": "mtforg2ec220ef",
+    "functionName": "mtforg2ec220efCustomMessage",
+    "parentStack": "auth",
+    "triggerEnvs": "[{\"key\":\"RESOURCENAME\",\"value\":\"resourceName\"}]",
+    "triggerTemplate": "CustomMessage.json.ejs",
+    "roleName": "mtforg2ec220efCustomMessage",
+    "skipEdit": true,
+    "resourceName": "mtforg2ec220efCustomMessage"
+}
