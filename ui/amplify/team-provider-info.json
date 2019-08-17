@@ -9,18 +9,6 @@
             "UnauthRoleName": "mtforg-master-20190815220804-unauthRole",
             "StackName": "mtforg-master-20190815220804",
             "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/mtforg-master-20190815220804/1092eda0-bfd3-11e9-abb9-0a3c8425d484"
-        },
-        "categories": {
-            "auth": {
-                "mtforg87fba5a8": {}
-            },
-            "function": {
-                "mtforg87fba5a8DefineAuthChallenge": {},
-                "mtforg87fba5a8CreateAuthChallenge": {},
-                "mtforg87fba5a8VerifyAuthChallengeResponse": {
-                    "RECAPTCHASECRET": "6LdLfrMUAAAAAB3DSNja6Sz6McitVyHdAueekrlU"
-                }
-            }
         }
     }
 }
