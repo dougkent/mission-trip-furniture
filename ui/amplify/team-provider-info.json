@@ -10,5 +10,12 @@
             "StackName": "mtforg-master-20190815220804",
             "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/mtforg-master-20190815220804/1092eda0-bfd3-11e9-abb9-0a3c8425d484"
         }
+    },
+    "undefined": {
+        "categories": {
+            "auth": {
+                "mtforg2d041e67": {}
+            }
+        }
     }
 }
