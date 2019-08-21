@@ -1,9 +1,10 @@
+// React
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+// MTF
 import HomeComponent from '../components/home.component/Home.component';
 import DashboardComponent from '../components/dashboard.component/Dashboard.component';
-import NavComponent from '../components/nav.component/Nav.component';
 import './App.scss';
 
 class App extends React.Component {
@@ -11,7 +12,6 @@ class App extends React.Component {
     return (
       <Router>
         <div className="container">
-          <NavComponent />
           <Route exact path="/" component={HomeComponent} />
           <Route path="/dashboard" component={DashboardComponent} />
         </div>
