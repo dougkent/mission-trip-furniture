@@ -6,6 +6,9 @@ import Amplify from 'aws-amplify';
 import aws_exports from '../../aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 
+// MTF
+import NavComponent from '../nav.component/Nav.component';
+
 // Configure
 Amplify.configure(aws_exports);
 
@@ -47,9 +50,12 @@ const signUpConfig = {
 class DashboardComponent extends React.Component {
     render() {
         return (
-            <h1>
-                Dashboard
-            </h1>
+            <div>
+                <NavComponent />
+                <h1>
+                    Dashboard
+                </h1>
+            </div>
         );
     }
 }

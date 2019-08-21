@@ -1,9 +1,16 @@
+// React
 import React from 'react';
+
+// MTF
+import NavComponent from '../nav.component/Nav.component';
 
 class HomeComponent extends React.Component {
     render() {
         return (
-            <h1>Home Page</h1>
+            <div>
+                <NavComponent />
+                <h1>Home Page</h1>
+            </div>
         );
     }
 }
