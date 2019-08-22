@@ -12,8 +12,11 @@ class NavComponent extends React.Component {
                 <Link to="/" className="nav-item">
                     Mission Trip Furniture
                 </Link>
-                <Link to="/dashboard" className="nav-item">
-                    Dashboard
+                <Link to="/plans" className="nav-item">
+                    Plans
+                </Link>
+                <Link to="/my-mtf" className="nav-item">
+                    My Account
                 </Link>
                 <Authenticator hideDefault={true}>
                     <Greetings inGreeting={(username: string) => 'Welcome ' + username} />

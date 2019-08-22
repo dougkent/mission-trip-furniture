@@ -3,8 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 // MTF
-import HomeComponent from '../components/home.component/Home.component';
-import DashboardComponent from '../components/dashboard.component/Dashboard.component';
+import PublicComponent from './public.component/Public.component';
+import MyMtfComponent from './my-mtf.component/MyMtf.component';
 import './App.scss';
 
 class App extends React.Component {
@@ -12,8 +12,8 @@ class App extends React.Component {
     return (
       <Router>
         <div className="container">
-          <Route exact path="/" component={HomeComponent} />
-          <Route path="/dashboard" component={DashboardComponent} />
+          <Route exact path="/" component={PublicComponent} />
+          <Route path="/my-mtf" component={MyMtfComponent} />
         </div>
       </Router>
     );

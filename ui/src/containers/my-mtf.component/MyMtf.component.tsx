@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 // AWS
 import Amplify from 'aws-amplify';
@@ -7,7 +8,10 @@ import aws_exports from '../../aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 
 // MTF
-import NavComponent from '../nav.component/Nav.component';
+import NavComponent from '../../components/nav.component/Nav.component';
+import DashboardComponent from '../../components/dashboard.component/DasboardComponent';
+import PlanEditComponent from '../../components/plan-edit.componet/PlanEdit.component';
+import PlanCreateComponent from '../../components/plan-create.component/PlanCreate.component';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -47,19 +51,21 @@ const signUpConfig = {
     ]
 }
 
-class DashboardComponent extends React.Component {
+class MyMtfComponent extends React.Component {
     render() {
         return (
             <div>
                 <NavComponent />
-                <h1>
-                    Dashboard
-                </h1>
+                <Router>
+                    <Route exact to="/my-mtf" component={DashboardComponent} />
+                    <Route exact to="/my-mtf/plans/:planUrl" component={PlanEditComponent} />
+                    <Route exact to="/my-mtf/plans/create" component={PlanCreateComponent} />
+                </Router>
             </div>
         );
     }
 }
 
-export default withAuthenticator(DashboardComponent, {
+export default withAuthenticator(MyMtfComponent, {
     signUpConfig: signUpConfig
 });
