@@ -1,0 +1,12 @@
+projects:
+  mtfOrgApi:
+    schemaPath: src\graphql\schema.json
+    includes:
+      - src\graphql\**\*.ts
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: typescript
+        generatedFileName: src\services\API.ts
+        docsFilePath: src\graphql
