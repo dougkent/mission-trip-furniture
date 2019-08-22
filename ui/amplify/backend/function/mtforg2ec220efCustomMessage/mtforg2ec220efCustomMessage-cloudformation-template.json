@@ -119,7 +119,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "mtforg-develop-20190817181335-deployment",
-					"S3Key": "amplify-builds/mtforg2ec220efCustomMessage-6877476678346c2f444d-build.zip"
+					"S3Key": "amplify-builds/mtforg2ec220efCustomMessage-54707a64514c54766b4c-build.zip"
 				}
 			}
 		},
