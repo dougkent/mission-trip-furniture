@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Authenticator, Greetings } from 'aws-amplify-react';
 
 class NavComponent extends React.Component {
+
     render() {
         return (
             <header>
