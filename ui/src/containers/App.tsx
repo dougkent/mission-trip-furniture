@@ -16,14 +16,18 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-        <div className="container">
+        <div className='container'>
           <NavComponent />
-          <Route exact path="/" component={HomeComponent} />
-          <Route exact path="/plans" component={PlansListComponent} />
-          <Route path="/plans/:planUrl" component={PlanViewComponent} />
-          <Route exact path="/my-mtf" component={DashboardComponent} />
-          <Route exact path="/my-mtf/create-plan" component={PlanCreateComponent} />
-          <Route path="/my-mtf/plans/:planUrl" component={PlanEditComponent} />
+          <Route exact path='/' component={HomeComponent} />
+          <Route exact path='/plans' component={PlansListComponent} />
+          <Route path='/plans/:planUrl' component={PlanViewComponent} />
+          <Route exact path='/my-mtf' component={DashboardComponent} />
+          <Route
+            exact
+            path='/my-mtf/create-plan'
+            component={PlanCreateComponent}
+          />
+          <Route path='/my-mtf/plans/:planUrl' component={PlanEditComponent} />
         </div>
       </Router>
     );

@@ -21,72 +21,65 @@ import { ListMaterialsQuery } from '../../services/API';
 Amplify.configure(aws_exports);
 
 export interface Material {
-    id: string,
-    name: string,
+  id: string;
+  name: string;
 }
 
 class MaterialsSelectorComponent extends React.Component {
-    state: { selectedMaterials: Material[], materials: Material[] } = {
-        selectedMaterials: [],
-        materials: []
-    }
+  state: { selectedMaterials: Material[]; materials: Material[] } = {
+    selectedMaterials: [],
+    materials: [],
+  };
 
-    private sampleMaterialData: SelectedMaterial[] = [
-        {
-            id: "1",
-            name: "2x4",
-        },
-        {
-            id: "2",
-            name: "2x6",
-        }
-    ];
+  // handleChange = (selectedMaterial: Material) => {
+  //     const selectedMaterials = this.state.selectedMaterials;
+  //     selectedMaterials.push(selectedMaterial);
 
-    handleChange = (selectedMaterial: Material) => {
-        const selectedMaterials = this.state.selectedMaterials;
-        selectedMaterials.push(selectedMaterial);
+  //     this.setState({ selectedMaterials });
 
-        this.setState({ selectedMaterials });
+  //     console.log(`Option selected:`, selectedMaterial, 'Options selected: ', selectedMaterials);
+  // };
 
-        console.log(`Option selected:`, selectedMaterial, 'Options selected: ', selectedMaterials);
-    };
+  // handleDelete = (selectedMaterial: Material) => {
+  //     let selectedMaterials = this.state.selectedMaterials;
+  //     selectedMaterials = selectedMaterials.filter((material) => material.id != selectedMaterial.id);
 
-    handleDelete = (selectedMaterial: Material) => {
-        let selectedMaterials = this.state.selectedMaterials;
-        selectedMaterials = selectedMaterials.filter((material) => material.id != selectedMaterial.id);
+  //     this.setState({ selectedMaterials });
 
-        this.setState({ selectedMaterials });
+  //     console.log(selectedMaterial);
+  // }
 
-        console.log(selectedMaterial);
-    }
+  // onInputChange = (newValue: string) => {
+  //     // TODO: Handle Input change
+  //     console.log('InputChange', newValue);
+  // }
 
-    onInputChange = (newValue: string) => {
-        // TODO: Handle Input change
-        console.log('InputChange', newValue);
-    }
+  render() {
+    return (
+      <div>
+        <h3>Materials Needed</h3>
+        <Connect query={graphqlOperation(listMaterials)}>
+          {({
+            data,
+            loading,
+          }: {
+            data: ListMaterialsQuery;
+            loading: boolean;
+          }) => {
+            if (data.listMaterials) {
+              this.setState({ materials: data.listMaterials.items });
+            }
 
-    render() {
-        return (
-            <div>
-                <h3>Materials Needed</h3>
-                <Connect query={graphqlOperation(listMaterials)}>
-                    {
-                        ({ data, loading }: { data: ListMaterialsQuery, loading: boolean }) => {
-                            if (data.listMaterials) {
-                                this.setState({ materials: data.listMaterials.items });
-                            }
-
-                            <Select closeMenuOnSelect={false}
-                                isMulti
-                                name="selectedMaterials"
-                                isLoading={loading}
-                                options={this.state.materials}
-                            />
-                        }
-                    }
-
-                </Connect>
-                {/* {this.sampleMaterialData.map(selectedMaterial => {
+            <Select
+              closeMenuOnSelect={false}
+              isMulti
+              name='selectedMaterials'
+              isLoading={loading}
+              options={this.state.materials}
+            />;
+          }}
+        </Connect>
+        {/* {this.sampleMaterialData.map(selectedMaterial => {
                     return (
                         <Chip key={selectedMaterial.id}
                             label={selectedMaterial.name}
@@ -94,9 +87,9 @@ class MaterialsSelectorComponent extends React.Component {
                         />
                     )
                 })} */}
-            </div>
-        )
-    }
+      </div>
+    );
+  }
 }
 
 export default MaterialsSelectorComponent;
