@@ -13,17 +13,12 @@ import Chip from '@material-ui/core/Chip';
 import Select from 'react-select';
 
 //MTF
-import { SelectedMaterial } from '../../models/selected-material';
+import { Material } from '../../models/material.model';
 import { listMaterials } from '../../graphql/queries';
 import { ListMaterialsQuery } from '../../services/API';
 
 //Configure
 Amplify.configure(aws_exports);
-
-export interface Material {
-  id: string;
-  name: string;
-}
 
 class MaterialsSelectorComponent extends React.Component {
   state: { selectedMaterials: Material[]; materials: Material[] } = {
