@@ -31,7 +31,7 @@
 				"securityType": "AMAZON_COGNITO_USER_POOLS"
 			}
 		},
-		"mtfOrgApi": {
+		"mtfapi": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {

@@ -1,15 +1,16 @@
-type Tool @model{
+type Tool @model(queries: {list: "listTools"}, mutations: null, subscriptions: null) {
 	id: ID!
 	name: String!
 }
 
-type Material @model {
+type Material @model(queries: {list: "listMaterials"}, mutations: null, subscriptions: null)  {
 	id: ID!
 	name: String!
 }
 
-type User @model {
-	id: ID!
+type User @model @key(fields: ["username"]) @auth(rules: [
+	{ allow: owner, ownerField: "username", operations: [create, update, delete]}
+]) {
 	username: String!
 	favoritedPlans: [UserFavoritedPlan!]! @connection(name: "FavoritedPlans")
 	createdPlans: [Plan!]! @connection(name: "UserCreatedPlans")
@@ -21,7 +22,9 @@ type S3Info {
 	height: Int!
 }
 
-type UserFavoritedPlan @model(queries: null) {
+type UserFavoritedPlan @model(queries: null, mutations: null, subscriptions: null) @auth(rules:[
+	{ allow: owner, operations: [create, update, delete]}
+]) {
 	id: ID!
 	plan: Plan! @connection (name: "FavoritedByUsers")
 	user: User! @connection (name: "FavoritedPlans")
@@ -33,8 +36,8 @@ type Plan @model @searchable {
 	description: String!
 	imageS3Info: S3Info!
 	pdfS3Info: S3Info!
-	toolsRequired: [Tool!]! @connection
-	materialsRequired: [Material!]! @connection
+	toolsRequired: [Tool!]!
+	materialsRequired: [Material!]!
 	favoritedBy:[UserFavoritedPlan!]! @connection (name: "FavoritedByUsers")
 	created: AWSDateTime!
 	createdBy: User! @connection(name: "UserCreatedPlans")

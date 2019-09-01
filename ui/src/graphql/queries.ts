@@ -1,13 +1,6 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const getTool = `query GetTool($id: ID!) {
-  getTool(id: $id) {
-    id
-    name
-  }
-}
-`;
 export const listTools = `query ListTools(
   $filter: ModelToolFilterInput
   $limit: Int
@@ -19,13 +12,6 @@ export const listTools = `query ListTools(
       name
     }
     nextToken
-  }
-}
-`;
-export const getMaterial = `query GetMaterial($id: ID!) {
-  getMaterial(id: $id) {
-    id
-    name
   }
 }
 `;
@@ -43,9 +29,8 @@ export const listMaterials = `query ListMaterials(
   }
 }
 `;
-export const getUser = `query GetUser($id: ID!) {
-  getUser(id: $id) {
-    id
+export const getUser = `query GetUser($username: String!) {
+  getUser(username: $username) {
     username
     favoritedPlans {
       items {
@@ -66,13 +51,20 @@ export const getUser = `query GetUser($id: ID!) {
 }
 `;
 export const listUsers = `query ListUsers(
+  $username: String
   $filter: ModelUserFilterInput
   $limit: Int
   $nextToken: String
+  $sortDirection: ModelSortDirection
 ) {
-  listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listUsers(
+    username: $username
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    sortDirection: $sortDirection
+  ) {
     items {
-      id
       username
       favoritedPlans {
         nextToken
@@ -101,18 +93,12 @@ export const getPlan = `query GetPlan($id: ID!) {
       height
     }
     toolsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     materialsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     favoritedBy {
       items {
@@ -122,7 +108,6 @@ export const getPlan = `query GetPlan($id: ID!) {
     }
     created
     createdBy {
-      id
       username
       favoritedPlans {
         nextToken
@@ -155,17 +140,18 @@ export const listPlans = `query ListPlans(
         height
       }
       toolsRequired {
-        nextToken
+        id
+        name
       }
       materialsRequired {
-        nextToken
+        id
+        name
       }
       favoritedBy {
         nextToken
       }
       created
       createdBy {
-        id
         username
       }
     }
@@ -200,17 +186,18 @@ export const searchPlans = `query SearchPlans(
         height
       }
       toolsRequired {
-        nextToken
+        id
+        name
       }
       materialsRequired {
-        nextToken
+        id
+        name
       }
       favoritedBy {
         nextToken
       }
       created
       createdBy {
-        id
         username
       }
     }

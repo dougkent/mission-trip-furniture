@@ -1,66 +1,16 @@
 /* tslint:disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateToolInput = {
-  id?: string | null,
-  name: string,
-  planToolsRequiredId?: string | null,
-};
-
-export type UpdateToolInput = {
-  id: string,
-  name?: string | null,
-  planToolsRequiredId?: string | null,
-};
-
-export type DeleteToolInput = {
-  id?: string | null,
-};
-
-export type CreateMaterialInput = {
-  id?: string | null,
-  name: string,
-  planMaterialsRequiredId?: string | null,
-};
-
-export type UpdateMaterialInput = {
-  id: string,
-  name?: string | null,
-  planMaterialsRequiredId?: string | null,
-};
-
-export type DeleteMaterialInput = {
-  id?: string | null,
-};
-
 export type CreateUserInput = {
-  id?: string | null,
   username: string,
 };
 
 export type UpdateUserInput = {
-  id: string,
-  username?: string | null,
+  username: string,
 };
 
 export type DeleteUserInput = {
-  id?: string | null,
-};
-
-export type CreateUserFavoritedPlanInput = {
-  id?: string | null,
-  userFavoritedPlanPlanId: string,
-  userFavoritedPlanUserId: string,
-};
-
-export type UpdateUserFavoritedPlanInput = {
-  id: string,
-  userFavoritedPlanPlanId?: string | null,
-  userFavoritedPlanUserId?: string | null,
-};
-
-export type DeleteUserFavoritedPlanInput = {
-  id?: string | null,
+  username: string,
 };
 
 export type CreatePlanInput = {
@@ -136,12 +86,17 @@ export type ModelMaterialFilterInput = {
 };
 
 export type ModelUserFilterInput = {
-  id?: ModelIDFilterInput | null,
   username?: ModelStringFilterInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
   or?: Array< ModelUserFilterInput | null > | null,
   not?: ModelUserFilterInput | null,
 };
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type ModelPlanFilterInput = {
   id?: ModelIDFilterInput | null,
@@ -206,78 +161,6 @@ export enum SearchableSortDirection {
 }
 
 
-export type CreateToolMutationVariables = {
-  input: CreateToolInput,
-};
-
-export type CreateToolMutation = {
-  createTool:  {
-    __typename: "Tool",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type UpdateToolMutationVariables = {
-  input: UpdateToolInput,
-};
-
-export type UpdateToolMutation = {
-  updateTool:  {
-    __typename: "Tool",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type DeleteToolMutationVariables = {
-  input: DeleteToolInput,
-};
-
-export type DeleteToolMutation = {
-  deleteTool:  {
-    __typename: "Tool",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type CreateMaterialMutationVariables = {
-  input: CreateMaterialInput,
-};
-
-export type CreateMaterialMutation = {
-  createMaterial:  {
-    __typename: "Material",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type UpdateMaterialMutationVariables = {
-  input: UpdateMaterialInput,
-};
-
-export type UpdateMaterialMutation = {
-  updateMaterial:  {
-    __typename: "Material",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type DeleteMaterialMutationVariables = {
-  input: DeleteMaterialInput,
-};
-
-export type DeleteMaterialMutation = {
-  deleteMaterial:  {
-    __typename: "Material",
-    id: string,
-    name: string,
-  } | null,
-};
-
 export type CreateUserMutationVariables = {
   input: CreateUserInput,
 };
@@ -285,7 +168,6 @@ export type CreateUserMutationVariables = {
 export type CreateUserMutation = {
   createUser:  {
     __typename: "User",
-    id: string,
     username: string,
     favoritedPlans:  {
       __typename: "ModelUserFavoritedPlanConnection",
@@ -316,7 +198,6 @@ export type UpdateUserMutationVariables = {
 export type UpdateUserMutation = {
   updateUser:  {
     __typename: "User",
-    id: string,
     username: string,
     favoritedPlans:  {
       __typename: "ModelUserFavoritedPlanConnection",
@@ -347,7 +228,6 @@ export type DeleteUserMutationVariables = {
 export type DeleteUserMutation = {
   deleteUser:  {
     __typename: "User",
-    id: string,
     username: string,
     favoritedPlans:  {
       __typename: "ModelUserFavoritedPlanConnection",
@@ -368,186 +248,6 @@ export type DeleteUserMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-  } | null,
-};
-
-export type CreateUserFavoritedPlanMutationVariables = {
-  input: CreateUserFavoritedPlanInput,
-};
-
-export type CreateUserFavoritedPlanMutation = {
-  createUserFavoritedPlan:  {
-    __typename: "UserFavoritedPlan",
-    id: string,
-    plan:  {
-      __typename: "Plan",
-      id: string,
-      name: string,
-      description: string,
-      imageS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      pdfS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      toolsRequired:  {
-        __typename: "ModelToolConnection",
-        nextToken: string | null,
-      } | null,
-      materialsRequired:  {
-        __typename: "ModelMaterialConnection",
-        nextToken: string | null,
-      } | null,
-      favoritedBy:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      created: string,
-      createdBy:  {
-        __typename: "User",
-        id: string,
-        username: string,
-      },
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      username: string,
-      favoritedPlans:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      createdPlans:  {
-        __typename: "ModelPlanConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type UpdateUserFavoritedPlanMutationVariables = {
-  input: UpdateUserFavoritedPlanInput,
-};
-
-export type UpdateUserFavoritedPlanMutation = {
-  updateUserFavoritedPlan:  {
-    __typename: "UserFavoritedPlan",
-    id: string,
-    plan:  {
-      __typename: "Plan",
-      id: string,
-      name: string,
-      description: string,
-      imageS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      pdfS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      toolsRequired:  {
-        __typename: "ModelToolConnection",
-        nextToken: string | null,
-      } | null,
-      materialsRequired:  {
-        __typename: "ModelMaterialConnection",
-        nextToken: string | null,
-      } | null,
-      favoritedBy:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      created: string,
-      createdBy:  {
-        __typename: "User",
-        id: string,
-        username: string,
-      },
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      username: string,
-      favoritedPlans:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      createdPlans:  {
-        __typename: "ModelPlanConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type DeleteUserFavoritedPlanMutationVariables = {
-  input: DeleteUserFavoritedPlanInput,
-};
-
-export type DeleteUserFavoritedPlanMutation = {
-  deleteUserFavoritedPlan:  {
-    __typename: "UserFavoritedPlan",
-    id: string,
-    plan:  {
-      __typename: "Plan",
-      id: string,
-      name: string,
-      description: string,
-      imageS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      pdfS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      toolsRequired:  {
-        __typename: "ModelToolConnection",
-        nextToken: string | null,
-      } | null,
-      materialsRequired:  {
-        __typename: "ModelMaterialConnection",
-        nextToken: string | null,
-      } | null,
-      favoritedBy:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      created: string,
-      createdBy:  {
-        __typename: "User",
-        id: string,
-        username: string,
-      },
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      username: string,
-      favoritedPlans:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      createdPlans:  {
-        __typename: "ModelPlanConnection",
-        nextToken: string | null,
-      } | null,
-    },
   } | null,
 };
 
@@ -573,24 +273,16 @@ export type CreatePlanMutation = {
       widht: number,
       height: number,
     },
-    toolsRequired:  {
-      __typename: "ModelToolConnection",
-      items:  Array< {
-        __typename: "Tool",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    materialsRequired:  {
-      __typename: "ModelMaterialConnection",
-      items:  Array< {
-        __typename: "Material",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    toolsRequired:  Array< {
+      __typename: "Tool",
+      id: string,
+      name: string,
+    } >,
+    materialsRequired:  Array< {
+      __typename: "Material",
+      id: string,
+      name: string,
+    } >,
     favoritedBy:  {
       __typename: "ModelUserFavoritedPlanConnection",
       items:  Array< {
@@ -602,7 +294,6 @@ export type CreatePlanMutation = {
     created: string,
     createdBy:  {
       __typename: "User",
-      id: string,
       username: string,
       favoritedPlans:  {
         __typename: "ModelUserFavoritedPlanConnection",
@@ -638,24 +329,16 @@ export type UpdatePlanMutation = {
       widht: number,
       height: number,
     },
-    toolsRequired:  {
-      __typename: "ModelToolConnection",
-      items:  Array< {
-        __typename: "Tool",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    materialsRequired:  {
-      __typename: "ModelMaterialConnection",
-      items:  Array< {
-        __typename: "Material",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    toolsRequired:  Array< {
+      __typename: "Tool",
+      id: string,
+      name: string,
+    } >,
+    materialsRequired:  Array< {
+      __typename: "Material",
+      id: string,
+      name: string,
+    } >,
     favoritedBy:  {
       __typename: "ModelUserFavoritedPlanConnection",
       items:  Array< {
@@ -667,7 +350,6 @@ export type UpdatePlanMutation = {
     created: string,
     createdBy:  {
       __typename: "User",
-      id: string,
       username: string,
       favoritedPlans:  {
         __typename: "ModelUserFavoritedPlanConnection",
@@ -703,24 +385,16 @@ export type DeletePlanMutation = {
       widht: number,
       height: number,
     },
-    toolsRequired:  {
-      __typename: "ModelToolConnection",
-      items:  Array< {
-        __typename: "Tool",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    materialsRequired:  {
-      __typename: "ModelMaterialConnection",
-      items:  Array< {
-        __typename: "Material",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    toolsRequired:  Array< {
+      __typename: "Tool",
+      id: string,
+      name: string,
+    } >,
+    materialsRequired:  Array< {
+      __typename: "Material",
+      id: string,
+      name: string,
+    } >,
     favoritedBy:  {
       __typename: "ModelUserFavoritedPlanConnection",
       items:  Array< {
@@ -732,7 +406,6 @@ export type DeletePlanMutation = {
     created: string,
     createdBy:  {
       __typename: "User",
-      id: string,
       username: string,
       favoritedPlans:  {
         __typename: "ModelUserFavoritedPlanConnection",
@@ -743,18 +416,6 @@ export type DeletePlanMutation = {
         nextToken: string | null,
       } | null,
     },
-  } | null,
-};
-
-export type GetToolQueryVariables = {
-  id: string,
-};
-
-export type GetToolQuery = {
-  getTool:  {
-    __typename: "Tool",
-    id: string,
-    name: string,
   } | null,
 };
 
@@ -773,18 +434,6 @@ export type ListToolsQuery = {
       name: string,
     } | null > | null,
     nextToken: string | null,
-  } | null,
-};
-
-export type GetMaterialQueryVariables = {
-  id: string,
-};
-
-export type GetMaterialQuery = {
-  getMaterial:  {
-    __typename: "Material",
-    id: string,
-    name: string,
   } | null,
 };
 
@@ -807,13 +456,12 @@ export type ListMaterialsQuery = {
 };
 
 export type GetUserQueryVariables = {
-  id: string,
+  username: string,
 };
 
 export type GetUserQuery = {
   getUser:  {
     __typename: "User",
-    id: string,
     username: string,
     favoritedPlans:  {
       __typename: "ModelUserFavoritedPlanConnection",
@@ -838,9 +486,11 @@ export type GetUserQuery = {
 };
 
 export type ListUsersQueryVariables = {
+  username?: string | null,
   filter?: ModelUserFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListUsersQuery = {
@@ -848,7 +498,6 @@ export type ListUsersQuery = {
     __typename: "ModelUserConnection",
     items:  Array< {
       __typename: "User",
-      id: string,
       username: string,
       favoritedPlans:  {
         __typename: "ModelUserFavoritedPlanConnection",
@@ -885,24 +534,16 @@ export type GetPlanQuery = {
       widht: number,
       height: number,
     },
-    toolsRequired:  {
-      __typename: "ModelToolConnection",
-      items:  Array< {
-        __typename: "Tool",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    materialsRequired:  {
-      __typename: "ModelMaterialConnection",
-      items:  Array< {
-        __typename: "Material",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    toolsRequired:  Array< {
+      __typename: "Tool",
+      id: string,
+      name: string,
+    } >,
+    materialsRequired:  Array< {
+      __typename: "Material",
+      id: string,
+      name: string,
+    } >,
     favoritedBy:  {
       __typename: "ModelUserFavoritedPlanConnection",
       items:  Array< {
@@ -914,7 +555,6 @@ export type GetPlanQuery = {
     created: string,
     createdBy:  {
       __typename: "User",
-      id: string,
       username: string,
       favoritedPlans:  {
         __typename: "ModelUserFavoritedPlanConnection",
@@ -954,14 +594,16 @@ export type ListPlansQuery = {
         widht: number,
         height: number,
       },
-      toolsRequired:  {
-        __typename: "ModelToolConnection",
-        nextToken: string | null,
-      } | null,
-      materialsRequired:  {
-        __typename: "ModelMaterialConnection",
-        nextToken: string | null,
-      } | null,
+      toolsRequired:  Array< {
+        __typename: "Tool",
+        id: string,
+        name: string,
+      } >,
+      materialsRequired:  Array< {
+        __typename: "Material",
+        id: string,
+        name: string,
+      } >,
       favoritedBy:  {
         __typename: "ModelUserFavoritedPlanConnection",
         nextToken: string | null,
@@ -969,7 +611,6 @@ export type ListPlansQuery = {
       created: string,
       createdBy:  {
         __typename: "User",
-        id: string,
         username: string,
       },
     } | null > | null,
@@ -1004,14 +645,16 @@ export type SearchPlansQuery = {
         widht: number,
         height: number,
       },
-      toolsRequired:  {
-        __typename: "ModelToolConnection",
-        nextToken: string | null,
-      } | null,
-      materialsRequired:  {
-        __typename: "ModelMaterialConnection",
-        nextToken: string | null,
-      } | null,
+      toolsRequired:  Array< {
+        __typename: "Tool",
+        id: string,
+        name: string,
+      } >,
+      materialsRequired:  Array< {
+        __typename: "Material",
+        id: string,
+        name: string,
+      } >,
       favoritedBy:  {
         __typename: "ModelUserFavoritedPlanConnection",
         nextToken: string | null,
@@ -1019,7 +662,6 @@ export type SearchPlansQuery = {
       created: string,
       createdBy:  {
         __typename: "User",
-        id: string,
         username: string,
       },
     } | null > | null,
@@ -1027,58 +669,9 @@ export type SearchPlansQuery = {
   } | null,
 };
 
-export type OnCreateToolSubscription = {
-  onCreateTool:  {
-    __typename: "Tool",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type OnUpdateToolSubscription = {
-  onUpdateTool:  {
-    __typename: "Tool",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type OnDeleteToolSubscription = {
-  onDeleteTool:  {
-    __typename: "Tool",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type OnCreateMaterialSubscription = {
-  onCreateMaterial:  {
-    __typename: "Material",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type OnUpdateMaterialSubscription = {
-  onUpdateMaterial:  {
-    __typename: "Material",
-    id: string,
-    name: string,
-  } | null,
-};
-
-export type OnDeleteMaterialSubscription = {
-  onDeleteMaterial:  {
-    __typename: "Material",
-    id: string,
-    name: string,
-  } | null,
-};
-
 export type OnCreateUserSubscription = {
   onCreateUser:  {
     __typename: "User",
-    id: string,
     username: string,
     favoritedPlans:  {
       __typename: "ModelUserFavoritedPlanConnection",
@@ -1105,7 +698,6 @@ export type OnCreateUserSubscription = {
 export type OnUpdateUserSubscription = {
   onUpdateUser:  {
     __typename: "User",
-    id: string,
     username: string,
     favoritedPlans:  {
       __typename: "ModelUserFavoritedPlanConnection",
@@ -1132,7 +724,6 @@ export type OnUpdateUserSubscription = {
 export type OnDeleteUserSubscription = {
   onDeleteUser:  {
     __typename: "User",
-    id: string,
     username: string,
     favoritedPlans:  {
       __typename: "ModelUserFavoritedPlanConnection",
@@ -1156,174 +747,6 @@ export type OnDeleteUserSubscription = {
   } | null,
 };
 
-export type OnCreateUserFavoritedPlanSubscription = {
-  onCreateUserFavoritedPlan:  {
-    __typename: "UserFavoritedPlan",
-    id: string,
-    plan:  {
-      __typename: "Plan",
-      id: string,
-      name: string,
-      description: string,
-      imageS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      pdfS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      toolsRequired:  {
-        __typename: "ModelToolConnection",
-        nextToken: string | null,
-      } | null,
-      materialsRequired:  {
-        __typename: "ModelMaterialConnection",
-        nextToken: string | null,
-      } | null,
-      favoritedBy:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      created: string,
-      createdBy:  {
-        __typename: "User",
-        id: string,
-        username: string,
-      },
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      username: string,
-      favoritedPlans:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      createdPlans:  {
-        __typename: "ModelPlanConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type OnUpdateUserFavoritedPlanSubscription = {
-  onUpdateUserFavoritedPlan:  {
-    __typename: "UserFavoritedPlan",
-    id: string,
-    plan:  {
-      __typename: "Plan",
-      id: string,
-      name: string,
-      description: string,
-      imageS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      pdfS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      toolsRequired:  {
-        __typename: "ModelToolConnection",
-        nextToken: string | null,
-      } | null,
-      materialsRequired:  {
-        __typename: "ModelMaterialConnection",
-        nextToken: string | null,
-      } | null,
-      favoritedBy:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      created: string,
-      createdBy:  {
-        __typename: "User",
-        id: string,
-        username: string,
-      },
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      username: string,
-      favoritedPlans:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      createdPlans:  {
-        __typename: "ModelPlanConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type OnDeleteUserFavoritedPlanSubscription = {
-  onDeleteUserFavoritedPlan:  {
-    __typename: "UserFavoritedPlan",
-    id: string,
-    plan:  {
-      __typename: "Plan",
-      id: string,
-      name: string,
-      description: string,
-      imageS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      pdfS3Info:  {
-        __typename: "S3Info",
-        key: string,
-        widht: number,
-        height: number,
-      },
-      toolsRequired:  {
-        __typename: "ModelToolConnection",
-        nextToken: string | null,
-      } | null,
-      materialsRequired:  {
-        __typename: "ModelMaterialConnection",
-        nextToken: string | null,
-      } | null,
-      favoritedBy:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      created: string,
-      createdBy:  {
-        __typename: "User",
-        id: string,
-        username: string,
-      },
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      username: string,
-      favoritedPlans:  {
-        __typename: "ModelUserFavoritedPlanConnection",
-        nextToken: string | null,
-      } | null,
-      createdPlans:  {
-        __typename: "ModelPlanConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
 export type OnCreatePlanSubscription = {
   onCreatePlan:  {
     __typename: "Plan",
@@ -1342,24 +765,16 @@ export type OnCreatePlanSubscription = {
       widht: number,
       height: number,
     },
-    toolsRequired:  {
-      __typename: "ModelToolConnection",
-      items:  Array< {
-        __typename: "Tool",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    materialsRequired:  {
-      __typename: "ModelMaterialConnection",
-      items:  Array< {
-        __typename: "Material",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    toolsRequired:  Array< {
+      __typename: "Tool",
+      id: string,
+      name: string,
+    } >,
+    materialsRequired:  Array< {
+      __typename: "Material",
+      id: string,
+      name: string,
+    } >,
     favoritedBy:  {
       __typename: "ModelUserFavoritedPlanConnection",
       items:  Array< {
@@ -1371,7 +786,6 @@ export type OnCreatePlanSubscription = {
     created: string,
     createdBy:  {
       __typename: "User",
-      id: string,
       username: string,
       favoritedPlans:  {
         __typename: "ModelUserFavoritedPlanConnection",
@@ -1403,24 +817,16 @@ export type OnUpdatePlanSubscription = {
       widht: number,
       height: number,
     },
-    toolsRequired:  {
-      __typename: "ModelToolConnection",
-      items:  Array< {
-        __typename: "Tool",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    materialsRequired:  {
-      __typename: "ModelMaterialConnection",
-      items:  Array< {
-        __typename: "Material",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    toolsRequired:  Array< {
+      __typename: "Tool",
+      id: string,
+      name: string,
+    } >,
+    materialsRequired:  Array< {
+      __typename: "Material",
+      id: string,
+      name: string,
+    } >,
     favoritedBy:  {
       __typename: "ModelUserFavoritedPlanConnection",
       items:  Array< {
@@ -1432,7 +838,6 @@ export type OnUpdatePlanSubscription = {
     created: string,
     createdBy:  {
       __typename: "User",
-      id: string,
       username: string,
       favoritedPlans:  {
         __typename: "ModelUserFavoritedPlanConnection",
@@ -1464,24 +869,16 @@ export type OnDeletePlanSubscription = {
       widht: number,
       height: number,
     },
-    toolsRequired:  {
-      __typename: "ModelToolConnection",
-      items:  Array< {
-        __typename: "Tool",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    materialsRequired:  {
-      __typename: "ModelMaterialConnection",
-      items:  Array< {
-        __typename: "Material",
-        id: string,
-        name: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    toolsRequired:  Array< {
+      __typename: "Tool",
+      id: string,
+      name: string,
+    } >,
+    materialsRequired:  Array< {
+      __typename: "Material",
+      id: string,
+      name: string,
+    } >,
     favoritedBy:  {
       __typename: "ModelUserFavoritedPlanConnection",
       items:  Array< {
@@ -1493,7 +890,6 @@ export type OnDeletePlanSubscription = {
     created: string,
     createdBy:  {
       __typename: "User",
-      id: string,
       username: string,
       favoritedPlans:  {
         __typename: "ModelUserFavoritedPlanConnection",

@@ -44,6 +44,7 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
             name='tools'
             onChange={handleChange}
             options={props.tools}
+            placeholder='Select Tools Required for this Plan'
         />
     );
 };

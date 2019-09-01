@@ -2,13 +2,15 @@
 import React from 'react';
 
 // AWS
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation, Auth } from 'aws-amplify';
 import { Connect, withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
 
 // Material
-import Input from '@material-ui/core/Input';
 import { Button, TextField } from '@material-ui/core';
+
+// uuid
+import { v4 as uuid } from 'uuid';
 
 // MTF
 import './PlanCreate.component.scss';
@@ -28,7 +30,7 @@ class CreatePlan extends React.Component<{}, Plan> {
         super(props);
 
         this.state = {
-            id: '',
+            id: uuid(),
             name: '',
             description: '',
             materials: [],
@@ -37,6 +39,26 @@ class CreatePlan extends React.Component<{}, Plan> {
             createdBy: '',
         };
     }
+
+    async componentDidMount() {
+        const user = await Auth.currentAuthenticatedUser();
+
+        const userResult = await API.graphql(
+            graphqlOperation(queries.getUser, { username: user.username })
+        );
+        console.log(userResult);
+    }
+
+    handleTextChange = (event: React.ChangeEvent) => {
+        const element = event.target as HTMLInputElement;
+        const key: string = element.name;
+        const value: string = element.value;
+
+        this.setState((prevState: Plan) => ({
+            ...prevState,
+            [key]: value,
+        }));
+    };
 
     handleMaterialSelected = (materials: Material[]) => {
         this.setState({
@@ -47,10 +69,16 @@ class CreatePlan extends React.Component<{}, Plan> {
     handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        const result = await API.graphql(
-            graphqlOperation(mutations.createPlan, this.state)
-        );
-        console.log(result);
+        await this.setState({
+            created: new Date(),
+        });
+
+        console.log(this.state);
+
+        // const result = await API.graphql(
+        //     graphqlOperation(mutations.createPlan, this.state)
+        // );
+        // console.log(result);
     };
 
     handleToolSelected = (tools: Tool[]) => {
@@ -65,19 +93,25 @@ class CreatePlan extends React.Component<{}, Plan> {
                 <h1>Create Plan</h1>
                 <form className='create-plan-form' onSubmit={this.handleSubmit}>
                     <div className='formRow'>
-                        <Input
-                            type='text'
+                        <TextField
+                            fullWidth
+                            inputProps={{ maxLength: 50 }}
+                            name='name'
+                            onChange={this.handleTextChange}
                             placeholder='Name'
                             required
-                            inputProps={{ maxLength: 50 }}
                         />
                     </div>
                     <div className='formRow'>
                         <TextField
-                            type='text'
+                            fullWidth
+                            inputProps={{ maxLength: 500 }}
+                            multiline
+                            name='description'
+                            onChange={this.handleTextChange}
                             placeholder='Description'
                             required
-                            inputProps={{ maxLength: 500 }}
+                            rows='4'
                         />
                     </div>
                     <div className='formRow'>Pdf Upload Goes here.</div>
@@ -129,9 +163,9 @@ class CreatePlan extends React.Component<{}, Plan> {
                     <div className='formRow'>Image Upload Goes here.</div>
                     <div className='formRow'>
                         <Button
-                            variant='contained'
                             color='primary'
-                            type='submit'>
+                            type='submit'
+                            variant='contained'>
                             Create Plan
                         </Button>
                     </div>

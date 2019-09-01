@@ -3,11 +3,11 @@ import React from 'react';
 
 // React Select
 import Select from 'react-select';
+import { ValueType } from 'react-select/src/types';
 
 // MTF
 import { Material } from '../../models';
 import { MaterialSelectorProps } from '../../models/props';
-import { ValueType } from 'react-select/src/types';
 
 const MaterialsSelector: React.FC<MaterialSelectorProps> = (
     props: MaterialSelectorProps
@@ -43,6 +43,7 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
             name='materials'
             onChange={handleChange}
             options={props.materials}
+            placeholder='Select Materials Required for this Plan'
         />
     );
 };
