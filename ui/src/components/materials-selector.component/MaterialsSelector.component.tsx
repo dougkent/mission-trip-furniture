@@ -1,90 +1,50 @@
 // React
 import React from 'react';
 
-//AWS
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
-import Connect from 'aws-amplify-react';
-import aws_exports from './aws-exports';
-
-// Material
-import Chip from '@material-ui/core/Chip';
-
 // React Select
 import Select from 'react-select';
 
-//MTF
-import { Material } from '../../models/material.model';
-import { listMaterials } from '../../graphql/queries';
-import { ListMaterialsQuery } from '../../services/API';
+// MTF
+import { Material } from '../../models';
+import { MaterialSelectorProps } from '../../models/props';
+import { ValueType } from 'react-select/src/types';
 
-//Configure
-Amplify.configure(aws_exports);
+const MaterialsSelector: React.FC<MaterialSelectorProps> = (
+    props: MaterialSelectorProps
+) => {
+    function getOptionLabel(option: Material): string {
+        return option.name;
+    }
 
-class MaterialsSelectorComponent extends React.Component {
-  state: { selectedMaterials: Material[]; materials: Material[] } = {
-    selectedMaterials: [],
-    materials: [],
-  };
+    function getOptionValue(option: Material): string {
+        return option.id;
+    }
+    function handleChange(value: ValueType<Material>): void {
+        let materials: Material[];
 
-  // handleChange = (selectedMaterial: Material) => {
-  //     const selectedMaterials = this.state.selectedMaterials;
-  //     selectedMaterials.push(selectedMaterial);
+        if (!value) {
+            materials = [];
+        } else if (Array.isArray(value)) {
+            materials = value;
+        } else {
+            materials = [value as Material];
+        }
 
-  //     this.setState({ selectedMaterials });
+        props.onSelect(materials);
+    }
 
-  //     console.log(`Option selected:`, selectedMaterial, 'Options selected: ', selectedMaterials);
-  // };
-
-  // handleDelete = (selectedMaterial: Material) => {
-  //     let selectedMaterials = this.state.selectedMaterials;
-  //     selectedMaterials = selectedMaterials.filter((material) => material.id != selectedMaterial.id);
-
-  //     this.setState({ selectedMaterials });
-
-  //     console.log(selectedMaterial);
-  // }
-
-  // onInputChange = (newValue: string) => {
-  //     // TODO: Handle Input change
-  //     console.log('InputChange', newValue);
-  // }
-
-  render() {
     return (
-      <div>
-        <h3>Materials Needed</h3>
-        <Connect query={graphqlOperation(listMaterials)}>
-          {({
-            data,
-            loading,
-          }: {
-            data: ListMaterialsQuery;
-            loading: boolean;
-          }) => {
-            if (data.listMaterials) {
-              this.setState({ materials: data.listMaterials.items });
-            }
-
-            <Select
-              closeMenuOnSelect={false}
-              isMulti
-              name='selectedMaterials'
-              isLoading={loading}
-              options={this.state.materials}
-            />;
-          }}
-        </Connect>
-        {/* {this.sampleMaterialData.map(selectedMaterial => {
-                    return (
-                        <Chip key={selectedMaterial.id}
-                            label={selectedMaterial.name}
-                            onDelete={() => this.handleDelete(selectedMaterial)}
-                        />
-                    )
-                })} */}
-      </div>
+        <Select
+            getOptionLabel={getOptionLabel}
+            getOptionValue={getOptionValue}
+            hideSelectedOptions={true}
+            isLoading={props.loading}
+            isMulti
+            name='materials'
+            onChange={handleChange}
+            options={props.materials}
+        />
     );
-  }
-}
+};
 
-export default MaterialsSelectorComponent;
+export default MaterialsSelector;
