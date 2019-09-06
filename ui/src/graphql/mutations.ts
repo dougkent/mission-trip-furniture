@@ -80,12 +80,18 @@ export const createPlan = `mutation CreatePlan($input: CreatePlanInput!) {
       height
     }
     toolsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     materialsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     favoritedBy {
       items {
@@ -122,12 +128,18 @@ export const updatePlan = `mutation UpdatePlan($input: UpdatePlanInput!) {
       height
     }
     toolsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     materialsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     favoritedBy {
       items {
@@ -164,12 +176,18 @@ export const deletePlan = `mutation DeletePlan($input: DeletePlanInput!) {
       height
     }
     toolsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     materialsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     favoritedBy {
       items {

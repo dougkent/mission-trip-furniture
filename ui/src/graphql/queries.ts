@@ -50,33 +50,6 @@ export const getUser = `query GetUser($username: String!) {
   }
 }
 `;
-export const listUsers = `query ListUsers(
-  $username: String
-  $filter: ModelUserFilterInput
-  $limit: Int
-  $nextToken: String
-  $sortDirection: ModelSortDirection
-) {
-  listUsers(
-    username: $username
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    sortDirection: $sortDirection
-  ) {
-    items {
-      username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
-    }
-    nextToken
-  }
-}
-`;
 export const getPlan = `query GetPlan($id: ID!) {
   getPlan(id: $id) {
     id
@@ -93,12 +66,18 @@ export const getPlan = `query GetPlan($id: ID!) {
       height
     }
     toolsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     materialsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     favoritedBy {
       items {
@@ -140,58 +119,10 @@ export const listPlans = `query ListPlans(
         height
       }
       toolsRequired {
-        id
-        name
-      }
-      materialsRequired {
-        id
-        name
-      }
-      favoritedBy {
         nextToken
       }
-      created
-      createdBy {
-        username
-      }
-    }
-    nextToken
-  }
-}
-`;
-export const searchPlans = `query SearchPlans(
-  $filter: SearchablePlanFilterInput
-  $sort: SearchablePlanSortInput
-  $limit: Int
-  $nextToken: String
-) {
-  searchPlans(
-    filter: $filter
-    sort: $sort
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      name
-      description
-      imageS3Info {
-        key
-        widht
-        height
-      }
-      pdfS3Info {
-        key
-        widht
-        height
-      }
-      toolsRequired {
-        id
-        name
-      }
       materialsRequired {
-        id
-        name
+        nextToken
       }
       favoritedBy {
         nextToken

@@ -1,5 +1,5 @@
 projects:
-  mtfapi:
+  missiontripfurniture:
     schemaPath: src\graphql\schema.json
     includes:
       - src\graphql\**\*.ts
@@ -8,5 +8,5 @@ projects:
     extensions:
       amplify:
         codeGenTarget: typescript
-        generatedFileName: src\services\API.ts
+        generatedFileName: src\models\api.models.ts
         docsFilePath: src\graphql

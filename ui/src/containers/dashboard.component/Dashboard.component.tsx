@@ -14,19 +14,19 @@ import { signUpConfig } from '../../models/sign-up-config.model';
 Amplify.configure(aws_exports);
 
 class DashboardComponent extends React.Component {
-  render() {
-    return (
-      <div>
-        <h1>My Plans</h1>
-        <h1>Favorited Plans</h1>
-        <Link to='/my-mtf/create-plan' className='nav-item'>
-          Create Plan
-        </Link>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <h1>My Plans</h1>
+                <h1>Favorited Plans</h1>
+                <Link to='/my-mtf/create-plan' className='nav-item'>
+                    Create Plan
+                </Link>
+            </div>
+        );
+    }
 }
 
 export default withAuthenticator(DashboardComponent, {
-  signUpConfig: signUpConfig,
+    signUpConfig: signUpConfig,
 });

@@ -8,7 +8,7 @@ type Material @model(queries: {list: "listMaterials"}, mutations: null, subscrip
 	name: String!
 }
 
-type User @model @key(fields: ["username"]) @auth(rules: [
+type User @model(queries: { get: "getUser", list: null }, mutations: { create: "createUser", update: "updateUser", delete: "deleteUser" }) @key(fields: ["username"]) @auth(rules: [
 	{ allow: owner, ownerField: "username", operations: [create, update, delete]}
 ]) {
 	username: String!
@@ -30,14 +30,14 @@ type UserFavoritedPlan @model(queries: null, mutations: null, subscriptions: nul
 	user: User! @connection (name: "FavoritedPlans")
 }
 
-type Plan @model @searchable {
+type Plan @model {
 	id: ID!
 	name: String!
 	description: String!
 	imageS3Info: S3Info!
 	pdfS3Info: S3Info!
-	toolsRequired: [Tool!]!
-	materialsRequired: [Material!]!
+	toolsRequired: [Tool!]! @connection
+	materialsRequired: [Material!]! @connection
 	favoritedBy:[UserFavoritedPlan!]! @connection (name: "FavoritedByUsers")
 	created: AWSDateTime!
 	createdBy: User! @connection(name: "UserCreatedPlans")

@@ -16,11 +16,10 @@ import { v4 as uuid } from 'uuid';
 import './PlanCreate.component.scss';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
-import * as graphQLModels from '../../services/API';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
-import { Plan, Material, Tool } from '../../models';
+import { graphQLModels, Plan, Material, Tool } from '../../models';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -46,7 +45,10 @@ class CreatePlan extends React.Component<{}, Plan> {
         const userResult = await API.graphql(
             graphqlOperation(queries.getUser, { username: user.username })
         );
-        console.log(userResult);
+
+        this.setState({
+            createdBy: userResult.username,
+        });
     }
 
     handleTextChange = (event: React.ChangeEvent) => {

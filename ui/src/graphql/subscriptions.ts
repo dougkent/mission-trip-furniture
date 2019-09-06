@@ -80,12 +80,18 @@ export const onCreatePlan = `subscription OnCreatePlan {
       height
     }
     toolsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     materialsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     favoritedBy {
       items {
@@ -122,12 +128,18 @@ export const onUpdatePlan = `subscription OnUpdatePlan {
       height
     }
     toolsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     materialsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     favoritedBy {
       items {
@@ -164,12 +176,18 @@ export const onDeletePlan = `subscription OnDeletePlan {
       height
     }
     toolsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     materialsRequired {
-      id
-      name
+      items {
+        id
+        name
+      }
+      nextToken
     }
     favoritedBy {
       items {

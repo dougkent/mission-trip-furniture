@@ -11,8 +11,15 @@ import Nav from '../components/nav.component/Nav.component';
 import DashboardComponent from './dashboard.component/Dashboard.component';
 import PlanCreateComponent from './plan-create.component/PlanCreate.component';
 import PlanEditComponent from './plan-edit.componet/PlanEdit.component';
+import { listenToAuthEvents } from '../../services/auth-hub';
 
 class App extends React.Component {
+    constructor() {
+        super({});
+
+        listenToAuthEvents();
+    }
+
     render() {
         return (
             <Router>
