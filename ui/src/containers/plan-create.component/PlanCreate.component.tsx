@@ -120,17 +120,15 @@ class CreatePlan extends React.Component<{}, Plan> {
                     <div className='formRow'>
                         <Connect query={graphqlOperation(queries.listTools)}>
                             {({
-                                data: { listTools },
+                                tools,
                                 loading,
                             }: {
-                                data: graphQLModels.ListToolsQuery;
+                                tools: graphQLModels.ListToolsQuery;
                                 loading: boolean;
                             }) => {
                                 return (
                                     <ToolsSelector
-                                        tools={
-                                            !!listTools ? listTools.items : null
-                                        }
+                                        tools={!!tools ? tools : null}
                                         loading={loading}
                                         onSelect={this.handleToolSelected}
                                     />
@@ -142,18 +140,16 @@ class CreatePlan extends React.Component<{}, Plan> {
                         <Connect
                             query={graphqlOperation(queries.listMaterials)}>
                             {({
-                                data: { listMaterials },
+                                materials,
                                 loading,
                             }: {
-                                data: graphQLModels.ListMaterialsQuery;
+                                materials: graphQLModels.ListMaterialsQuery;
                                 loading: boolean;
                             }) => {
                                 return (
                                     <MaterialsSelector
                                         materials={
-                                            !!listMaterials
-                                                ? listMaterials.items
-                                                : null
+                                            !!materials ? materials : null
                                         }
                                         loading={loading}
                                         onSelect={this.handleMaterialSelected}

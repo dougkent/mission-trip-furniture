@@ -4,27 +4,24 @@ export type CreatePlanInput = {
     id: string;
     name: string;
     description: string;
-    imageS3Info: S3Info;
-    pdfS3Info: S3Info;
-    toolIdsRequired: string[];
-    materialIdsRequired: string[];
-    created: string;
-    planCreatedById: string;
+    favoritedByUsernames: string[];
+    imageS3Info: S3ImageInfo;
+    pdfS3Key: string;
+    requiredToolIds: string[];
+    requiredMaterialIds: string[];
+    createdDate: string;
+    createdByUsername: string;
 };
 
-export type ListToolsQuery = {
-    listTools: {
-        items: Material[];
-        nextToken: string;
-    };
+export type CreateUserInput = {
+    username: string;
+    planIdsFavorited: string[];
+    planIdsCreated: string[];
 };
 
-export type ListMaterialsQuery = {
-    listMaterials: {
-        items: Tool[];
-        nextToken: string;
-    };
-};
+export type ListToolsQuery = Tool[];
+
+export type ListMaterialsQuery = Material[];
 
 export type Material = {
     id: string;
@@ -35,15 +32,15 @@ export type Plan = {
     id: string;
     name: string;
     description: string;
-    imageS3Info: S3Info;
-    pdfS3Info: S3Info;
+    imageS3Info: S3ImageInfo;
+    pdfS3Key: string;
     toolsRequired: Tool[];
     materialsRequired: Material[];
-    created: string;
+    createdDate: string;
     createdBy: User;
 };
 
-export type S3Info = {
+export type S3ImageInfo = {
     key: string;
     width: number;
     height: number;

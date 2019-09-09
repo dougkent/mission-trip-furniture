@@ -4,21 +4,6 @@
 export const onCreateUser = `subscription OnCreateUser {
   onCreateUser {
     username
-    favoritedPlans {
-      items {
-        id
-      }
-      nextToken
-    }
-    createdPlans {
-      items {
-        id
-        name
-        description
-        created
-      }
-      nextToken
-    }
   }
 }
 `;
@@ -26,19 +11,16 @@ export const onUpdateUser = `subscription OnUpdateUser {
   onUpdateUser {
     username
     favoritedPlans {
-      items {
-        id
-      }
-      nextToken
+      id
+      name
+      description
+      created
     }
     createdPlans {
-      items {
-        id
-        name
-        description
-        created
-      }
-      nextToken
+      id
+      name
+      description
+      created
     }
   }
 }
@@ -47,19 +29,16 @@ export const onDeleteUser = `subscription OnDeleteUser {
   onDeleteUser {
     username
     favoritedPlans {
-      items {
-        id
-      }
-      nextToken
+      id
+      name
+      description
+      created
     }
     createdPlans {
-      items {
-        id
-        name
-        description
-        created
-      }
-      nextToken
+      id
+      name
+      description
+      created
     }
   }
 }
@@ -71,43 +50,24 @@ export const onCreatePlan = `subscription OnCreatePlan {
     description
     imageS3Info {
       key
-      widht
-      height
+      width
+      heigth
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
+    pdfS3Key
     toolsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     materialsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     favoritedBy {
-      items {
-        id
-      }
-      nextToken
+      username
     }
     created
     createdBy {
       username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
     }
   }
 }
@@ -119,43 +79,24 @@ export const onUpdatePlan = `subscription OnUpdatePlan {
     description
     imageS3Info {
       key
-      widht
-      height
+      width
+      heigth
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
+    pdfS3Key
     toolsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     materialsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     favoritedBy {
-      items {
-        id
-      }
-      nextToken
+      username
     }
     created
     createdBy {
       username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
     }
   }
 }
@@ -167,43 +108,24 @@ export const onDeletePlan = `subscription OnDeletePlan {
     description
     imageS3Info {
       key
-      widht
-      height
+      width
+      heigth
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
+    pdfS3Key
     toolsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     materialsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     favoritedBy {
-      items {
-        id
-      }
-      nextToken
+      username
     }
     created
     createdBy {
       username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
     }
   }
 }

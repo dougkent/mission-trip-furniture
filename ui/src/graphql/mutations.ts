@@ -4,66 +4,10 @@
 export const createUser = `mutation CreateUser($input: CreateUserInput!) {
   createUser(input: $input) {
     username
-    favoritedPlans {
-      items {
-        id
-      }
-      nextToken
-    }
-    createdPlans {
-      items {
-        id
-        name
-        description
-        created
-      }
-      nextToken
-    }
   }
 }
 `;
-export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
-  updateUser(input: $input) {
-    username
-    favoritedPlans {
-      items {
-        id
-      }
-      nextToken
-    }
-    createdPlans {
-      items {
-        id
-        name
-        description
-        created
-      }
-      nextToken
-    }
-  }
-}
-`;
-export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
-  deleteUser(input: $input) {
-    username
-    favoritedPlans {
-      items {
-        id
-      }
-      nextToken
-    }
-    createdPlans {
-      items {
-        id
-        name
-        description
-        created
-      }
-      nextToken
-    }
-  }
-}
-`;
+
 export const createPlan = `mutation CreatePlan($input: CreatePlanInput!) {
   createPlan(input: $input) {
     id
@@ -71,43 +15,24 @@ export const createPlan = `mutation CreatePlan($input: CreatePlanInput!) {
     description
     imageS3Info {
       key
-      widht
-      height
+      width
+      heigth
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
+    pdfS3Key
     toolsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     materialsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     favoritedBy {
-      items {
-        id
-      }
-      nextToken
+      username
     }
     created
     createdBy {
       username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
     }
   }
 }
@@ -119,43 +44,24 @@ export const updatePlan = `mutation UpdatePlan($input: UpdatePlanInput!) {
     description
     imageS3Info {
       key
-      widht
-      height
+      width
+      heigth
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
+    pdfS3Key
     toolsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     materialsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     favoritedBy {
-      items {
-        id
-      }
-      nextToken
+      username
     }
     created
     createdBy {
       username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
     }
   }
 }
@@ -167,43 +73,24 @@ export const deletePlan = `mutation DeletePlan($input: DeletePlanInput!) {
     description
     imageS3Info {
       key
-      widht
-      height
+      width
+      heigth
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
+    pdfS3Key
     toolsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     materialsRequired {
-      items {
-        id
-        name
-      }
-      nextToken
+      id
+      name
     }
     favoritedBy {
-      items {
-        id
-      }
-      nextToken
+      username
     }
     created
     createdBy {
       username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
     }
   }
 }
