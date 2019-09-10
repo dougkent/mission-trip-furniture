@@ -19,60 +19,56 @@ import * as mutations from '../../graphql/mutations';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
-import { graphQLModels, Plan, Material, Tool } from '../../models';
+import {
+    CreatePlanInput,
+    Material,
+    Tool,
+    ListMaterialsQuery,
+    ListToolsQuery,
+} from '../../models';
 
 // Configure
 Amplify.configure(aws_exports);
 
-class CreatePlan extends React.Component<{}, Plan> {
+class CreatePlan extends React.Component<{}, CreatePlanInput> {
     constructor(props: any) {
         super(props);
 
         this.state = {
             id: uuid(),
-            name: '',
+            createdDate: '',
+            createdByUsername: '',
             description: '',
-            materials: [],
-            tools: [],
-            created: new Date(),
-            createdBy: '',
+            favoritedByUsernames: [],
+            imageS3Info: null,
+            name: '',
+            pdfS3Key: '',
+            requiredMaterialIds: [],
+            requiredToolIds: [],
         };
     }
 
     async componentDidMount() {
-        const user = await Auth.currentAuthenticatedUser();
+        var user = await Auth.currentAuthenticatedUser();
 
-        const userResult = await API.graphql(
-            graphqlOperation(queries.getUser, { username: user.username })
-        );
-
-        this.setState({
-            createdBy: userResult.username,
-        });
+        this.setState({ createdByUsername: user.username });
     }
 
-    handleTextChange = (event: React.ChangeEvent) => {
-        const element = event.target as HTMLInputElement;
-        const key: string = element.name;
-        const value: string = element.value;
-
-        this.setState((prevState: Plan) => ({
-            ...prevState,
-            [key]: value,
-        }));
-    };
-
     handleMaterialSelected = (materials: Material[]) => {
+        const materialIds = materials.map(material => material.id);
+
         this.setState({
-            materials: materials,
+            requiredMaterialIds: materialIds,
         });
     };
 
     handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
+        const createdDate = new Date().toISOString();
+
         await this.setState({
-            created: new Date(),
+            createdDate: createdDate,
         });
 
         console.log(this.state);
@@ -83,9 +79,22 @@ class CreatePlan extends React.Component<{}, Plan> {
         // console.log(result);
     };
 
+    handleTextChange = (event: React.ChangeEvent) => {
+        const element = event.target as HTMLInputElement;
+        const key: string = element.name;
+        const value: string = element.value;
+
+        this.setState((prevState: CreatePlanInput) => ({
+            ...prevState,
+            [key]: value,
+        }));
+    };
+
     handleToolSelected = (tools: Tool[]) => {
+        const toolIds = tools.map(tool => tool.id);
+
         this.setState({
-            tools: tools,
+            requiredToolIds: toolIds,
         });
     };
 
@@ -120,15 +129,12 @@ class CreatePlan extends React.Component<{}, Plan> {
                     <div className='formRow'>
                         <Connect query={graphqlOperation(queries.listTools)}>
                             {({
-                                tools,
+                                data: { listTools },
                                 loading,
-                            }: {
-                                tools: graphQLModels.ListToolsQuery;
-                                loading: boolean;
-                            }) => {
+                            }: ListToolsQuery) => {
                                 return (
                                     <ToolsSelector
-                                        tools={!!tools ? tools : null}
+                                        tools={!!listTools ? listTools : null}
                                         loading={loading}
                                         onSelect={this.handleToolSelected}
                                     />
@@ -140,16 +146,15 @@ class CreatePlan extends React.Component<{}, Plan> {
                         <Connect
                             query={graphqlOperation(queries.listMaterials)}>
                             {({
-                                materials,
+                                data: { listMaterials },
                                 loading,
-                            }: {
-                                materials: graphQLModels.ListMaterialsQuery;
-                                loading: boolean;
-                            }) => {
+                            }: ListMaterialsQuery) => {
                                 return (
                                     <MaterialsSelector
                                         materials={
-                                            !!materials ? materials : null
+                                            !!listMaterials
+                                                ? listMaterials
+                                                : null
                                         }
                                         loading={loading}
                                         onSelect={this.handleMaterialSelected}

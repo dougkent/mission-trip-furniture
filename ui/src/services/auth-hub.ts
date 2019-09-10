@@ -5,7 +5,7 @@ import aws_exports from '../aws-exports';
 // MTF
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
-import { graphQLModels } from '../models';
+import { CreateUserInput } from '../models';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -46,7 +46,7 @@ class UserCreator {
     }
 
     private async createUserByUsername(username: string) {
-        var createUserInput: graphQLModels.CreateUserInput = {
+        var createUserInput: CreateUserInput = {
             username: username,
             planIdsCreated: [],
             planIdsFavorited: [],

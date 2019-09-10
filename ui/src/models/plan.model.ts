@@ -1,14 +1,13 @@
-import { Material } from './material.model';
-import { Tool } from './tool.model';
+import { Material, S3ImageInfo, Tool, User } from '.';
 
-export interface Plan {
+export type Plan = {
     id: string;
     name: string;
     description: string;
-    // TODO Pdf Info
-    // TODO Image Info
-    materials: Material[];
-    tools: Tool[];
-    created: Date;
-    createdBy: string;
-}
+    imageS3Info: S3ImageInfo;
+    pdfS3Key: string;
+    toolsRequired: Tool[];
+    materialsRequired: Material[];
+    createdDate: string;
+    createdBy: User;
+};
