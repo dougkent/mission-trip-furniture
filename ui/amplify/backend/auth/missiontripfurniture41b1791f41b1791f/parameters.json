@@ -1,6 +1,6 @@
 {
     "identityPoolName": "missiontripfurniture41b1791f41b1791f_identitypool_353076d4",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "missio41b1791f",
     "userPoolName": "missiontripfurniture41b1791f_userpool_41b1791f",
     "autoVerifiedAttributes": [
