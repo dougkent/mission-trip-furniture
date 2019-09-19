@@ -15,10 +15,5 @@
 			}
 		}
 	},
-	"storage": {
-		"mtfPlanPdfs": {
-			"service": "S3",
-			"providerPlugin": "awscloudformation"
-		}
-	}
+	"storage": {}
 }

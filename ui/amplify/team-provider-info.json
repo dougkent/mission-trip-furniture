@@ -15,5 +15,22 @@
                 "missiontripfurniture41b1791f41b1791f": {}
             }
         }
+    },
+    "test": {
+        "awscloudformation": {
+            "AuthRoleName": "missiontripfurniture-test-20190917184404-authRole",
+            "UnauthRoleArn": "arn:aws:iam::866938331794:role/missiontripfurniture-test-20190917184404-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::866938331794:role/missiontripfurniture-test-20190917184404-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "missiontripfurniture-test-20190917184404-deployment",
+            "UnauthRoleName": "missiontripfurniture-test-20190917184404-unauthRole",
+            "StackName": "missiontripfurniture-test-20190917184404",
+            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/missiontripfurniture-test-20190917184404/0806b7c0-d9a5-11e9-889f-02bdb80754dc"
+        },
+        "categories": {
+            "auth": {
+                "missiontripfurniture41b1791f41b1791f": {}
+            }
+        }
     }
 }

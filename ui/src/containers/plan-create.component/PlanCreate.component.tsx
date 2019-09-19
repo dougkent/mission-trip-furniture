@@ -37,9 +37,9 @@ class CreatePlan extends React.Component<{}, CreatePlanInput> {
         this.state = {
             id: uuid(),
             createdDate: '',
-            createdByUsername: '',
+            createdById: '',
             description: '',
-            favoritedByUsernames: [],
+            userIdsFavoritedBy: [],
             imageS3Info: null,
             name: '',
             pdfS3Key: '',
@@ -51,7 +51,8 @@ class CreatePlan extends React.Component<{}, CreatePlanInput> {
     async componentDidMount() {
         var user = await Auth.currentAuthenticatedUser();
 
-        this.setState({ createdByUsername: user.username });
+        // TODO: Change this to userId;
+        this.setState({ createdById: user.username });
     }
 
     handleMaterialSelected = (materials: Material[]) => {

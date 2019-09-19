@@ -2,6 +2,9 @@
 import Amplify, { API, graphqlOperation, Auth, Hub } from 'aws-amplify';
 import aws_exports from '../aws-exports';
 
+// uuid
+import { v4 as uuid } from 'uuid';
+
 // MTF
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
@@ -47,6 +50,7 @@ class UserCreator {
 
     private async createUserByUsername(username: string) {
         var createUserInput: CreateUserInput = {
+            id: uuid(),
             username: username,
             planIdsCreated: [],
             planIdsFavorited: [],
