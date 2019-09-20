@@ -1,73 +1,49 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUser = `subscription OnCreateUser {
-  onCreateUser {
-    username
-  }
-}
-`;
-export const onUpdateUser = `subscription OnUpdateUser {
-  onUpdateUser {
-    username
-    favoritedPlans {
-      id
-      name
-      description
-      created
-    }
-    createdPlans {
-      id
-      name
-      description
-      created
-    }
-  }
-}
-`;
-export const onDeleteUser = `subscription OnDeleteUser {
-  onDeleteUser {
-    username
-    favoritedPlans {
-      id
-      name
-      description
-      created
-    }
-    createdPlans {
-      id
-      name
-      description
-      created
-    }
-  }
-}
-`;
 export const onCreatePlan = `subscription OnCreatePlan {
   onCreatePlan {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
       width
-      heigth
-    }
-    pdfS3Key
-    toolsRequired {
-      id
-      name
-    }
-    materialsRequired {
-      id
-      name
-    }
-    favoritedBy {
-      username
+      height
     }
     created
     createdBy {
+      id
       username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        created
+      }
+      favoritedPlans {
+        nextToken
+      }
+    }
+    favoritedBy {
+      items {
+        id
+      }
+      nextToken
+    }
+    materialsRequired {
+      items {
+        id
+      }
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
+      }
+      nextToken
     }
   }
 }
@@ -77,26 +53,44 @@ export const onUpdatePlan = `subscription OnUpdatePlan {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
       width
-      heigth
-    }
-    pdfS3Key
-    toolsRequired {
-      id
-      name
-    }
-    materialsRequired {
-      id
-      name
-    }
-    favoritedBy {
-      username
+      height
     }
     created
     createdBy {
+      id
       username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        created
+      }
+      favoritedPlans {
+        nextToken
+      }
+    }
+    favoritedBy {
+      items {
+        id
+      }
+      nextToken
+    }
+    materialsRequired {
+      items {
+        id
+      }
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
+      }
+      nextToken
     }
   }
 }
@@ -106,26 +100,44 @@ export const onDeletePlan = `subscription OnDeletePlan {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
       width
-      heigth
-    }
-    pdfS3Key
-    toolsRequired {
-      id
-      name
-    }
-    materialsRequired {
-      id
-      name
-    }
-    favoritedBy {
-      username
+      height
     }
     created
     createdBy {
+      id
       username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        created
+      }
+      favoritedPlans {
+        nextToken
+      }
+    }
+    favoritedBy {
+      items {
+        id
+      }
+      nextToken
+    }
+    materialsRequired {
+      items {
+        id
+      }
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
+      }
+      nextToken
     }
   }
 }

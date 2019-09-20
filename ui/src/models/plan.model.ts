@@ -4,6 +4,7 @@ export type Plan = {
     id: string;
     name: string;
     description: string;
+    favoritedBy: User[];
     imageS3Info: S3ImageInfo;
     pdfS3Key: string;
     toolsRequired: Tool[];

@@ -1,44 +1,104 @@
-type Tool @model(queries: {list: "listTools"}, mutations: null, subscriptions: null) {
-	id: ID!
-	name: String!
+﻿type User
+    @model(
+        queries: { get: "getUser" }
+        mutations: {
+            create: "createUser"
+            update: "updateUser"
+            delete: "deleteUser"
+        }
+        subscriptions: null
+    )
+    @auth(
+        rules: [
+            {
+                allow: owner
+                ownerField: "username"
+                operations: [create, update, delete]
+            }
+        ]
+    ) {
+    id: ID!
+    username: String!
+    createdPlans: [Plan!]
+    favoritedPlans: [Favorite!] @connection(name: "FavoritedPlans")
 }
 
-type Material @model(queries: {list: "listMaterials"}, mutations: null, subscriptions: null)  {
-	id: ID!
-	name: String!
+type Plan
+    @model
+    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    id: ID!
+    name: String!
+    description: String!
+    pdfS3Key: String!
+    imageS3Info: S3ImageInfo!
+    created: AWSDateTime!
+    createdBy: User! @connection
+    favoritedCount: Int!
+    favoritedBy: [Favorite!] @connection(name: "FavoritedBy")
+    materialsRequired: [PlanMaterial!]! @connection(name: "RequiresMaterials")
+    toolsRequired: [PlanTool!]! @connection(name: "RequiresTools")
 }
 
-type User @model(queries: { get: "getUser", list: null }, mutations: { create: "createUser", update: "updateUser", delete: "deleteUser" }) @key(fields: ["username"]) @auth(rules: [
-	{ allow: owner, ownerField: "username", operations: [create, update, delete]}
-]) {
-	username: String!
-	favoritedPlans: [UserFavoritedPlan!]! @connection(name: "FavoritedPlans")
-	createdPlans: [Plan!]! @connection(name: "UserCreatedPlans")
+type Favorite
+    @model(
+        queries: null
+        mutations: { create: "createFavorite", delete: "deleteFavorite" }
+        subscriptions: null
+    ) {
+    id: ID!
+    plan: Plan! @connection(name: "FavoritedBy")
+    user: User! @connection(name: "FavoritedPlans")
 }
 
-type S3Info {
-	key: String!
-	widht: Int!
-	height: Int!
+type PlanMaterial
+    @model(
+        queries: null
+        mutations: {
+            create: "createPlanMaterial"
+            delete: "deletePlanMaterial"
+        }
+        subscriptions: null
+    )
+    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    id: ID!
+    material: Material! @connection
+    plan: Plan! @connection(name: "RequiresMaterials")
 }
 
-type UserFavoritedPlan @model(queries: null, mutations: null, subscriptions: null) @auth(rules:[
-	{ allow: owner, operations: [create, update, delete]}
-]) {
-	id: ID!
-	plan: Plan! @connection (name: "FavoritedByUsers")
-	user: User! @connection (name: "FavoritedPlans")
+type Material
+    @model(
+        queries: { list: "listMaterials" }
+        mutations: null
+        subscriptions: null
+    ) {
+    id: ID!
+    name: String!
 }
 
-type Plan @model {
-	id: ID!
-	name: String!
-	description: String!
-	imageS3Info: S3Info!
-	pdfS3Info: S3Info!
-	toolsRequired: [Tool!]! @connection
-	materialsRequired: [Material!]! @connection
-	favoritedBy:[UserFavoritedPlan!]! @connection (name: "FavoritedByUsers")
-	created: AWSDateTime!
-	createdBy: User! @connection(name: "UserCreatedPlans")
+type PlanTool
+    @model(
+        queries: null
+        mutations: { create: "createPlanTool", delete: "deletePlanTool" }
+        subscriptions: null
+    )
+    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    id: ID!
+    tool: Tool! @connection
+    plan: Plan! @connection(name: "RequiresTools")
+}
+
+type Tool
+    @model(
+        queries: { list: "listTools" }
+        mutations: null
+        subscriptions: null
+    ) {
+    id: ID!
+    name: String!
+}
+
+type S3ImageInfo {
+    key: String!
+    width: Int!
+    height: Int!
 }
