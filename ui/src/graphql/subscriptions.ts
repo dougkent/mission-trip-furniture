@@ -1,73 +1,4531 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUser = `subscription OnCreateUser {
-  onCreateUser {
-    username
-  }
-}
-`;
-export const onUpdateUser = `subscription OnUpdateUser {
-  onUpdateUser {
-    username
-    favoritedPlans {
-      id
-      name
-      description
-      created
-    }
-    createdPlans {
-      id
-      name
-      description
-      created
-    }
-  }
-}
-`;
-export const onDeleteUser = `subscription OnDeleteUser {
-  onDeleteUser {
-    username
-    favoritedPlans {
-      id
-      name
-      description
-      created
-    }
-    createdPlans {
-      id
-      name
-      description
-      created
-    }
-  }
-}
-`;
 export const onCreatePlan = `subscription OnCreatePlan {
   onCreatePlan {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
       width
-      heigth
-    }
-    pdfS3Key
-    toolsRequired {
-      id
-      name
-    }
-    materialsRequired {
-      id
-      name
-    }
-    favoritedBy {
-      username
+      height
     }
     created
     createdBy {
+      id
       username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        imageS3Info {
+          key
+          width
+          height
+        }
+        created
+        createdBy {
+          id
+          username
+          createdPlans {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedPlans {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        favoritedBy {
+          items {
+            id
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            user {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+        materialsRequired {
+          items {
+            id
+            material {
+              id
+              name
+            }
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+        toolsRequired {
+          items {
+            id
+            tool {
+              id
+              name
+            }
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+      }
+      favoritedPlans {
+        items {
+          id
+          plan {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          user {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+        }
+        nextToken
+      }
+    }
+    favoritedBy {
+      items {
+        id
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        user {
+          id
+          username
+          createdPlans {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedPlans {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
+    }
+    materialsRequired {
+      items {
+        id
+        material {
+          id
+          name
+        }
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
+        tool {
+          id
+          name
+        }
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
     }
   }
 }
@@ -77,26 +4535,4526 @@ export const onUpdatePlan = `subscription OnUpdatePlan {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
       width
-      heigth
-    }
-    pdfS3Key
-    toolsRequired {
-      id
-      name
-    }
-    materialsRequired {
-      id
-      name
-    }
-    favoritedBy {
-      username
+      height
     }
     created
     createdBy {
+      id
       username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        imageS3Info {
+          key
+          width
+          height
+        }
+        created
+        createdBy {
+          id
+          username
+          createdPlans {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedPlans {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        favoritedBy {
+          items {
+            id
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            user {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+        materialsRequired {
+          items {
+            id
+            material {
+              id
+              name
+            }
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+        toolsRequired {
+          items {
+            id
+            tool {
+              id
+              name
+            }
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+      }
+      favoritedPlans {
+        items {
+          id
+          plan {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          user {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+        }
+        nextToken
+      }
+    }
+    favoritedBy {
+      items {
+        id
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        user {
+          id
+          username
+          createdPlans {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedPlans {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
+    }
+    materialsRequired {
+      items {
+        id
+        material {
+          id
+          name
+        }
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
+        tool {
+          id
+          name
+        }
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
     }
   }
 }
@@ -106,26 +9064,4526 @@ export const onDeletePlan = `subscription OnDeletePlan {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
       width
-      heigth
-    }
-    pdfS3Key
-    toolsRequired {
-      id
-      name
-    }
-    materialsRequired {
-      id
-      name
-    }
-    favoritedBy {
-      username
+      height
     }
     created
     createdBy {
+      id
       username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        imageS3Info {
+          key
+          width
+          height
+        }
+        created
+        createdBy {
+          id
+          username
+          createdPlans {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedPlans {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        favoritedBy {
+          items {
+            id
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            user {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+        materialsRequired {
+          items {
+            id
+            material {
+              id
+              name
+            }
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+        toolsRequired {
+          items {
+            id
+            tool {
+              id
+              name
+            }
+            plan {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+      }
+      favoritedPlans {
+        items {
+          id
+          plan {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          user {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+        }
+        nextToken
+      }
+    }
+    favoritedBy {
+      items {
+        id
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        user {
+          id
+          username
+          createdPlans {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+              key
+              width
+              height
+            }
+            created
+            createdBy {
+              id
+              username
+              createdPlans {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedPlans {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedBy {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            materialsRequired {
+              items {
+                id
+                material {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+            toolsRequired {
+              items {
+                id
+                tool {
+                  id
+                  name
+                }
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedPlans {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
+    }
+    materialsRequired {
+      items {
+        id
+        material {
+          id
+          name
+        }
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
+        tool {
+          id
+          name
+        }
+        plan {
+          id
+          name
+          description
+          pdfS3Key
+          imageS3Info {
+            key
+            width
+            height
+          }
+          created
+          createdBy {
+            id
+            username
+            createdPlans {
+              id
+              name
+              description
+              pdfS3Key
+              imageS3Info {
+                key
+                width
+                height
+              }
+              created
+              createdBy {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+              favoritedBy {
+                items {
+                  id
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  user {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              materialsRequired {
+                items {
+                  id
+                  material {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+              toolsRequired {
+                items {
+                  id
+                  tool {
+                    id
+                    name
+                  }
+                  plan {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+            favoritedPlans {
+              items {
+                id
+                plan {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                user {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+              }
+              nextToken
+            }
+          }
+          favoritedBy {
+            items {
+              id
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+              user {
+                id
+                username
+                createdPlans {
+                  id
+                  name
+                  description
+                  pdfS3Key
+                  imageS3Info {
+                    key
+                    width
+                    height
+                  }
+                  created
+                  createdBy {
+                    id
+                    username
+                    createdPlans {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    favoritedPlans {
+                      nextToken
+                    }
+                  }
+                  favoritedBy {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  materialsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                  toolsRequired {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedPlans {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          materialsRequired {
+            items {
+              id
+              material {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+          toolsRequired {
+            items {
+              id
+              tool {
+                id
+                name
+              }
+              plan {
+                id
+                name
+                description
+                pdfS3Key
+                imageS3Info {
+                  key
+                  width
+                  height
+                }
+                created
+                createdBy {
+                  id
+                  username
+                  createdPlans {
+                    id
+                    name
+                    description
+                    pdfS3Key
+                    imageS3Info {
+                      key
+                      width
+                      height
+                    }
+                    created
+                    createdBy {
+                      id
+                      username
+                    }
+                    favoritedBy {
+                      nextToken
+                    }
+                    materialsRequired {
+                      nextToken
+                    }
+                    toolsRequired {
+                      nextToken
+                    }
+                  }
+                  favoritedPlans {
+                    items {
+                      id
+                    }
+                    nextToken
+                  }
+                }
+                favoritedBy {
+                  items {
+                    id
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                    user {
+                      id
+                      username
+                    }
+                  }
+                  nextToken
+                }
+                materialsRequired {
+                  items {
+                    id
+                    material {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+                toolsRequired {
+                  items {
+                    id
+                    tool {
+                      id
+                      name
+                    }
+                    plan {
+                      id
+                      name
+                      description
+                      pdfS3Key
+                      created
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+      }
+      nextToken
     }
   }
 }

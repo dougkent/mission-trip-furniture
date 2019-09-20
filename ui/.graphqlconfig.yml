@@ -1,12 +1,13 @@
 projects:
-  missiontripfurniture:
-    schemaPath: src\graphql\schema.json
-    includes:
-      - src\graphql\**\*.ts
-    excludes:
-      - ./amplify/**
-    extensions:
-      amplify:
-        codeGenTarget: typescript
-        generatedFileName: src\models\api.models.ts
-        docsFilePath: src\graphql
+    missiontripfurniture:
+        schemaPath: src\graphql\schema.json
+        includes:
+            - src\graphql\**\*.ts
+        excludes:
+            - ./amplify/**
+        extensions:
+            amplify:
+                codeGenTarget: typescript
+                generatedFileName: src\models\api.models.ts
+                docsFilePath: src\graphql
+                maxDepth: 10
