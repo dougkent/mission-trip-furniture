@@ -33,6 +33,7 @@ type Plan
     imageS3Info: S3ImageInfo!
     created: AWSDateTime!
     createdBy: User! @connection
+    favoritedCount: Int!
     favoritedBy: [Favorite!] @connection(name: "FavoritedBy")
     materialsRequired: [PlanMaterial!]! @connection(name: "RequiresMaterials")
     toolsRequired: [PlanTool!]! @connection(name: "RequiresTools")

@@ -10,4 +10,4 @@ projects:
                 codeGenTarget: typescript
                 generatedFileName: src\models\api.models.ts
                 docsFilePath: src\graphql
-                maxDepth: 10
+                maxDepth: 3
