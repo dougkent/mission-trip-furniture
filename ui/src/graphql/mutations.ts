@@ -1,64 +1,38 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const createTool = `mutation CreateTool($input: CreateToolInput!) {
-  createTool(input: $input) {
-    id
-    name
-  }
-}
-`;
-export const updateTool = `mutation UpdateTool($input: UpdateToolInput!) {
-  updateTool(input: $input) {
-    id
-    name
-  }
-}
-`;
-export const deleteTool = `mutation DeleteTool($input: DeleteToolInput!) {
-  deleteTool(input: $input) {
-    id
-    name
-  }
-}
-`;
-export const createMaterial = `mutation CreateMaterial($input: CreateMaterialInput!) {
-  createMaterial(input: $input) {
-    id
-    name
-  }
-}
-`;
-export const updateMaterial = `mutation UpdateMaterial($input: UpdateMaterialInput!) {
-  updateMaterial(input: $input) {
-    id
-    name
-  }
-}
-`;
-export const deleteMaterial = `mutation DeleteMaterial($input: DeleteMaterialInput!) {
-  deleteMaterial(input: $input) {
-    id
-    name
-  }
-}
-`;
 export const createUser = `mutation CreateUser($input: CreateUserInput!) {
   createUser(input: $input) {
     id
     username
+    createdPlans {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
+        nextToken
+      }
+    }
     favoritedPlans {
       items {
         id
-      }
-      nextToken
-    }
-    createdPlans {
-      items {
-        id
-        name
-        description
-        created
       }
       nextToken
     }
@@ -69,18 +43,34 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
   updateUser(input: $input) {
     id
     username
+    createdPlans {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
+        nextToken
+      }
+    }
     favoritedPlans {
       items {
         id
-      }
-      nextToken
-    }
-    createdPlans {
-      items {
-        id
-        name
-        description
-        created
       }
       nextToken
     }
@@ -91,155 +81,36 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
   deleteUser(input: $input) {
     id
     username
+    createdPlans {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
+        nextToken
+      }
+    }
     favoritedPlans {
       items {
         id
       }
       nextToken
-    }
-    createdPlans {
-      items {
-        id
-        name
-        description
-        created
-      }
-      nextToken
-    }
-  }
-}
-`;
-export const createUserFavoritedPlan = `mutation CreateUserFavoritedPlan($input: CreateUserFavoritedPlanInput!) {
-  createUserFavoritedPlan(input: $input) {
-    id
-    plan {
-      id
-      name
-      description
-      imageS3Info {
-        key
-        widht
-        height
-      }
-      pdfS3Info {
-        key
-        widht
-        height
-      }
-      toolsRequired {
-        nextToken
-      }
-      materialsRequired {
-        nextToken
-      }
-      favoritedBy {
-        nextToken
-      }
-      created
-      createdBy {
-        id
-        username
-      }
-    }
-    user {
-      id
-      username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
-    }
-  }
-}
-`;
-export const updateUserFavoritedPlan = `mutation UpdateUserFavoritedPlan($input: UpdateUserFavoritedPlanInput!) {
-  updateUserFavoritedPlan(input: $input) {
-    id
-    plan {
-      id
-      name
-      description
-      imageS3Info {
-        key
-        widht
-        height
-      }
-      pdfS3Info {
-        key
-        widht
-        height
-      }
-      toolsRequired {
-        nextToken
-      }
-      materialsRequired {
-        nextToken
-      }
-      favoritedBy {
-        nextToken
-      }
-      created
-      createdBy {
-        id
-        username
-      }
-    }
-    user {
-      id
-      username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
-    }
-  }
-}
-`;
-export const deleteUserFavoritedPlan = `mutation DeleteUserFavoritedPlan($input: DeleteUserFavoritedPlanInput!) {
-  deleteUserFavoritedPlan(input: $input) {
-    id
-    plan {
-      id
-      name
-      description
-      imageS3Info {
-        key
-        widht
-        height
-      }
-      pdfS3Info {
-        key
-        widht
-        height
-      }
-      toolsRequired {
-        nextToken
-      }
-      materialsRequired {
-        nextToken
-      }
-      favoritedBy {
-        nextToken
-      }
-      created
-      createdBy {
-        id
-        username
-      }
-    }
-    user {
-      id
-      username
-      favoritedPlans {
-        nextToken
-      }
-      createdPlans {
-        nextToken
-      }
     }
   }
 }
@@ -249,29 +120,26 @@ export const createPlan = `mutation CreatePlan($input: CreatePlanInput!) {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
-      widht
+      width
       height
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
-    toolsRequired {
-      items {
+    created
+    createdBy {
+      id
+      username
+      createdPlans {
         id
         name
+        description
+        pdfS3Key
+        created
       }
-      nextToken
-    }
-    materialsRequired {
-      items {
-        id
-        name
+      favoritedPlans {
+        nextToken
       }
-      nextToken
     }
     favoritedBy {
       items {
@@ -279,16 +147,17 @@ export const createPlan = `mutation CreatePlan($input: CreatePlanInput!) {
       }
       nextToken
     }
-    created
-    createdBy {
-      id
-      username
-      favoritedPlans {
-        nextToken
+    materialsRequired {
+      items {
+        id
       }
-      createdPlans {
-        nextToken
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
       }
+      nextToken
     }
   }
 }
@@ -298,29 +167,26 @@ export const updatePlan = `mutation UpdatePlan($input: UpdatePlanInput!) {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
-      widht
+      width
       height
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
-    toolsRequired {
-      items {
+    created
+    createdBy {
+      id
+      username
+      createdPlans {
         id
         name
+        description
+        pdfS3Key
+        created
       }
-      nextToken
-    }
-    materialsRequired {
-      items {
-        id
-        name
+      favoritedPlans {
+        nextToken
       }
-      nextToken
     }
     favoritedBy {
       items {
@@ -328,16 +194,17 @@ export const updatePlan = `mutation UpdatePlan($input: UpdatePlanInput!) {
       }
       nextToken
     }
-    created
-    createdBy {
-      id
-      username
-      favoritedPlans {
-        nextToken
+    materialsRequired {
+      items {
+        id
       }
-      createdPlans {
-        nextToken
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
       }
+      nextToken
     }
   }
 }
@@ -347,29 +214,26 @@ export const deletePlan = `mutation DeletePlan($input: DeletePlanInput!) {
     id
     name
     description
+    pdfS3Key
     imageS3Info {
       key
-      widht
+      width
       height
     }
-    pdfS3Info {
-      key
-      widht
-      height
-    }
-    toolsRequired {
-      items {
+    created
+    createdBy {
+      id
+      username
+      createdPlans {
         id
         name
+        description
+        pdfS3Key
+        created
       }
-      nextToken
-    }
-    materialsRequired {
-      items {
-        id
-        name
+      favoritedPlans {
+        nextToken
       }
-      nextToken
     }
     favoritedBy {
       items {
@@ -377,14 +241,245 @@ export const deletePlan = `mutation DeletePlan($input: DeletePlanInput!) {
       }
       nextToken
     }
-    created
-    createdBy {
+    materialsRequired {
+      items {
+        id
+      }
+      nextToken
+    }
+    toolsRequired {
+      items {
+        id
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const createFavorite = `mutation CreateFavorite($input: CreateFavoriteInput!) {
+  createFavorite(input: $input) {
+    id
+    plan {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
+        nextToken
+      }
+    }
+    user {
       id
       username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        created
+      }
       favoritedPlans {
         nextToken
       }
+    }
+  }
+}
+`;
+export const deleteFavorite = `mutation DeleteFavorite($input: DeleteFavoriteInput!) {
+  deleteFavorite(input: $input) {
+    id
+    plan {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
+        nextToken
+      }
+    }
+    user {
+      id
+      username
       createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        created
+      }
+      favoritedPlans {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const createPlanMaterial = `mutation CreatePlanMaterial($input: CreatePlanMaterialInput!) {
+  createPlanMaterial(input: $input) {
+    id
+    material {
+      id
+      name
+    }
+    plan {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const deletePlanMaterial = `mutation DeletePlanMaterial($input: DeletePlanMaterialInput!) {
+  deletePlanMaterial(input: $input) {
+    id
+    material {
+      id
+      name
+    }
+    plan {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const createPlanTool = `mutation CreatePlanTool($input: CreatePlanToolInput!) {
+  createPlanTool(input: $input) {
+    id
+    tool {
+      id
+      name
+    }
+    plan {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const deletePlanTool = `mutation DeletePlanTool($input: DeletePlanToolInput!) {
+  deletePlanTool(input: $input) {
+    id
+    tool {
+      id
+      name
+    }
+    plan {
+      id
+      name
+      description
+      pdfS3Key
+      imageS3Info {
+        key
+        width
+        height
+      }
+      created
+      createdBy {
+        id
+        username
+      }
+      favoritedBy {
+        nextToken
+      }
+      materialsRequired {
+        nextToken
+      }
+      toolsRequired {
         nextToken
       }
     }

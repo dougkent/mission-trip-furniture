@@ -1,42 +1,19 @@
 {
-	"function": {
-		"mtforg2ec220efCustomMessage": {
-			"service": "Lambda",
-			"providerPlugin": "awscloudformation",
-			"build": true
-		}
-	},
 	"auth": {
-		"mtforg2ec220ef": {
+		"missiontripfurniture41b1791f41b1791f": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
-			"dependsOn": [
-				{
-					"category": "function",
-					"resourceName": "mtforg2ec220efCustomMessage",
-					"triggerProvider": "Cognito",
-					"attributes": [
-						"Arn",
-						"Name"
-					]
-				}
-			]
+			"dependsOn": []
 		}
 	},
 	"api": {
-		"mtforgapi": {
-			"service": "AppSync",
-			"providerPlugin": "awscloudformation",
-			"output": {
-				"securityType": "AMAZON_COGNITO_USER_POOLS"
-			}
-		},
-		"mtfOrgApi": {
+		"missiontripfurniture": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {
 				"securityType": "AMAZON_COGNITO_USER_POOLS"
 			}
 		}
-	}
+	},
+	"storage": {}
 }

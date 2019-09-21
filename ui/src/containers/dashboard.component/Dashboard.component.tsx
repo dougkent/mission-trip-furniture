@@ -19,7 +19,7 @@ class DashboardComponent extends React.Component {
             <div>
                 <h1>My Plans</h1>
                 <h1>Favorited Plans</h1>
-                <Link to="/my-mtf/create-plan" className="nav-item">
+                <Link to='/my-mtf/create-plan' className='nav-item'>
                     Create Plan
                 </Link>
             </div>
@@ -28,5 +28,5 @@ class DashboardComponent extends React.Component {
 }
 
 export default withAuthenticator(DashboardComponent, {
-    signUpConfig: signUpConfig
+    signUpConfig: signUpConfig,
 });

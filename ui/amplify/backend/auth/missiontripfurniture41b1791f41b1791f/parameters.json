@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "mtforg2ec220ef_identitypool_2ec220ef",
-    "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "mtforg2ec220ef",
-    "userPoolName": "mtforg2ec220ef_userpool_2ec220ef",
+    "identityPoolName": "missiontripfurniture41b1791f41b1791f_identitypool_353076d4",
+    "allowUnauthenticatedIdentities": true,
+    "resourceNameTruncated": "missio41b1791f",
+    "userPoolName": "missiontripfurniture41b1791f_userpool_41b1791f",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -18,8 +18,7 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-        "email",
-        "name"
+        "email"
     ],
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
@@ -29,10 +28,13 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "mtforg2ec220ef_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "missio41b1791f_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "resourceName": "mtforg2ec220ef",
+    "useDefault": "default",
     "authSelections": "identityPoolAndUserPool",
+    "resourceName": "missiontripfurniture41b1791f41b1791f",
+    "triggers": "{}",
+    "hostedUI": false,
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",
@@ -45,22 +47,9 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
-    "triggers": "{\"CustomMessage\":[\"verification-link\"]}",
-    "verificationBucketName": "mtforg2ec220efverificationbucket",
     "parentStack": {
         "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "dependsOn": [
-        {
-            "category": "function",
-            "resourceName": "mtforg2ec220efCustomMessage",
-            "triggerProvider": "Cognito",
-            "attributes": [
-                "Arn",
-                "Name"
-            ]
-        }
-    ]
+    "dependsOn": []
 }

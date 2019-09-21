@@ -14,12 +14,10 @@ Amplify.configure(aws_exports);
 
 class PlanEditComponent extends React.Component {
     render() {
-        return (
-            <h1>Plan Name To Edit Goes Here</h1>
-        );
+        return <h1>Plan Name To Edit Goes Here</h1>;
     }
 }
 
 export default withAuthenticator(PlanEditComponent, {
-    signUpConfig: signUpConfig
+    signUpConfig: signUpConfig,
 });
