@@ -1,6 +1,6 @@
 ﻿type User
     @model(
-        queries: { get: "getUser" }
+        queries: { get: "getUser", list: "listUsers" }
         mutations: {
             create: "createUser"
             update: "updateUser"
@@ -16,6 +16,11 @@
                 operations: [create, update, delete]
             }
         ]
+    )
+    @key(
+        name: "byUsername"
+        fields: ["username"]
+        queryField: "getUserByUsername"
     ) {
     id: ID!
     username: String!

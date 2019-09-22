@@ -20,6 +20,7 @@ export const getUser = `query GetUser($id: ID!) {
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -36,6 +37,31 @@ export const getUser = `query GetUser($id: ID!) {
       }
       nextToken
     }
+  }
+}
+`;
+export const listUsers = `query ListUsers(
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        created
+        favoritedCount
+      }
+      favoritedPlans {
+        nextToken
+      }
+    }
+    nextToken
   }
 }
 `;
@@ -60,11 +86,13 @@ export const getPlan = `query GetPlan($id: ID!) {
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
       }
     }
+    favoritedCount
     favoritedBy {
       items {
         id
@@ -107,6 +135,7 @@ export const listPlans = `query ListPlans(
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -144,6 +173,39 @@ export const listTools = `query ListTools(
     items {
       id
       name
+    }
+    nextToken
+  }
+}
+`;
+export const getUserByUsername = `query GetUserByUsername(
+  $username: String
+  $sortDirection: ModelSortDirection
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  getUserByUsername(
+    username: $username
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      username
+      createdPlans {
+        id
+        name
+        description
+        pdfS3Key
+        created
+        favoritedCount
+      }
+      favoritedPlans {
+        nextToken
+      }
     }
     nextToken
   }

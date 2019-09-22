@@ -2,7 +2,7 @@
 import React from 'react';
 
 // AWS
-import Amplify, { API, graphqlOperation, Auth } from 'aws-amplify';
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import { Connect, withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
 
@@ -14,53 +14,66 @@ import { v4 as uuid } from 'uuid';
 
 // MTF
 import './PlanCreate.component.scss';
-import * as queries from '../../graphql/queries';
-import * as mutations from '../../graphql/mutations';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
 import {
     CreatePlanInput,
-    Material,
-    Tool,
-    ListMaterialsQuery,
     ListToolsQuery,
-} from '../../models';
+    ListMaterialsQuery,
+} from '../../models/api.models';
+import { Material, Tool } from '../../models';
+import { AppProps } from '../../models/props';
 
 // Configure
 Amplify.configure(aws_exports);
 
-class CreatePlan extends React.Component<{}, CreatePlanInput> {
-    constructor(props: any) {
+class CreatePlan extends React.Component<AppProps, CreatePlanInput> {
+    private listMaterialsQuery = `query ListMaterials {
+        listMaterials {
+            items {
+                id
+                name
+            }
+        }
+    }`;
+
+    private listToolsQuery = `query ListTools {
+        listTools {
+            items {
+                id
+                name
+            }
+        }
+    }`;
+
+    constructor(props: AppProps) {
         super(props);
 
         this.state = {
             id: uuid(),
-            createdDate: '',
-            createdById: '',
-            description: '',
-            userIdsFavoritedBy: [],
-            imageS3Info: null,
             name: '',
+            description: '',
             pdfS3Key: '',
-            requiredMaterialIds: [],
-            requiredToolIds: [],
+            imageS3Info: null,
+            created: '',
+            favoritedCount: 0,
+            planCreatedById: props.userId,
         };
     }
 
-    async componentDidMount() {
-        var user = await Auth.currentAuthenticatedUser();
-
-        // TODO: Change this to userId;
-        this.setState({ createdById: user.username });
+    componentDidUpdate(prevProps: AppProps) {
+        if (this.props.userId !== prevProps.userId) {
+            this.setState({ planCreatedById: this.props.userId });
+        }
     }
 
     handleMaterialSelected = (materials: Material[]) => {
         const materialIds = materials.map(material => material.id);
 
-        this.setState({
-            requiredMaterialIds: materialIds,
-        });
+        // this.setState({
+        //     requiredMaterialIds: materialIds,
+        // });
     };
 
     handleSubmit = async (event: React.FormEvent) => {
@@ -69,7 +82,7 @@ class CreatePlan extends React.Component<{}, CreatePlanInput> {
         const createdDate = new Date().toISOString();
 
         await this.setState({
-            createdDate: createdDate,
+            created: createdDate,
         });
 
         console.log(this.state);
@@ -94,9 +107,9 @@ class CreatePlan extends React.Component<{}, CreatePlanInput> {
     handleToolSelected = (tools: Tool[]) => {
         const toolIds = tools.map(tool => tool.id);
 
-        this.setState({
-            requiredToolIds: toolIds,
-        });
+        // this.setState({
+        //     requiredToolIds: toolIds,
+        // });
     };
 
     render() {
@@ -128,14 +141,19 @@ class CreatePlan extends React.Component<{}, CreatePlanInput> {
                     </div>
                     <div className='formRow'>Pdf Upload Goes here.</div>
                     <div className='formRow'>
-                        <Connect query={graphqlOperation(queries.listTools)}>
+                        <Connect query={graphqlOperation(this.listToolsQuery)}>
                             {({
                                 data: { listTools },
                                 loading,
-                            }: ListToolsQuery) => {
+                            }: {
+                                data: ListToolsQuery;
+                                loading: boolean;
+                            }) => {
                                 return (
                                     <ToolsSelector
-                                        tools={!!listTools ? listTools : null}
+                                        tools={
+                                            !!listTools ? listTools.items : null
+                                        }
                                         loading={loading}
                                         onSelect={this.handleToolSelected}
                                     />
@@ -145,16 +163,19 @@ class CreatePlan extends React.Component<{}, CreatePlanInput> {
                     </div>
                     <div className='formRow'>
                         <Connect
-                            query={graphqlOperation(queries.listMaterials)}>
+                            query={graphqlOperation(this.listMaterialsQuery)}>
                             {({
                                 data: { listMaterials },
                                 loading,
-                            }: ListMaterialsQuery) => {
+                            }: {
+                                data: ListMaterialsQuery;
+                                loading: boolean;
+                            }) => {
                                 return (
                                     <MaterialsSelector
                                         materials={
                                             !!listMaterials
-                                                ? listMaterials
+                                                ? listMaterials.items
                                                 : null
                                         }
                                         loading={loading}

@@ -9,11 +9,26 @@ import { withAuthenticator } from 'aws-amplify-react';
 
 // MTF
 import { signUpConfig } from '../../models/sign-up-config.model';
+import { AppProps } from '../../models/props';
 
 // Configure
 Amplify.configure(aws_exports);
 
-class DashboardComponent extends React.Component {
+class DashboardComponent extends React.Component<AppProps, AppProps> {
+    constructor(props: AppProps) {
+        super(props);
+
+        this.state = {
+            userId: props.userId,
+        };
+    }
+
+    componentDidUpdate(prevProps: AppProps) {
+        if (this.props.userId !== prevProps.userId) {
+            this.setState({ userId: this.props.userId });
+        }
+    }
+
     render() {
         return (
             <div>

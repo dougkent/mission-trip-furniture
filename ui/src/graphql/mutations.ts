@@ -20,6 +20,7 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -58,6 +59,7 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -96,6 +98,7 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -136,11 +139,13 @@ export const createPlan = `mutation CreatePlan($input: CreatePlanInput!) {
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
       }
     }
+    favoritedCount
     favoritedBy {
       items {
         id
@@ -183,11 +188,13 @@ export const updatePlan = `mutation UpdatePlan($input: UpdatePlanInput!) {
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
       }
     }
+    favoritedCount
     favoritedBy {
       items {
         id
@@ -230,11 +237,13 @@ export const deletePlan = `mutation DeletePlan($input: DeletePlanInput!) {
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
       }
     }
+    favoritedCount
     favoritedBy {
       items {
         id
@@ -274,6 +283,7 @@ export const createFavorite = `mutation CreateFavorite($input: CreateFavoriteInp
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -293,6 +303,7 @@ export const createFavorite = `mutation CreateFavorite($input: CreateFavoriteInp
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
@@ -319,6 +330,7 @@ export const deleteFavorite = `mutation DeleteFavorite($input: DeleteFavoriteInp
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -338,6 +350,7 @@ export const deleteFavorite = `mutation DeleteFavorite($input: DeleteFavoriteInp
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
@@ -368,6 +381,7 @@ export const createPlanMaterial = `mutation CreatePlanMaterial($input: CreatePla
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -403,6 +417,7 @@ export const deletePlanMaterial = `mutation DeletePlanMaterial($input: DeletePla
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -438,6 +453,7 @@ export const createPlanTool = `mutation CreatePlanTool($input: CreatePlanToolInp
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
@@ -473,6 +489,7 @@ export const deletePlanTool = `mutation DeletePlanTool($input: DeletePlanToolInp
         id
         username
       }
+      favoritedCount
       favoritedBy {
         nextToken
       }
