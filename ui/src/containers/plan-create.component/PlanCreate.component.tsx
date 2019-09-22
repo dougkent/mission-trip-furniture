@@ -18,17 +18,19 @@ import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
 import {
-    CreatePlanInput,
     ListToolsQuery,
     ListMaterialsQuery,
+    CreatePlanToolInput,
+    CreatePlanMaterialInput,
 } from '../../models/api.models';
 import { Material, Tool } from '../../models';
 import { AppProps } from '../../models/props';
+import { CreatePlanState } from '../../models/states';
 
 // Configure
 Amplify.configure(aws_exports);
 
-class CreatePlan extends React.Component<AppProps, CreatePlanInput> {
+class CreatePlan extends React.Component<AppProps, CreatePlanState> {
     private listMaterialsQuery = `query ListMaterials {
         listMaterials {
             items {
@@ -51,29 +53,48 @@ class CreatePlan extends React.Component<AppProps, CreatePlanInput> {
         super(props);
 
         this.state = {
-            id: uuid(),
-            name: '',
-            description: '',
-            pdfS3Key: '',
-            imageS3Info: null,
-            created: '',
-            favoritedCount: 0,
-            planCreatedById: props.userId,
+            plan: {
+                id: uuid(),
+                name: '',
+                description: '',
+                pdfS3Key: '',
+                imageS3Info: null,
+                created: '',
+                favoritedCount: 0,
+                planCreatedById: props.userId,
+            },
+            planMaterials: [],
+            planTools: [],
         };
     }
 
     componentDidUpdate(prevProps: AppProps) {
         if (this.props.userId !== prevProps.userId) {
-            this.setState({ planCreatedById: this.props.userId });
+            this.setState(prevState => ({
+                ...prevState,
+                plan: {
+                    ...prevState.plan,
+                    planCreatedById: this.props.userId,
+                },
+            }));
         }
     }
 
     handleMaterialSelected = (materials: Material[]) => {
-        const materialIds = materials.map(material => material.id);
+        const planMaterials: CreatePlanMaterialInput[] = materials.map(
+            material => {
+                return {
+                    id: uuid(),
+                    planMaterialMaterialId: material.id,
+                    planMaterialPlanId: this.state.plan.id,
+                };
+            }
+        );
 
-        // this.setState({
-        //     requiredMaterialIds: materialIds,
-        // });
+        this.setState(prevState => ({
+            ...prevState,
+            planMaterials: planMaterials,
+        }));
     };
 
     handleSubmit = async (event: React.FormEvent) => {
@@ -81,9 +102,13 @@ class CreatePlan extends React.Component<AppProps, CreatePlanInput> {
 
         const createdDate = new Date().toISOString();
 
-        await this.setState({
-            created: createdDate,
-        });
+        await this.setState(prevState => ({
+            ...prevState,
+            plan: {
+                ...prevState.plan,
+                created: createdDate,
+            },
+        }));
 
         console.log(this.state);
 
@@ -98,18 +123,28 @@ class CreatePlan extends React.Component<AppProps, CreatePlanInput> {
         const key: string = element.name;
         const value: string = element.value;
 
-        this.setState((prevState: CreatePlanInput) => ({
+        this.setState(prevState => ({
             ...prevState,
-            [key]: value,
+            plan: {
+                ...prevState.plan,
+                [key]: value,
+            },
         }));
     };
 
     handleToolSelected = (tools: Tool[]) => {
-        const toolIds = tools.map(tool => tool.id);
+        const planTools: CreatePlanToolInput[] = tools.map(tool => {
+            return {
+                id: uuid(),
+                planToolToolId: tool.id,
+                planToolPlanId: this.state.plan.id,
+            };
+        });
 
-        // this.setState({
-        //     requiredToolIds: toolIds,
-        // });
+        this.setState(prevState => ({
+            ...prevState,
+            planTools: planTools,
+        }));
     };
 
     render() {
