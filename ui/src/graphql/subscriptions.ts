@@ -22,11 +22,13 @@ export const onCreatePlan = `subscription OnCreatePlan {
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
       }
     }
+    favoritedCount
     favoritedBy {
       items {
         id
@@ -69,11 +71,13 @@ export const onUpdatePlan = `subscription OnUpdatePlan {
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
       }
     }
+    favoritedCount
     favoritedBy {
       items {
         id
@@ -116,11 +120,13 @@ export const onDeletePlan = `subscription OnDeletePlan {
         description
         pdfS3Key
         created
+        favoritedCount
       }
       favoritedPlans {
         nextToken
       }
     }
+    favoritedCount
     favoritedBy {
       items {
         id

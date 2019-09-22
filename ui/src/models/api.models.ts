@@ -22,6 +22,7 @@ export type CreatePlanInput = {
   pdfS3Key: string,
   imageS3Info: S3ImageInfoInput,
   created: string,
+  favoritedCount: number,
   planCreatedById: string,
 };
 
@@ -38,6 +39,7 @@ export type UpdatePlanInput = {
   pdfS3Key?: string | null,
   imageS3Info?: S3ImageInfoInput | null,
   created?: string | null,
+  favoritedCount?: number | null,
   planCreatedById?: string | null,
 };
 
@@ -75,15 +77,12 @@ export type DeletePlanToolInput = {
   id?: string | null,
 };
 
-export type ModelPlanFilterInput = {
+export type ModelUserFilterInput = {
   id?: ModelIDFilterInput | null,
-  name?: ModelStringFilterInput | null,
-  description?: ModelStringFilterInput | null,
-  pdfS3Key?: ModelStringFilterInput | null,
-  created?: ModelStringFilterInput | null,
-  and?: Array< ModelPlanFilterInput | null > | null,
-  or?: Array< ModelPlanFilterInput | null > | null,
-  not?: ModelPlanFilterInput | null,
+  username?: ModelStringFilterInput | null,
+  and?: Array< ModelUserFilterInput | null > | null,
+  or?: Array< ModelUserFilterInput | null > | null,
+  not?: ModelUserFilterInput | null,
 };
 
 export type ModelIDFilterInput = {
@@ -112,6 +111,30 @@ export type ModelStringFilterInput = {
   beginsWith?: string | null,
 };
 
+export type ModelPlanFilterInput = {
+  id?: ModelIDFilterInput | null,
+  name?: ModelStringFilterInput | null,
+  description?: ModelStringFilterInput | null,
+  pdfS3Key?: ModelStringFilterInput | null,
+  created?: ModelStringFilterInput | null,
+  favoritedCount?: ModelIntFilterInput | null,
+  and?: Array< ModelPlanFilterInput | null > | null,
+  or?: Array< ModelPlanFilterInput | null > | null,
+  not?: ModelPlanFilterInput | null,
+};
+
+export type ModelIntFilterInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  contains?: number | null,
+  notContains?: number | null,
+  between?: Array< number | null > | null,
+};
+
 export type ModelMaterialFilterInput = {
   id?: ModelIDFilterInput | null,
   name?: ModelStringFilterInput | null,
@@ -127,6 +150,12 @@ export type ModelToolFilterInput = {
   or?: Array< ModelToolFilterInput | null > | null,
   not?: ModelToolFilterInput | null,
 };
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type CreateUserMutationVariables = {
   input: CreateUserInput,
@@ -155,6 +184,7 @@ export type CreateUserMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -206,6 +236,7 @@ export type UpdateUserMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -257,6 +288,7 @@ export type DeleteUserMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -310,12 +342,14 @@ export type CreatePlanMutation = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
       } | null,
     },
+    favoritedCount: number,
     favoritedBy:  {
       __typename: "ModelFavoriteConnection",
       items:  Array< {
@@ -372,12 +406,14 @@ export type UpdatePlanMutation = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
       } | null,
     },
+    favoritedCount: number,
     favoritedBy:  {
       __typename: "ModelFavoriteConnection",
       items:  Array< {
@@ -434,12 +470,14 @@ export type DeletePlanMutation = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
       } | null,
     },
+    favoritedCount: number,
     favoritedBy:  {
       __typename: "ModelFavoriteConnection",
       items:  Array< {
@@ -493,6 +531,7 @@ export type CreateFavoriteMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -517,6 +556,7 @@ export type CreateFavoriteMutation = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
@@ -552,6 +592,7 @@ export type DeleteFavoriteMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -576,6 +617,7 @@ export type DeleteFavoriteMutation = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
@@ -616,6 +658,7 @@ export type CreatePlanMaterialMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -663,6 +706,7 @@ export type DeletePlanMaterialMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -710,6 +754,7 @@ export type CreatePlanToolMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -757,6 +802,7 @@ export type DeletePlanToolMutation = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -800,6 +846,7 @@ export type GetUserQuery = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -821,6 +868,37 @@ export type GetUserQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+  } | null,
+};
+
+export type ListUsersQueryVariables = {
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListUsersQuery = {
+  listUsers:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      username: string,
+      createdPlans:  Array< {
+        __typename: "Plan",
+        id: string,
+        name: string,
+        description: string,
+        pdfS3Key: string,
+        created: string,
+        favoritedCount: number,
+      } > | null,
+      favoritedPlans:  {
+        __typename: "ModelFavoriteConnection",
+        nextToken: string | null,
+      } | null,
+    } | null > | null,
+    nextToken: string | null,
   } | null,
 };
 
@@ -853,12 +931,14 @@ export type GetPlanQuery = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
       } | null,
     },
+    favoritedCount: number,
     favoritedBy:  {
       __typename: "ModelFavoriteConnection",
       items:  Array< {
@@ -913,6 +993,7 @@ export type ListPlansQuery = {
         id: string,
         username: string,
       },
+      favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
@@ -966,6 +1047,39 @@ export type ListToolsQuery = {
   } | null,
 };
 
+export type GetUserByUsernameQueryVariables = {
+  username?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type GetUserByUsernameQuery = {
+  getUserByUsername:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      username: string,
+      createdPlans:  Array< {
+        __typename: "Plan",
+        id: string,
+        name: string,
+        description: string,
+        pdfS3Key: string,
+        created: string,
+        favoritedCount: number,
+      } > | null,
+      favoritedPlans:  {
+        __typename: "ModelFavoriteConnection",
+        nextToken: string | null,
+      } | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
 export type OnCreatePlanSubscription = {
   onCreatePlan:  {
     __typename: "Plan",
@@ -991,12 +1105,14 @@ export type OnCreatePlanSubscription = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
       } | null,
     },
+    favoritedCount: number,
     favoritedBy:  {
       __typename: "ModelFavoriteConnection",
       items:  Array< {
@@ -1049,12 +1165,14 @@ export type OnUpdatePlanSubscription = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
       } | null,
     },
+    favoritedCount: number,
     favoritedBy:  {
       __typename: "ModelFavoriteConnection",
       items:  Array< {
@@ -1107,12 +1225,14 @@ export type OnDeletePlanSubscription = {
         description: string,
         pdfS3Key: string,
         created: string,
+        favoritedCount: number,
       } > | null,
       favoritedPlans:  {
         __typename: "ModelFavoriteConnection",
         nextToken: string | null,
       } | null,
     },
+    favoritedCount: number,
     favoritedBy:  {
       __typename: "ModelFavoriteConnection",
       items:  Array< {
