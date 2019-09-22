@@ -137,10 +137,18 @@ class App extends React.Component<{}, AppProps> {
                             <HomeComponent userId={this.state.userId} />
                         )}
                     />
-                    <Route exact path='/plans' component={PlansListComponent} />
+                    <Route
+                        exact
+                        path='/plans'
+                        render={() => (
+                            <PlansListComponent userId={this.state.userId} />
+                        )}
+                    />
                     <Route
                         path='/plans/:planUrl'
-                        component={PlanViewComponent}
+                        render={() => (
+                            <PlanViewComponent userId={this.state.userId} />
+                        )}
                     />
                     <Route
                         exact
@@ -152,11 +160,15 @@ class App extends React.Component<{}, AppProps> {
                     <Route
                         exact
                         path='/my-mtf/create-plan'
-                        component={PlanCreateComponent}
+                        render={() => (
+                            <PlanCreateComponent userId={this.state.userId} />
+                        )}
                     />
                     <Route
                         path='/my-mtf/plans/:planUrl'
-                        component={PlanEditComponent}
+                        render={() => (
+                            <PlanEditComponent userId={this.state.userId} />
+                        )}
                     />
                 </div>
             </Router>
