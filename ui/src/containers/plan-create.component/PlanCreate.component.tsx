@@ -2,7 +2,7 @@
 import React from 'react';
 
 // AWS
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
 import { Connect, withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
 
@@ -17,6 +17,7 @@ import './PlanCreate.component.scss';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
+import PdfUploader from '../../components/pdf-uploader.component/PdfUploader.component';
 import {
     ListToolsQuery,
     ListMaterialsQuery,
@@ -65,10 +66,11 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
             },
             planMaterials: [],
             planTools: [],
+            uploading: false,
         };
     }
 
-    componentDidUpdate(prevProps: AppProps) {
+    async componentDidUpdate(prevProps: AppProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState(prevState => ({
                 ...prevState,
@@ -77,6 +79,15 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                     planCreatedById: this.props.userId,
                 },
             }));
+        }
+    }
+
+    async componentWillUnmount() {
+        debugger;
+        if (this.state.plan.pdfS3Key) {
+            await Storage.remove(this.state.plan.pdfS3Key, {
+                level: 'uploads/',
+            });
         }
     }
 
@@ -94,6 +105,24 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         this.setState(prevState => ({
             ...prevState,
             planMaterials: planMaterials,
+        }));
+    };
+
+    handlePdfUpload = async (file: File) => {
+        const fileName = uuid();
+
+        const pdfResult = await Storage.put(fileName, file, {
+            customPrefix: { public: 'uploads/' },
+            metadata: { owner: this.state.plan.planCreatedById },
+        });
+
+        this.setState(prevState => ({
+            ...prevState,
+            uploading: false,
+            plan: {
+                ...prevState.plan,
+                pdfS3Key: fileName,
+            },
         }));
     };
 
@@ -174,7 +203,12 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                             rows='4'
                         />
                     </div>
-                    <div className='formRow'>Pdf Upload Goes here.</div>
+                    <div className='formRow'>
+                        <PdfUploader
+                            pdfS3Key={this.state.plan.pdfS3Key}
+                            onUpload={this.handlePdfUpload}
+                        />
+                    </div>
                     <div className='formRow'>
                         <Connect query={graphqlOperation(this.listToolsQuery)}>
                             {({
