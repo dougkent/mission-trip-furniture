@@ -54,6 +54,8 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         super(props);
 
         this.state = {
+            imageFile: null,
+            pdfFile: null,
             plan: {
                 id: uuid(),
                 name: '',
@@ -66,7 +68,7 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
             },
             planMaterials: [],
             planTools: [],
-            uploading: false,
+            loading: false,
         };
     }
 
@@ -79,15 +81,6 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                     planCreatedById: this.props.userId,
                 },
             }));
-        }
-    }
-
-    async componentWillUnmount() {
-        debugger;
-        if (this.state.plan.pdfS3Key) {
-            await Storage.remove(this.state.plan.pdfS3Key, {
-                level: 'uploads/',
-            });
         }
     }
 
@@ -108,17 +101,23 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         }));
     };
 
-    handlePdfUpload = async (file: File) => {
-        const fileName = uuid();
+    handlePdfDeselect = async () => {
+        this.setState(prevState => ({
+            ...prevState,
+            pdfFile: null,
+            plan: {
+                ...prevState.plan,
+                pdfS3Key: '',
+            },
+        }));
+    };
 
-        const pdfResult = await Storage.put(fileName, file, {
-            customPrefix: { public: 'uploads/' },
-            metadata: { owner: this.state.plan.planCreatedById },
-        });
+    handlePdfSelect = async (file: File) => {
+        const fileName = uuid();
 
         this.setState(prevState => ({
             ...prevState,
-            uploading: false,
+            pdfFile: file,
             plan: {
                 ...prevState.plan,
                 pdfS3Key: fileName,
@@ -128,6 +127,8 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
 
     handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        await this.uploadPdf();
 
         const createdDate = new Date().toISOString();
 
@@ -176,6 +177,16 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         }));
     };
 
+    uploadPdf = async () => {
+        debugger;
+        await Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
+            level: 'protected',
+            contentType: 'application/pdf',
+            //customPrefix: { protected: 'pdfs/' },
+            metadata: { planCreatedById: this.state.plan.planCreatedById },
+        });
+    };
+
     render() {
         return (
             <div className='create-plan-container'>
@@ -205,8 +216,9 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                     </div>
                     <div className='formRow'>
                         <PdfUploader
-                            pdfS3Key={this.state.plan.pdfS3Key}
-                            onUpload={this.handlePdfUpload}
+                            onDeselect={this.handlePdfDeselect}
+                            onSelect={this.handlePdfSelect}
+                            pdfFile={this.state.pdfFile}
                         />
                     </div>
                     <div className='formRow'>

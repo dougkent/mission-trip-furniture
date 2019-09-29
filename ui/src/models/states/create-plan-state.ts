@@ -8,5 +8,7 @@ export interface CreatePlanState {
     planMaterials: CreatePlanMaterialInput[];
     planTools: CreatePlanToolInput[];
     plan: CreatePlanInput;
-    uploading: boolean;
+    pdfFile: File;
+    imageFile: File;
+    loading: boolean;
 }

@@ -1,4 +1,5 @@
 export interface PdfUploaderProps {
-    pdfS3Key: string;
-    onUpload(file: File): void;
+    onSelect(file: File): void;
+    onDeselect(): void;
+    pdfFile: File;
 }
