@@ -16,7 +16,7 @@
 		}
 	},
 	"storage": {
-		"missiontripfurniturePdfs": {
+		"missiontripfurnitureuploads": {
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
 		}

@@ -113,7 +113,7 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
     };
 
     handlePdfSelect = async (file: File) => {
-        const fileName = uuid();
+        const fileName = `pdfs/${uuid()}`;
 
         this.setState(prevState => ({
             ...prevState,
