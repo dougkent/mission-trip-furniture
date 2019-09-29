@@ -158,6 +158,7 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         event.preventDefault();
 
         await this.uploadPdf();
+        await this.uploadImage();
 
         const createdDate = new Date().toISOString();
 
@@ -206,13 +207,22 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         }));
     };
 
+    uploadImage = async () => {
+        await Storage.put(
+            this.state.plan.imageS3Info.key,
+            this.state.imageFile,
+            {
+                level: 'protected',
+                metadata: { owner: this.state.plan.planCreatedById },
+            }
+        );
+    };
+
     uploadPdf = async () => {
-        debugger;
         await Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
             level: 'protected',
             contentType: 'application/pdf',
-            //customPrefix: { protected: 'pdfs/' },
-            metadata: { planCreatedById: this.state.plan.planCreatedById },
+            metadata: { owner: this.state.plan.planCreatedById },
         });
     };
 
