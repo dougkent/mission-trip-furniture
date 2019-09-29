@@ -18,6 +18,7 @@ import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
 import PdfUploader from '../../components/pdf-uploader.component/PdfUploader.component';
+import ImageUploader from '../../components/image-uploader.component/ImageUploader.component';
 import {
     ListToolsQuery,
     ListMaterialsQuery,
@@ -84,6 +85,34 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         }
     }
 
+    handleImageDeselect = () => {
+        this.setState(prevState => ({
+            ...prevState,
+            imageFile: null,
+            plan: {
+                ...prevState.plan,
+                imageS3Info: null,
+            },
+        }));
+    };
+
+    handleImageSelect = (file: File) => {
+        const fileName = `images/${uuid()}`;
+
+        this.setState(prevState => ({
+            ...prevState,
+            imageFile: file,
+            plan: {
+                ...prevState.plan,
+                imageS3Info: {
+                    key: fileName,
+                    width: 200,
+                    height: 200,
+                },
+            },
+        }));
+    };
+
     handleMaterialSelected = (materials: Material[]) => {
         const planMaterials: CreatePlanMaterialInput[] = materials.map(
             material => {
@@ -129,6 +158,7 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         event.preventDefault();
 
         await this.uploadPdf();
+        await this.uploadImage();
 
         const createdDate = new Date().toISOString();
 
@@ -177,13 +207,22 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         }));
     };
 
+    uploadImage = async () => {
+        await Storage.put(
+            this.state.plan.imageS3Info.key,
+            this.state.imageFile,
+            {
+                level: 'protected',
+                metadata: { owner: this.state.plan.planCreatedById },
+            }
+        );
+    };
+
     uploadPdf = async () => {
-        debugger;
         await Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
             level: 'protected',
             contentType: 'application/pdf',
-            //customPrefix: { protected: 'pdfs/' },
-            metadata: { planCreatedById: this.state.plan.planCreatedById },
+            metadata: { owner: this.state.plan.planCreatedById },
         });
     };
 
@@ -266,7 +305,13 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                             }}
                         </Connect>
                     </div>
-                    <div className='formRow'>Image Upload Goes here.</div>
+                    <div className='formRow'>
+                        <ImageUploader
+                            image={this.state.imageFile}
+                            onDeselect={this.handleImageDeselect}
+                            onSelect={this.handleImageSelect}
+                        />
+                    </div>
                     <div className='formRow'>
                         <Button
                             color='primary'
