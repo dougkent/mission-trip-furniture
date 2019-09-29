@@ -38,7 +38,7 @@ const PdfUploader: React.FC<PdfUploaderProps> = (props: PdfUploaderProps) => {
         return (
             <>
                 <Button
-                    color='primary'
+                    color='default'
                     onClick={() =>
                         document.getElementById('add-pdf-file-input').click()
                     }

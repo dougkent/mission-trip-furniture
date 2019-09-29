@@ -18,6 +18,7 @@ import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
 import PdfUploader from '../../components/pdf-uploader.component/PdfUploader.component';
+import ImageUploader from '../../components/image-uploader.component/ImageUploader.component';
 import {
     ListToolsQuery,
     ListMaterialsQuery,
@@ -83,6 +84,34 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
             }));
         }
     }
+
+    handleImageDeselect = () => {
+        this.setState(prevState => ({
+            ...prevState,
+            imageFile: null,
+            plan: {
+                ...prevState.plan,
+                imageS3Info: null,
+            },
+        }));
+    };
+
+    handleImageSelect = (file: File) => {
+        const fileName = `images/${uuid()}`;
+
+        this.setState(prevState => ({
+            ...prevState,
+            imageFile: file,
+            plan: {
+                ...prevState.plan,
+                imageS3Info: {
+                    key: fileName,
+                    width: 200,
+                    height: 200,
+                },
+            },
+        }));
+    };
 
     handleMaterialSelected = (materials: Material[]) => {
         const planMaterials: CreatePlanMaterialInput[] = materials.map(
@@ -266,7 +295,13 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                             }}
                         </Connect>
                     </div>
-                    <div className='formRow'>Image Upload Goes here.</div>
+                    <div className='formRow'>
+                        <ImageUploader
+                            image={this.state.imageFile}
+                            onDeselect={this.handleImageDeselect}
+                            onSelect={this.handleImageSelect}
+                        />
+                    </div>
                     <div className='formRow'>
                         <Button
                             color='primary'
