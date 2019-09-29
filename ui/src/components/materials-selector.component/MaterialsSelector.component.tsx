@@ -19,7 +19,7 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
     function getOptionValue(option: Material): string {
         return option.id;
     }
-    function handleChange(value: ValueType<Material>): void {
+    function handleChange(value: ValueType<Material>) {
         let materials: Material[];
 
         if (!value) {

@@ -58,28 +58,30 @@ class App extends React.Component<{}, AppProps> {
     }
 
     async setUserId() {
-        const user = await Auth.currentAuthenticatedUser();
+        const userInfo = await Auth.currentUserInfo();
+        if (userInfo) {
+            var userId = await this.tryGetUserId(userInfo.username);
 
-        var userId = await this.tryGetUserId(user.username);
-
-        if (userId) {
-            this.setState({ userId: userId });
+            if (userId) {
+                this.setState({ userId: userId });
+            }
         }
     }
 
     async componentDidMount() {
-        const user = await Auth.currentAuthenticatedUser();
-
         Hub.listen('auth', data => {
             const { payload } = data;
-            this.listenToAuthEvents(payload, user.username);
+            this.listenToAuthEvents(payload);
         });
     }
 
-    private async listenToAuthEvents(payload: any, username: string) {
+    private async listenToAuthEvents(payload: any) {
         switch (payload.event) {
             case 'signIn':
-                await this.createUserIfNotExists(username);
+                await this.createUserIfNotExists();
+                break;
+            case 'signOut':
+                this.setState({ userId: '' });
                 break;
         }
     }
@@ -98,11 +100,13 @@ class App extends React.Component<{}, AppProps> {
         }
     }
 
-    private async createUserIfNotExists(username: string) {
-        const userId = await this.tryGetUserId(username);
+    private async createUserIfNotExists() {
+        const user = await Auth.currentAuthenticatedUser();
+
+        const userId = await this.tryGetUserId(user.username);
 
         if (!userId) {
-            await this.createUserByUsername(username);
+            await this.createUserByUsername(user.username);
         } else {
             this.setState({ userId: userId });
         }

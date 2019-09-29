@@ -2,7 +2,7 @@
 import React from 'react';
 
 // AWS
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
 import { Connect, withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
 
@@ -17,6 +17,7 @@ import './PlanCreate.component.scss';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
+import PdfUploader from '../../components/pdf-uploader.component/PdfUploader.component';
 import {
     ListToolsQuery,
     ListMaterialsQuery,
@@ -53,6 +54,8 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         super(props);
 
         this.state = {
+            imageFile: null,
+            pdfFile: null,
             plan: {
                 id: uuid(),
                 name: '',
@@ -65,10 +68,11 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
             },
             planMaterials: [],
             planTools: [],
+            loading: false,
         };
     }
 
-    componentDidUpdate(prevProps: AppProps) {
+    async componentDidUpdate(prevProps: AppProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState(prevState => ({
                 ...prevState,
@@ -97,8 +101,34 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         }));
     };
 
+    handlePdfDeselect = async () => {
+        this.setState(prevState => ({
+            ...prevState,
+            pdfFile: null,
+            plan: {
+                ...prevState.plan,
+                pdfS3Key: '',
+            },
+        }));
+    };
+
+    handlePdfSelect = async (file: File) => {
+        const fileName = `pdfs/${uuid()}`;
+
+        this.setState(prevState => ({
+            ...prevState,
+            pdfFile: file,
+            plan: {
+                ...prevState.plan,
+                pdfS3Key: fileName,
+            },
+        }));
+    };
+
     handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        await this.uploadPdf();
 
         const createdDate = new Date().toISOString();
 
@@ -147,6 +177,16 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
         }));
     };
 
+    uploadPdf = async () => {
+        debugger;
+        await Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
+            level: 'protected',
+            contentType: 'application/pdf',
+            //customPrefix: { protected: 'pdfs/' },
+            metadata: { planCreatedById: this.state.plan.planCreatedById },
+        });
+    };
+
     render() {
         return (
             <div className='create-plan-container'>
@@ -174,7 +214,13 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                             rows='4'
                         />
                     </div>
-                    <div className='formRow'>Pdf Upload Goes here.</div>
+                    <div className='formRow'>
+                        <PdfUploader
+                            onDeselect={this.handlePdfDeselect}
+                            onSelect={this.handlePdfSelect}
+                            pdfFile={this.state.pdfFile}
+                        />
+                    </div>
                     <div className='formRow'>
                         <Connect query={graphqlOperation(this.listToolsQuery)}>
                             {({
