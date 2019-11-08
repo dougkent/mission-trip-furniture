@@ -1,30 +1,32 @@
-body {
-    font-family: 'Montserrat', sans-serif;
-    margin: 0;
-    width: 100%;
-    background: #f4f4f6;
-}
+@import url('https://fonts.googleapis.com/css?family=Rokkitt:300,400,500,700|Ubuntu:400,700&display=swap');
 
-.container {
-    width: 75%;
-    margin: 0px auto;
+// body {
+//     font-family: 'Ubuntu', sans-serif;
+//     margin: 0;
+//     width: 100%;
+//     background: #f4f4f6;
+// }
 
-    h1,
-    h2,
-    h3 {
-        font-weight: 300;
-    }
+// .container {
+//     width: 75%;
+//     margin: 0px auto;
 
-    header {
-        padding: 20px 0;
-        display: flex;
-        justify-content: flex-start;
+// h1,
+// h2,
+// h3 {
+//     font-family: 'Rokkitt', serif;
+//     font-weight: 300;
+// }
 
-        .nav-item {
-            width: 200px;
-        }
-    }
-}
+//header {
+//padding: 20px 0;
+//display: flex;
+//justify-content: flex-start;
+
+// .nav-item {
+//     width: 200px;
+// }
+//}
 
 @-webkit-keyframes fadeIn {
     from {

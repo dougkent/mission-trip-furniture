@@ -6,6 +6,9 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Amplify, { API, graphqlOperation, Auth, Hub } from 'aws-amplify';
 import aws_exports from '../aws-exports';
 
+// Material UI
+import { Container } from '@material-ui/core';
+
 // uuid
 import { v4 as uuid } from 'uuid';
 
@@ -132,8 +135,8 @@ class App extends React.Component<{}, AppProps> {
     render() {
         return (
             <Router>
-                <div className='container'>
-                    <Nav />
+                <Nav />
+                <Container maxWidth='xl'>
                     <Route
                         exact
                         path='/'
@@ -174,7 +177,7 @@ class App extends React.Component<{}, AppProps> {
                             <PlanEditComponent userId={this.state.userId} />
                         )}
                     />
-                </div>
+                </Container>
             </Router>
         );
     }
