@@ -1,6 +1,9 @@
 // React
 import React from 'react';
 
+// Material UI
+import { Typography } from '@material-ui/core';
+
 //MTF
 import { AppProps } from '../../models/props';
 
@@ -19,7 +22,7 @@ class HomeComponent extends React.Component<AppProps, AppProps> {
         }
     }
     render() {
-        return <h1>Mission Trip Furniture</h1>;
+        return <Typography variant='h2'>Mission Trip Furniture</Typography>;
     }
 }
 

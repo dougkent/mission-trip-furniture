@@ -10,13 +10,10 @@ import {
     AppBar,
     Toolbar,
     Typography,
-    InputBase,
     IconButton,
     List,
-    ListItem,
     ListItemText,
     SwipeableDrawer,
-    Divider,
 } from '@material-ui/core';
 import {
     fade,
@@ -24,9 +21,9 @@ import {
     Theme,
     createStyles,
 } from '@material-ui/core/styles';
-import SearchSharpIcon from '@material-ui/icons/SearchSharp';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
 import HotelSharpIcon from '@material-ui/icons/HotelSharp';
+import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // MTF
 import mtfTheme from '../../theme';
@@ -48,41 +45,21 @@ const useStyles = makeStyles((theme: Theme) =>
             flexGrow: 0.1,
         },
         navLink: {
-            textAlign: 'center',
-        },
-        mobileNavLink: {
-            margin: theme.spacing(2),
-        },
-        search: {
-            position: 'relative',
-            backgroundColor: fade(theme.palette.secondary.main, 0.15),
-            '&:hover': {
-                backgroundColor: fade(theme.palette.secondary.main, 0.25),
-            },
-            //marginRight: theme.spacing(2),
-            //marginLeft: 0,
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                marginLeft: theme.spacing(3),
-                width: 'auto',
-            },
-        },
-        searchIcon: {
-            width: theme.spacing(7),
-            height: '100%',
-            position: 'absolute',
-            pointerEvents: 'none',
+            textDecoration: 'none',
+            color: 'inherit',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
         },
-        inputInput: {
-            padding: theme.spacing(1, 1, 1, 7),
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('md')]: {
-                width: 400,
-            },
+        mobileMenu: {
+            width: 200,
+        },
+        mobileMenuItem: {
+            margin: theme.spacing(4),
+        },
+        mobileNavLink: {
+            textDecoration: 'none',
+            color: 'inherit',
         },
         sectionDesktop: {
             display: 'none',
@@ -91,8 +68,6 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         sectionMobile: {
-            display: 'flex',
-            justifyContent: 'space-between',
             width: '100%',
             [theme.breakpoints.up('md')]: {
                 display: 'none',
@@ -122,14 +97,16 @@ const Nav: React.FC = () => {
             onOpen={handleMobileMenuOpen}
             onClose={handleMobileMenuClose}
             anchor='right'>
-            <List>
+            <List className={classes.mobileMenu}>
                 <ListItemText>
                     <Typography
-                        variant='h6'
+                        variant='h5'
                         noWrap
-                        className={classes.mobileNavLink}>
+                        color='primary'
+                        className={classes.mobileMenuItem}>
                         <ReactRouter.Link
                             to='/plans'
+                            className={classes.mobileNavLink}
                             onClick={handleMobileMenuClose}>
                             Plans
                         </ReactRouter.Link>
@@ -137,11 +114,13 @@ const Nav: React.FC = () => {
                 </ListItemText>
                 <ListItemText>
                     <Typography
-                        variant='h6'
+                        variant='h5'
                         noWrap
-                        className={classes.mobileNavLink}>
+                        color='primary'
+                        className={classes.mobileMenuItem}>
                         <ReactRouter.Link
                             to='/my-mtf'
+                            className={classes.mobileNavLink}
                             onClick={handleMobileMenuClose}>
                             My Account
                         </ReactRouter.Link>
@@ -153,7 +132,7 @@ const Nav: React.FC = () => {
                     </Authenticator>
                 </ListItem> */}
             </List>
-            <Divider />
+            {/* <Divider />
             <div className={classes.search}>
                 <div className={classes.searchIcon}>
                     <SearchSharpIcon />
@@ -163,25 +142,24 @@ const Nav: React.FC = () => {
                     className={classes.inputInput}
                     inputProps={{ 'aria-label': 'search' }}
                 />
-            </div>
+            </div> */}
         </SwipeableDrawer>
     );
 
     return (
         <>
-            <AppBar position='sticky'>
+            <AppBar position='sticky' color='default'>
                 <Toolbar className={classes.flex}>
-                    <div className={classes.sectionMobile}>
-                        <Typography
-                            variant='h6'
-                            noWrap
-                            className={classes.mobileNavLink}>
-                            <ReactRouter.Link to='/'>
-                                <HotelSharpIcon />
+                    <div className={`${classes.sectionMobile} ${classes.flex}`}>
+                        <Typography variant='h5' color='primary' noWrap>
+                            <ReactRouter.Link
+                                to='/'
+                                className={classes.navLink}>
+                                <HotelSharpIcon /> &nbsp; Mission Trip Furniture
                             </ReactRouter.Link>
                         </Typography>
                         <IconButton
-                            edge='start'
+                            edge='end'
                             color='inherit'
                             aria-label='open drawer'
                             aria-controls='mobile-menu'
@@ -192,23 +170,22 @@ const Nav: React.FC = () => {
                     </div>
                     <div
                         className={`${classes.flex} ${classes.flexLeft} ${classes.sectionDesktop}`}>
-                        <Typography
-                            variant='h6'
-                            noWrap
-                            className={classes.navLink}>
-                            <ReactRouter.Link to='/'>
-                                Mission Trip Furniture
+                        <Typography variant='h6' color='primary' noWrap>
+                            <ReactRouter.Link
+                                to='/'
+                                className={classes.navLink}>
+                                <HotelSharpIcon />
+                                &nbsp; Mission Trip Furniture
                             </ReactRouter.Link>
                         </Typography>
-                        <Typography
-                            variant='h6'
-                            noWrap
-                            className={classes.navLink}>
-                            <ReactRouter.Link to='/plans'>
+                        <Typography variant='h6' noWrap color='primary'>
+                            <ReactRouter.Link
+                                className={classes.navLink}
+                                to='/plans'>
                                 Plans
                             </ReactRouter.Link>
                         </Typography>
-                        <div className={classes.search}>
+                        {/* <div className={classes.search}>
                             <div className={classes.searchIcon}>
                                 <SearchSharpIcon />
                             </div>
@@ -217,17 +194,17 @@ const Nav: React.FC = () => {
                                 className={classes.inputInput}
                                 inputProps={{ 'aria-label': 'search' }}
                             />
-                        </div>
+                        </div> */}
                     </div>
                     <div className={classes.grow}></div>
                     <div
                         className={`${classes.flex} ${classes.flexRight} ${classes.sectionDesktop}`}>
-                        <Typography
-                            variant='h6'
-                            noWrap
-                            className={classes.navLink}>
-                            <ReactRouter.Link to='/my-mtf'>
-                                My Account
+                        <Typography variant='h6' noWrap color='primary'>
+                            <ReactRouter.Link
+                                to='/my-mtf'
+                                className={classes.navLink}>
+                                <AccountCircleSharpIcon />
+                                &nbsp;My Account
                             </ReactRouter.Link>
                         </Typography>
                         <Authenticator hideDefault={true}>
