@@ -1,13 +1,13 @@
 // React
 import React from 'react';
 
-// React Select
-import Select from 'react-select';
+// Material UI
+import { TextField } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 
 // MTF
 import { Tool } from '../../models';
 import { ToolsSelectorProps } from '../../models/props';
-import { ValueType } from 'react-select/src/types';
 
 const ToolsSelector: React.FC<ToolsSelectorProps> = (
     props: ToolsSelectorProps
@@ -16,11 +16,7 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
         return option.name;
     }
 
-    function getOptionValue(option: Tool): string {
-        return option.id;
-    }
-
-    function handleChange(value: ValueType<Tool>): void {
+    function handleChange(event: object, value: Tool): void {
         let tools: Tool[];
 
         if (!value) {
@@ -28,23 +24,26 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
         } else if (Array.isArray(value)) {
             tools = value;
         } else {
-            tools = [value as Tool];
+            tools = [value];
         }
 
         props.onSelect(tools);
     }
 
     return (
-        <Select
+        <Autocomplete
             getOptionLabel={getOptionLabel}
-            getOptionValue={getOptionValue}
-            hideSelectedOptions={true}
-            isLoading={props.loading}
-            isMulti
-            name='tools'
+            loading={props.loading}
+            multiple
             onChange={handleChange}
             options={props.tools}
-            placeholder='Select Tools Required for this Plan'
+            renderInput={params => (
+                <TextField
+                    {...params}
+                    label='Select Tools Required for this Plan'
+                    fullWidth
+                />
+            )}
         />
     );
 };

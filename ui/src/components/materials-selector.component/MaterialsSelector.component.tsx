@@ -1,9 +1,9 @@
 // React
 import React from 'react';
 
-// React Select
-import Select from 'react-select';
-import { ValueType } from 'react-select/src/types';
+// Material UI
+import { TextField } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 
 // MTF
 import { Material } from '../../models';
@@ -15,11 +15,7 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
     function getOptionLabel(option: Material): string {
         return option.name;
     }
-
-    function getOptionValue(option: Material): string {
-        return option.id;
-    }
-    function handleChange(value: ValueType<Material>) {
+    function handleChange(event: object, value: Material) {
         let materials: Material[];
 
         if (!value) {
@@ -27,23 +23,26 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
         } else if (Array.isArray(value)) {
             materials = value;
         } else {
-            materials = [value as Material];
+            materials = [value];
         }
 
         props.onSelect(materials);
     }
 
     return (
-        <Select
+        <Autocomplete
             getOptionLabel={getOptionLabel}
-            getOptionValue={getOptionValue}
-            hideSelectedOptions={true}
-            isLoading={props.loading}
-            isMulti
-            name='materials'
+            loading={props.loading}
+            multiple
             onChange={handleChange}
             options={props.materials}
-            placeholder='Select Materials Required for this Plan'
+            renderInput={params => (
+                <TextField
+                    {...params}
+                    label='Select Materials Required for this Plan'
+                    fullWidth
+                />
+            )}
         />
     );
 };

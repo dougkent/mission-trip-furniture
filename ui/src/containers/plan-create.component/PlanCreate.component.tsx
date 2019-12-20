@@ -7,7 +7,16 @@ import { Connect, withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
 
 // Material
-import { Button, TextField } from '@material-ui/core';
+import {
+    Button,
+    TextField,
+    Paper,
+    createStyles,
+    Theme,
+    withStyles,
+    WithStyles,
+    Typography,
+} from '@material-ui/core';
 
 // uuid
 import { v4 as uuid } from 'uuid';
@@ -28,30 +37,66 @@ import {
 import { Material, Tool } from '../../models';
 import { AppProps } from '../../models/props';
 import { CreatePlanState } from '../../models/states';
+import { mtfTheme } from '../../themes';
 
 // Configure
 Amplify.configure(aws_exports);
 
-class CreatePlan extends React.Component<AppProps, CreatePlanState> {
+const styles = (theme: Theme) =>
+    createStyles({
+        formContainer: {
+            padding: 20,
+            marginTop: 40,
+            [theme.breakpoints.up('md')]: {
+                padding: 40,
+                width: '70%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+            },
+        },
+        form: {
+            display: 'flex',
+            flexWrap: 'wrap',
+        },
+        formRow: {
+            width: '100%',
+            flexGrow: 1,
+            marginBottom: 10,
+            marginTop: 10,
+        },
+        textField: {
+            width: '100%',
+        },
+        multiCardRow: {
+            display: 'flex',
+        },
+        submitButtonRow: {
+            textAlign: 'right',
+        },
+    });
+
+export interface CreatePlanProps extends AppProps, WithStyles<typeof styles> {}
+
+class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     private listMaterialsQuery = `query ListMaterials {
-        listMaterials {
-            items {
-                id
-                name
+            listMaterials {
+                items {
+                    id
+                    name
+                }
             }
-        }
-    }`;
+        }`;
 
     private listToolsQuery = `query ListTools {
-        listTools {
-            items {
-                id
-                name
+            listTools {
+                items {
+                    id
+                    name
+                }
             }
-        }
-    }`;
+        }`;
 
-    constructor(props: AppProps) {
+    constructor(props: CreatePlanProps) {
         super(props);
 
         this.state = {
@@ -227,38 +272,45 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
     };
 
     render() {
+        const { classes } = this.props;
+
         return (
-            <div className='create-plan-container'>
-                <h1>Create Plan</h1>
-                <form className='create-plan-form' onSubmit={this.handleSubmit}>
-                    <div className='formRow'>
+            <Paper className={classes.formContainer}>
+                <Typography variant='h2' noWrap>
+                    Create Plan
+                </Typography>
+                <form onSubmit={this.handleSubmit} className={classes.form}>
+                    <div className={classes.formRow}>
                         <TextField
                             inputProps={{ maxLength: 50 }}
                             name='name'
                             onChange={this.handleTextChange}
-                            placeholder='Name'
+                            label='Name'
                             required
+                            className={classes.textField}
                         />
                     </div>
-                    <div className='formRow'>
+                    <div className={classes.formRow}>
                         <TextField
                             inputProps={{ maxLength: 500 }}
                             multiline
                             name='description'
                             onChange={this.handleTextChange}
-                            placeholder='Description'
+                            label='Description'
                             required
                             rows='4'
+                            className={classes.textField}
                         />
                     </div>
-                    <div className='formRow'>
+                    <div
+                        className={`${classes.formRow} ${classes.multiCardRow}`}>
                         <PdfUploader
                             onDeselect={this.handlePdfDeselect}
                             onSelect={this.handlePdfSelect}
                             pdfFile={this.state.pdfFile}
                         />
                     </div>
-                    <div className='formRow'>
+                    <div className={classes.formRow}>
                         <Connect query={graphqlOperation(this.listToolsQuery)}>
                             {({
                                 data: { listTools },
@@ -279,7 +331,7 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                             }}
                         </Connect>
                     </div>
-                    <div className='formRow'>
+                    <div className={classes.formRow}>
                         <Connect
                             query={graphqlOperation(this.listMaterialsQuery)}>
                             {({
@@ -303,27 +355,31 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                             }}
                         </Connect>
                     </div>
-                    <div className='formRow'>
+                    <div
+                        className={`${classes.formRow} ${classes.multiCardRow}`}>
                         <ImageUploader
                             image={this.state.imageFile}
                             onDeselect={this.handleImageDeselect}
                             onSelect={this.handleImageSelect}
                         />
                     </div>
-                    <div className='formRow'>
+                    <div
+                        className={`${classes.formRow} ${classes.submitButtonRow}`}>
                         <Button
-                            color='primary'
+                            color='secondary'
                             type='submit'
                             variant='contained'>
                             Create Plan
                         </Button>
                     </div>
                 </form>
-            </div>
+            </Paper>
         );
     }
 }
 
-export default withAuthenticator(CreatePlan, {
-    signUpConfig: signUpConfig,
-});
+export default withStyles(styles(mtfTheme))(
+    withAuthenticator(CreatePlan, {
+        signUpConfig: signUpConfig,
+    })
+);
