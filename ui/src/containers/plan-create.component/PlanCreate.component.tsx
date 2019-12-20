@@ -233,7 +233,6 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                 <form className='create-plan-form' onSubmit={this.handleSubmit}>
                     <div className='formRow'>
                         <TextField
-                            fullWidth
                             inputProps={{ maxLength: 50 }}
                             name='name'
                             onChange={this.handleTextChange}
@@ -243,7 +242,6 @@ class CreatePlan extends React.Component<AppProps, CreatePlanState> {
                     </div>
                     <div className='formRow'>
                         <TextField
-                            fullWidth
                             inputProps={{ maxLength: 500 }}
                             multiline
                             name='description'
