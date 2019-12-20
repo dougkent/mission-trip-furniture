@@ -13,7 +13,6 @@ import { Container } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 
 // MTF
-import './App.scss';
 import HomeComponent from './home.component/Home.component';
 import PlansListComponent from './plans-list.component/PlansList.component';
 import PlanViewComponent from './plan-view.component/PlanView.component';
@@ -30,10 +29,6 @@ import {
 
 // Configure
 Amplify.configure(aws_exports);
-
-interface UserId {
-    id: string;
-}
 
 class App extends React.Component<{}, AppProps> {
     private _getUserQuery = `query GetUserByUsername($username: String!) {

@@ -15,12 +15,7 @@ import {
     ListItemText,
     SwipeableDrawer,
 } from '@material-ui/core';
-import {
-    fade,
-    makeStyles,
-    Theme,
-    createStyles,
-} from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
 import HotelSharpIcon from '@material-ui/icons/HotelSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
@@ -69,9 +64,14 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         sectionMobile: {
             width: '100%',
+            justifyContent: 'flex-end',
             [theme.breakpoints.up('md')]: {
                 display: 'none',
             },
+        },
+        homeMenuLink: {
+            marginRight: theme.spacing(4),
+            minWidth: 223,
         },
     })
 );
@@ -126,23 +126,7 @@ const Nav: React.FC = () => {
                         </ReactRouter.Link>
                     </Typography>
                 </ListItemText>
-                {/* <ListItem>
-                    <Authenticator hideDefault={true}>
-                        <Greetings />
-                    </Authenticator>
-                </ListItem> */}
             </List>
-            {/* <Divider />
-            <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                    <SearchSharpIcon />
-                </div>
-                <InputBase
-                    placeholder='Search…'
-                    className={classes.inputInput}
-                    inputProps={{ 'aria-label': 'search' }}
-                />
-            </div> */}
         </SwipeableDrawer>
     );
 
@@ -150,14 +134,18 @@ const Nav: React.FC = () => {
         <>
             <AppBar position='sticky' color='default'>
                 <Toolbar className={classes.flex}>
-                    <div className={`${classes.sectionMobile} ${classes.flex}`}>
-                        <Typography variant='h5' color='primary' noWrap>
-                            <ReactRouter.Link
-                                to='/'
-                                className={classes.navLink}>
-                                <HotelSharpIcon /> &nbsp; Mission Trip Furniture
-                            </ReactRouter.Link>
-                        </Typography>
+                    <Typography
+                        variant='h5'
+                        color='primary'
+                        noWrap
+                        className={classes.homeMenuLink}>
+                        <ReactRouter.Link to='/' className={classes.navLink}>
+                            <HotelSharpIcon />
+                            &nbsp; Mission Trip Furniture
+                        </ReactRouter.Link>
+                    </Typography>
+                    <div
+                        className={`${classes.sectionMobile} ${classes.flex} ${classes.grow}`}>
                         <IconButton
                             edge='end'
                             color='inherit'
@@ -169,37 +157,16 @@ const Nav: React.FC = () => {
                         </IconButton>
                     </div>
                     <div
-                        className={`${classes.flex} ${classes.flexLeft} ${classes.sectionDesktop}`}>
-                        <Typography variant='h6' color='primary' noWrap>
-                            <ReactRouter.Link
-                                to='/'
-                                className={classes.navLink}>
-                                <HotelSharpIcon />
-                                &nbsp; Mission Trip Furniture
-                            </ReactRouter.Link>
-                        </Typography>
-                        <Typography variant='h6' noWrap color='primary'>
+                        className={`${classes.sectionDesktop} ${classes.flex} ${classes.grow}`}>
+                        <Typography variant='h5' noWrap color='primary'>
                             <ReactRouter.Link
                                 className={classes.navLink}
                                 to='/plans'>
                                 Plans
                             </ReactRouter.Link>
                         </Typography>
-                        {/* <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchSharpIcon />
-                            </div>
-                            <InputBase
-                                placeholder='Search…'
-                                className={classes.inputInput}
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </div> */}
-                    </div>
-                    <div className={classes.grow}></div>
-                    <div
-                        className={`${classes.flex} ${classes.flexRight} ${classes.sectionDesktop}`}>
-                        <Typography variant='h6' noWrap color='primary'>
+                        <div className={classes.grow}></div>
+                        <Typography variant='h5' noWrap color='primary'>
                             <ReactRouter.Link
                                 to='/my-mtf'
                                 className={classes.navLink}>
