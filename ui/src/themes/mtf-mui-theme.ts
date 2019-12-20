@@ -16,6 +16,9 @@ const mtfTheme = createMuiTheme({
             default: '#f4f4f6',
         },
     },
+    shape: {
+        borderRadius: 0,
+    },
     typography: {
         fontFamily: '"Ubuntu", sans-serif',
         fontSize: 12,

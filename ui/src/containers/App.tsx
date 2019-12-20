@@ -85,9 +85,9 @@ class App extends React.Component<{}, AppProps> {
     }
 
     private async tryGetUserId(username: string): Promise<string> {
-        const userResult: { data: GetUserByUsernameQuery } = await API.graphql(
+        const userResult: { data: GetUserByUsernameQuery } = (await API.graphql(
             graphqlOperation(this._getUserQuery, { username: username })
-        );
+        )) as { data: GetUserByUsernameQuery };
 
         const { getUserByUsername } = userResult.data;
 
@@ -116,11 +116,11 @@ class App extends React.Component<{}, AppProps> {
             username: username,
         };
 
-        var createUserResult: { data: CreateUserMutation } = await API.graphql(
+        var createUserResult: { data: CreateUserMutation } = (await API.graphql(
             graphqlOperation(this._createUserMutation, {
                 input: createUserInput,
             })
-        );
+        )) as { data: CreateUserMutation };
 
         const { createUser } = createUserResult.data;
 
