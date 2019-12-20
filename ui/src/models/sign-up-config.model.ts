@@ -29,6 +29,6 @@ export const signUpConfig = {
             required: true,
             displayOrder: 4,
             type: 'password',
-        }
-    ]
+        },
+    ],
 };

@@ -6,7 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline } from '@material-ui/core';
 
 // MTF
-import mtfTheme from './theme';
+import { mtfTheme } from './themes';
 import App from './containers/App';
 
 ReactDOM.render(

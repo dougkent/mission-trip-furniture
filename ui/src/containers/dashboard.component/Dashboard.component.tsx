@@ -10,6 +10,7 @@ import { withAuthenticator } from 'aws-amplify-react';
 // MTF
 import { signUpConfig } from '../../models/sign-up-config.model';
 import { AppProps } from '../../models/props';
+import { mtfAmplifyTheme } from '../../themes';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -44,4 +45,5 @@ class DashboardComponent extends React.Component<AppProps, AppProps> {
 
 export default withAuthenticator(DashboardComponent, {
     signUpConfig: signUpConfig,
+    theme: mtfAmplifyTheme,
 });

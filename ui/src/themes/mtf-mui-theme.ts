@@ -10,7 +10,7 @@ const mtfTheme = createMuiTheme({
             main: '#095b06',
         },
         error: {
-            main: red.A400,
+            main: red.A200,
         },
         background: {
             default: '#f4f4f6',

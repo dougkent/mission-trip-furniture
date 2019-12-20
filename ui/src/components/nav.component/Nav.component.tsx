@@ -21,7 +21,7 @@ import HotelSharpIcon from '@material-ui/icons/HotelSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // MTF
-import mtfTheme from '../../theme';
+import { mtfTheme, mtfAmplifyTheme } from '../../themes';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -72,6 +72,9 @@ const useStyles = makeStyles((theme: Theme) =>
         homeMenuLink: {
             marginRight: theme.spacing(4),
             minWidth: 223,
+        },
+        myAccountLink: {
+            marginRight: theme.spacing(4),
         },
     })
 );
@@ -166,7 +169,11 @@ const Nav: React.FC = () => {
                             </ReactRouter.Link>
                         </Typography>
                         <div className={classes.grow}></div>
-                        <Typography variant='h5' noWrap color='primary'>
+                        <Typography
+                            variant='h5'
+                            noWrap
+                            color='primary'
+                            className={classes.myAccountLink}>
                             <ReactRouter.Link
                                 to='/my-mtf'
                                 className={classes.navLink}>
@@ -174,9 +181,13 @@ const Nav: React.FC = () => {
                                 &nbsp;My Account
                             </ReactRouter.Link>
                         </Typography>
-                        <Authenticator hideDefault={true}>
-                            <Greetings />
-                        </Authenticator>
+                        <Typography variant='h5' noWrap color='primary'>
+                            <Authenticator
+                                hideDefault={true}
+                                theme={mtfAmplifyTheme}>
+                                <Greetings />
+                            </Authenticator>
+                        </Typography>
                     </div>
                 </Toolbar>
             </AppBar>
