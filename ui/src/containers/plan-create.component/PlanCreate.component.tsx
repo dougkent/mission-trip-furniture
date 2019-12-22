@@ -22,7 +22,6 @@ import {
 import { v4 as uuid } from 'uuid';
 
 // MTF
-import './PlanCreate.component.scss';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
 import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
