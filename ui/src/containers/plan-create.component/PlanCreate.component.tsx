@@ -32,6 +32,7 @@ import {
     ListMaterialsQuery,
     CreatePlanToolInput,
     CreatePlanMaterialInput,
+    CreatePlanMutation,
 } from '../../models/api.models';
 import { Material, Tool } from '../../models';
 import { AppProps } from '../../models/props';
@@ -95,28 +96,47 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             }
         }`;
 
+    private createPlanMutation = `mutation CreatePlan($input: CreatePlanInput!) {
+        createPlan(input: $input) {
+            id
+        }
+    }`;
+
+    private createPlanMaterialMutation = `mutation CreatePlanMaterial($input: CreatePlanMaterialInput!) {
+        createPlanMaterial(input: $input) {
+            id
+        }
+    }`;
+
+    private createPlanToolMutation = `mutation CreatePlanTool($input: CreatePlanToolInput!) {
+        createPlanTool(input: $input) {
+            id
+        }
+    }`;
+
+    private initialState: CreatePlanState = {
+        imageFile: null,
+        pdfFile: null,
+        plan: {
+            id: uuid(),
+            name: '',
+            description: '',
+            pdfS3Key: '',
+            imageS3Info: null,
+            created: '',
+            favoritedCount: 0,
+            planCreatedById: this.props.userId,
+        },
+        planMaterials: [],
+        planTools: [],
+        loading: false,
+    };
+
     constructor(props: CreatePlanProps) {
         super(props);
 
-        this.state = {
-            imageFile: null,
-            pdfFile: null,
-            plan: {
-                id: uuid(),
-                name: '',
-                description: '',
-                pdfS3Key: '',
-                imageS3Info: null,
-                created: '',
-                favoritedCount: 0,
-                planCreatedById: props.userId,
-            },
-            planMaterials: [],
-            planTools: [],
-            loading: false,
-        };
+        this.state = this.initialState;
     }
-
     async componentDidUpdate(prevProps: AppProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState(prevState => ({
@@ -201,25 +221,43 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        await this.uploadPdf();
-        await this.uploadImage();
-
-        const createdDate = new Date().toISOString();
-
         await this.setState(prevState => ({
             ...prevState,
+            loading: true,
             plan: {
                 ...prevState.plan,
-                created: createdDate,
+                created: new Date().toISOString(),
             },
         }));
 
-        console.log(this.state);
+        this.uploadPdf();
+        this.uploadImage();
 
-        // const result = await API.graphql(
-        //     graphqlOperation(mutations.createPlan, this.state)
-        // );
-        // console.log(result);
+        const planResult: { data: CreatePlanMutation } = (await API.graphql(
+            graphqlOperation(this.createPlanMutation, {
+                input: this.state.plan,
+            })
+        )) as { data: CreatePlanMutation };
+
+        this.state.planMaterials.forEach(material => {
+            API.graphql(
+                graphqlOperation(this.createPlanMaterialMutation, {
+                    input: material,
+                })
+            );
+        });
+
+        this.state.planTools.forEach(tool => {
+            API.graphql(
+                graphqlOperation(this.createPlanToolMutation, {
+                    input: tool,
+                })
+            );
+        });
+
+        if (planResult.data.createPlan.id) {
+            this.setState(this.initialState);
+        }
     };
 
     handleTextChange = (event: React.ChangeEvent) => {
@@ -251,19 +289,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    uploadImage = async () => {
-        await Storage.put(
-            this.state.plan.imageS3Info.key,
-            this.state.imageFile,
-            {
-                level: 'protected',
-                metadata: { owner: this.state.plan.planCreatedById },
-            }
-        );
+    uploadImage = () => {
+        Storage.put(this.state.plan.imageS3Info.key, this.state.imageFile, {
+            level: 'protected',
+            metadata: { owner: this.state.plan.planCreatedById },
+        });
     };
 
-    uploadPdf = async () => {
-        await Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
+    uploadPdf = () => {
+        Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
             level: 'protected',
             contentType: 'application/pdf',
             metadata: { owner: this.state.plan.planCreatedById },
@@ -367,7 +401,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         <Button
                             color='secondary'
                             type='submit'
-                            variant='contained'>
+                            variant='contained'
+                            disabled={this.state.loading}>
                             Create Plan
                         </Button>
                     </div>
