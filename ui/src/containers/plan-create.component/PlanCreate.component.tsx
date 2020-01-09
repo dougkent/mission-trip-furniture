@@ -225,8 +225,6 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     private handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        debugger;
-
         await this.setState(prevState => ({
             ...prevState,
             loading: true,
