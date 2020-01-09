@@ -118,7 +118,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         imageFile: null,
         pdfFile: null,
         plan: {
-            id: uuid(),
+            id: '',
             name: '',
             description: '',
             pdfS3Key: '',
@@ -149,7 +149,11 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }
     }
 
-    handleImageDeselect = () => {
+    private getPlanId = (planName: string) => {
+        return planName.toLowerCase().replace(/\s/g, '-');
+    };
+
+    private handleImageDeselect = () => {
         this.setState(prevState => ({
             ...prevState,
             imageFile: null,
@@ -160,7 +164,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    handleImageSelect = (file: File) => {
+    private handleImageSelect = (file: File) => {
         const fileName = `images/${uuid()}`;
 
         this.setState(prevState => ({
@@ -177,7 +181,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    handleMaterialSelected = (materials: Material[]) => {
+    private handleMaterialSelected = (materials: Material[]) => {
         const planMaterials: CreatePlanMaterialInput[] = materials.map(
             material => {
                 return {
@@ -194,7 +198,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    handlePdfDeselect = async () => {
+    private handlePdfDeselect = async () => {
         this.setState(prevState => ({
             ...prevState,
             pdfFile: null,
@@ -205,7 +209,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    handlePdfSelect = async (file: File) => {
+    private handlePdfSelect = async (file: File) => {
         const fileName = `pdfs/${uuid()}`;
 
         this.setState(prevState => ({
@@ -218,8 +222,10 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    handleSubmit = async (event: React.FormEvent) => {
+    private handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        debugger;
 
         await this.setState(prevState => ({
             ...prevState,
@@ -260,21 +266,42 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }
     };
 
-    handleTextChange = (event: React.ChangeEvent) => {
+    private handleTextChange = (event: React.ChangeEvent) => {
         const element = event.target as HTMLInputElement;
         const key: string = element.name;
         const value: string = element.value;
 
-        this.setState(prevState => ({
-            ...prevState,
-            plan: {
-                ...prevState.plan,
-                [key]: value,
-            },
-        }));
+        let planId = this.state.plan.id;
+
+        if (key === 'name') {
+            planId = this.getPlanId(value);
+        }
+
+        this.setState(prevState => {
+            const materials = prevState.planMaterials.map(material => {
+                material.planMaterialPlanId = planId;
+                return material;
+            });
+
+            const tools = prevState.planTools.map(tool => {
+                tool.planToolPlanId = planId;
+                return tool;
+            });
+
+            return {
+                ...prevState,
+                planMaterials: materials,
+                planTools: tools,
+                plan: {
+                    ...prevState.plan,
+                    id: planId,
+                    [key]: value,
+                },
+            };
+        });
     };
 
-    handleToolSelected = (tools: Tool[]) => {
+    private handleToolSelected = (tools: Tool[]) => {
         const planTools: CreatePlanToolInput[] = tools.map(tool => {
             return {
                 id: uuid(),
@@ -289,14 +316,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    uploadImage = () => {
+    private uploadImage = () => {
         Storage.put(this.state.plan.imageS3Info.key, this.state.imageFile, {
             level: 'protected',
             metadata: { owner: this.state.plan.planCreatedById },
         });
     };
 
-    uploadPdf = () => {
+    private uploadPdf = () => {
         Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
             level: 'protected',
             contentType: 'application/pdf',

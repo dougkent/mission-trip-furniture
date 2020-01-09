@@ -112,7 +112,7 @@ export type ModelStringFilterInput = {
 };
 
 export type ModelPlanFilterInput = {
-  id?: ModelIDFilterInput | null,
+  id?: ModelStringFilterInput | null,
   name?: ModelStringFilterInput | null,
   description?: ModelStringFilterInput | null,
   pdfS3Key?: ModelStringFilterInput | null,

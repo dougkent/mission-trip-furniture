@@ -141,7 +141,7 @@ class PlansListComponent extends React.Component<PlanListProps> {
     renderPlansList(data: ListPlansQuery, loading: boolean): any {
         if (loading) {
             return <Typography variant='h4'>Loading...</Typography>;
-        } else if (!loading && data.listPlans.items.length > 0) {
+        } else if (!loading && data && data.listPlans && data.listPlans.items) {
             return (
                 <Grid container spacing={2}>
                     {this.renderPlansListContent(data)}
