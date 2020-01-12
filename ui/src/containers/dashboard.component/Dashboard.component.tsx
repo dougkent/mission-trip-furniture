@@ -9,15 +9,16 @@ import { withAuthenticator, Connect } from 'aws-amplify-react';
 
 // Material UI
 import {
+    Button,
     Typography,
     Grid,
-    Paper,
     createStyles,
     Theme,
     withStyles,
     WithStyles,
 } from '@material-ui/core';
-import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp';
+import AddBoxSharpIcon from '@material-ui/icons/AddBoxSharp';
+import AddSharpIcon from '@material-ui/icons/AddSharp';
 
 // MTF
 import PlanCard from '../../components/plan-card.component/PlanCard.component';
@@ -33,13 +34,12 @@ Amplify.configure(aws_exports);
 const styles = (theme: Theme) =>
     createStyles({
         dashboardContainer: {
-            marginTop: 40,
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
                 justifyContent: 'space-evenly',
             },
         },
-        paper: {
+        listContainer: {
             padding: 20,
             width: '100%',
             marginBottom: 40,
@@ -50,11 +50,29 @@ const styles = (theme: Theme) =>
                 width: 'auto',
             },
         },
-        paperTitle: {
+        listTitle: {
             display: 'flex',
             justifyContent: 'space-between',
             alignContent: 'flex-end',
-            padding: 10,
+            padding: '10px 0',
+        },
+        mobileDisplay: {
+            [theme.breakpoints.up('md')]: {
+                display: 'none',
+            },
+        },
+        desktopDisplay: {
+            display: 'none',
+            [theme.breakpoints.up('md')]: {
+                display: 'inline-flex',
+            },
+        },
+        createNewPlanLink: {
+            textDecoration: 'none',
+            marginTop: theme.spacing(2),
+            [theme.breakpoints.up('md')]: {
+                marginTop: theme.spacing(1),
+            },
         },
     });
 
@@ -197,27 +215,45 @@ class DashboardComponent extends React.Component<DashboardProps, AppProps> {
                         }) => {
                             return (
                                 <>
-                                    <div className={classes.paper}>
-                                        <div className={classes.paperTitle}>
+                                    <div className={classes.listContainer}>
+                                        <div className={classes.listTitle}>
                                             <Typography variant='h2'>
                                                 My Plans
                                             </Typography>
                                             <Link
                                                 to='/my-mtf/create-plan'
-                                                className='nav-item'>
-                                                <AddCircleSharpIcon
+                                                className={
+                                                    classes.createNewPlanLink
+                                                }>
+                                                <AddBoxSharpIcon
                                                     color='secondary'
                                                     fontSize='large'
+                                                    className={
+                                                        classes.mobileDisplay
+                                                    }
                                                 />
+                                                <Button
+                                                    variant='contained'
+                                                    color='secondary'
+                                                    className={
+                                                        classes.desktopDisplay
+                                                    }
+                                                    startIcon={
+                                                        <AddSharpIcon />
+                                                    }>
+                                                    Create New Plan
+                                                </Button>
                                             </Link>
                                         </div>
 
                                         {this.renderMyPlansList(data, loading)}
                                     </div>
-                                    <div className={classes.paper}>
-                                        <Typography variant='h2'>
-                                            Favorited Plans
-                                        </Typography>
+                                    <div className={classes.listContainer}>
+                                        <div className={classes.listTitle}>
+                                            <Typography variant='h2'>
+                                                Favorited Plans
+                                            </Typography>
+                                        </div>
                                         {this.renderFavoritedPlansList(
                                             data,
                                             loading
