@@ -3,80 +3,22 @@ import React from 'react';
 
 // AWS
 import Amplify, { graphqlOperation } from 'aws-amplify';
-import { Connect, S3Image } from 'aws-amplify-react';
+import { Connect } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
 
 // Material UI
-import {
-    Typography,
-    Grid,
-    Card,
-    CardActions,
-    CardContent,
-    createStyles,
-    Theme,
-    withStyles,
-    WithStyles,
-} from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 
 // MTF
+import PlanCard from '../../components/plan-card.component/PlanCard.component';
+import { Plan } from '../../models';
 import { AppProps } from '../../models/props';
 import { ListPlansQuery } from '../../models/api.models';
-import { mtfTheme } from '../../themes';
 
 // Configure
 Amplify.configure(aws_exports);
 
-const styles = (theme: Theme) =>
-    createStyles({
-        card: {
-            display: 'flex',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-        },
-        image: {
-            width: '100%',
-            height: 100,
-            [theme.breakpoints.up('sm')]: {
-                width: 200,
-                height: 200,
-            },
-            '& img': {
-                width: '100%',
-                height: 100,
-                objectFit: 'cover',
-                [theme.breakpoints.up('sm')]: {
-                    width: 200,
-                    height: 200,
-                },
-            },
-        },
-        cardContentContainer: {
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                width: 'auto',
-            },
-        },
-        cardContent: {
-            maxWidth: 260,
-            paddingTop: 0,
-        },
-        cardTitle: {
-            display: 'flex',
-            maxWidth: 175,
-            alignItems: 'center',
-        },
-        cardActions: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: theme.spacing(2),
-        },
-    });
-
-export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
-
-class PlansListComponent extends React.Component<PlanListProps> {
+class PlansListComponent extends React.Component<AppProps> {
     private listPlansQuery = `query ListPlans {
         listPlans {
             items {
@@ -93,7 +35,7 @@ class PlansListComponent extends React.Component<PlanListProps> {
         }
     }`;
 
-    constructor(props: PlanListProps) {
+    constructor(props: AppProps) {
         super(props);
 
         this.state = {
@@ -101,44 +43,35 @@ class PlansListComponent extends React.Component<PlanListProps> {
         };
     }
 
-    componentDidUpdate(prevProps: PlanListProps) {
+    componentDidUpdate(prevProps: AppProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState({ userId: this.props.userId });
         }
     }
+    private toPlanModel(plan: any): Plan {
+        return {
+            id: plan.id,
+            name: plan.name,
+            description: plan.description,
+            pdfS3Key: plan.pdfS3Key,
+            imageS3Info: {
+                key: plan.imageS3Info.key,
+            },
+            createdDate: plan.created,
+            createdBy: plan.createdBy == null ? '' : plan.createdBy.username,
+            toolsRequired: [],
+            materialsRequired: [],
+            favoritedBy: [],
+        };
+    }
 
-    renderPlansListContent(data: ListPlansQuery): any {
-        const { classes } = this.props;
-
+    private renderPlansListContent(data: ListPlansQuery): any {
         return data.listPlans.items.map(plan => (
-            <Grid item>
-                <Card className={classes.card}>
-                    <div className={classes.image}>
-                        <S3Image
-                            level='protected'
-                            imgKey={plan.imageS3Info.key}
-                        />
-                    </div>
-                    <div className={classes.cardContentContainer}>
-                        <CardActions className={classes.cardActions}>
-                            <div className={classes.cardTitle}>
-                                <Typography variant='h5' noWrap>
-                                    {plan.name}
-                                </Typography>
-                            </div>
-                        </CardActions>
-                        <CardContent className={classes.cardContent}>
-                            <Typography variant='body1' noWrap>
-                                {plan.description}
-                            </Typography>
-                        </CardContent>
-                    </div>
-                </Card>
-            </Grid>
+            <PlanCard plan={this.toPlanModel(plan)} />
         ));
     }
 
-    renderPlansList(data: ListPlansQuery, loading: boolean): any {
+    private renderPlansList(data: ListPlansQuery, loading: boolean): any {
         if (loading) {
             return <Typography variant='h4'>Loading...</Typography>;
         } else if (!loading && data && data.listPlans && data.listPlans.items) {
@@ -172,4 +105,4 @@ class PlansListComponent extends React.Component<PlanListProps> {
     }
 }
 
-export default withStyles(styles(mtfTheme))(PlansListComponent);
+export default PlansListComponent;

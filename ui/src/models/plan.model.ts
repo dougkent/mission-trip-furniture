@@ -10,5 +10,5 @@ export type Plan = {
     toolsRequired: Tool[];
     materialsRequired: Material[];
     createdDate: string;
-    createdBy: User;
+    createdBy: string;
 };

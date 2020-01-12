@@ -24,7 +24,7 @@
     ) {
     id: ID!
     username: String!
-    createdPlans: [Plan!]
+    createdPlans: [Plan!] @connection(name: "CreatedBy")
     favoritedPlans: [Favorite!] @connection(name: "FavoritedPlans")
 }
 
@@ -37,7 +37,7 @@ type Plan
     pdfS3Key: String!
     imageS3Info: S3ImageInfo!
     created: AWSDateTime!
-    createdBy: User! @connection
+    createdBy: User! @connection(name: "CreatedBy")
     favoritedCount: Int!
     favoritedBy: [Favorite!] @connection(name: "FavoritedBy")
     materialsRequired: [PlanMaterial!]! @connection(name: "RequiresMaterials")
