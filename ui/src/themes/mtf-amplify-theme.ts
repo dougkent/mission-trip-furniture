@@ -40,6 +40,10 @@ const NavItem = {
     lineHeight: 1,
 };
 
+const NavRight = {
+    textAlign: 'center',
+};
+
 const SectionHeader = {
     fontFamily: mtfTheme.typography.h1.fontFamily,
     fontSize: '1.29rem',
@@ -64,6 +68,7 @@ const mtfAmplifyTheme = {
     navBar: NavBar,
     navButton: NavButton,
     navItem: NavItem,
+    navRight: NavRight,
     sectionHeader: SectionHeader,
     signInButton: SignInButton,
     toast: Toast,

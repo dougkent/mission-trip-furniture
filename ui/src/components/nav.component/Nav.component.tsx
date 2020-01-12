@@ -14,6 +14,7 @@ import {
     List,
     ListItemText,
     SwipeableDrawer,
+    Divider,
 } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
@@ -21,7 +22,7 @@ import HotelSharpIcon from '@material-ui/icons/HotelSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // MTF
-import { mtfTheme, mtfAmplifyTheme } from '../../themes';
+import { mtfTheme, mtfAmplifyTheme, mtfAmplifyMobileTheme } from '../../themes';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -55,6 +56,9 @@ const useStyles = makeStyles((theme: Theme) =>
         mobileNavLink: {
             textDecoration: 'none',
             color: 'inherit',
+        },
+        mobileSignOut: {
+            margin: theme.spacing(3),
         },
         sectionDesktop: {
             display: 'none',
@@ -130,6 +134,18 @@ const Nav: React.FC = () => {
                     </Typography>
                 </ListItemText>
             </List>
+            <Divider />
+            <Typography
+                variant='h5'
+                noWrap
+                color='primary'
+                className={classes.mobileSignOut}>
+                <Authenticator hideDefault={true} theme={mtfAmplifyMobileTheme}>
+                    <Greetings
+                        inGreeting={(username: string): string => null}
+                    />
+                </Authenticator>
+            </Typography>
         </SwipeableDrawer>
     );
 

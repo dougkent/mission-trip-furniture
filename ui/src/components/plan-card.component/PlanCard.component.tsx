@@ -29,14 +29,14 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         image: {
             width: '100%',
-            height: 100,
+            height: 200,
             [theme.breakpoints.up('sm')]: {
                 width: 200,
                 height: 200,
             },
             '& img': {
                 width: '100%',
-                height: 100,
+                height: 200,
                 objectFit: 'cover',
                 [theme.breakpoints.up('sm')]: {
                     width: 200,
