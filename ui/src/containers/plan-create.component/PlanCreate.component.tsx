@@ -137,7 +137,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
         this.state = this.initialState;
     }
-    async componentDidUpdate(prevProps: AppProps) {
+    async componentDidUpdate(prevProps: CreatePlanProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState(prevState => ({
                 ...prevState,
