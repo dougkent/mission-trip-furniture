@@ -6,7 +6,7 @@ import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 // MTF
-import { Tool } from '../../models';
+import { Tool } from '../../models/api-models';
 import { ToolsSelectorProps } from '../../models/props';
 
 const ToolsSelector: React.FC<ToolsSelectorProps> = (

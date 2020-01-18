@@ -43,18 +43,18 @@ const useStyles = makeStyles((theme: Theme) =>
 const PdfUploader: React.FC<PdfUploaderProps> = (props: PdfUploaderProps) => {
     const classes = useStyles(mtfTheme);
 
-    async function handlePdfDeselect() {
+    const handlePdfDeselect = async () => {
         await props.onDeselect();
-    }
+    };
 
-    async function handlePdfSelect(event: React.ChangeEvent) {
+    const handlePdfSelect = async (event: React.ChangeEvent) => {
         const element = event.target as HTMLInputElement;
         const file = element.files[0];
 
         if (file.type === 'application/pdf') {
             await props.onSelect(file);
         }
-    }
+    };
 
     if (props.pdfFile) {
         return (

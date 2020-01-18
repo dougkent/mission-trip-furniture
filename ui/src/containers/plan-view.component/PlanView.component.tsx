@@ -3,8 +3,9 @@ import React from 'react';
 
 // MTF
 import { AppProps } from '../../models/props';
+import { AppState } from '../../models/states';
 
-class PlanViewComponent extends React.Component<AppProps, AppProps> {
+class PlanViewComponent extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
 

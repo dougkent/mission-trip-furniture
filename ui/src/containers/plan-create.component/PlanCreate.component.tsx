@@ -28,13 +28,15 @@ import ToolsSelector from '../../components/tools-selector.component/ToolsSelect
 import PdfUploader from '../../components/pdf-uploader.component/PdfUploader.component';
 import ImageUploader from '../../components/image-uploader.component/ImageUploader.component';
 import {
+    GqlQuery,
     ListToolsQuery,
     ListMaterialsQuery,
     CreatePlanToolInput,
     CreatePlanMaterialInput,
     CreatePlanMutation,
-} from '../../models/api.models';
-import { Material, Tool } from '../../models';
+    Material,
+    Tool,
+} from '../../models/api-models';
 import { AppProps } from '../../models/props';
 import { CreatePlanState } from '../../models/states';
 import { mtfTheme } from '../../themes';
@@ -130,6 +132,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         planMaterials: [],
         planTools: [],
         loading: false,
+        userId: this.props.userId,
     };
 
     constructor(props: CreatePlanProps) {
@@ -141,6 +144,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         if (this.props.userId !== prevProps.userId) {
             this.setState(prevState => ({
                 ...prevState,
+                userId: this.props.userId,
                 plan: {
                     ...prevState.plan,
                     planCreatedById: this.props.userId,
@@ -237,11 +241,11 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         this.uploadPdf();
         this.uploadImage();
 
-        const planResult: { data: CreatePlanMutation } = (await API.graphql(
+        const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
             graphqlOperation(this.createPlanMutation, {
                 input: this.state.plan,
             })
-        )) as { data: CreatePlanMutation };
+        );
 
         this.state.planMaterials.forEach(material => {
             API.graphql(
@@ -373,10 +377,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                             {({
                                 data: { listTools },
                                 loading,
-                            }: {
-                                data: ListToolsQuery;
-                                loading: boolean;
-                            }) => {
+                            }: GqlQuery<ListToolsQuery>) => {
                                 return (
                                     <ToolsSelector
                                         tools={
@@ -395,10 +396,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                             {({
                                 data: { listMaterials },
                                 loading,
-                            }: {
-                                data: ListMaterialsQuery;
-                                loading: boolean;
-                            }) => {
+                            }: GqlQuery<ListMaterialsQuery>) => {
                                 return (
                                     <MaterialsSelector
                                         materials={
