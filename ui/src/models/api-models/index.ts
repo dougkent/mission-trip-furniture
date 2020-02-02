@@ -1,6 +1,7 @@
 export * from './favorite-connection.model';
 export * from './favorite.model';
 export * from './gql-query.model';
+export * from './input-create-favorite.model';
 export * from './input-create-plan.model';
 export * from './input-create-plan-material.model';
 export * from './input-create-plan-tool.model';
@@ -8,6 +9,7 @@ export * from './input-s3-image-info.model';
 export * from './input-create-user.model';
 export * from './material-connection.model';
 export * from './material.model';
+export * from './mutation-create-favorite.model';
 export * from './mutation-create-plan.model';
 export * from './mutation-create-user.model';
 export * from './plan-connection.model';

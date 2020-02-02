@@ -1,0 +1,11 @@
+{
+    "permissions": {
+        "api": {
+            "missiontripfurniture": [
+                "create",
+                "read",
+                "delete"
+            ]
+        }
+    }
+}
