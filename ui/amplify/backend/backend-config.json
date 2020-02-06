@@ -21,21 +21,5 @@
 			"providerPlugin": "awscloudformation"
 		}
 	},
-	"function": {
-		"mtfFavoritePlan": {
-			"service": "Lambda",
-			"providerPlugin": "awscloudformation",
-			"build": true,
-			"dependsOn": [
-				{
-					"category": "api",
-					"resourceName": "missiontripfurniture",
-					"attributes": [
-						"GraphQLAPIIdOutput",
-						"GraphQLAPIEndpointOutput"
-					]
-				}
-			]
-		}
-	}
+	"function": {}
 }

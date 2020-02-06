@@ -18,6 +18,7 @@ export * from './plan-material.model';
 export * from './plan-tool-connection.model';
 export * from './plan-tool.model';
 export * from './plan.model';
+export * from './query-get-plan.model';
 export * from './query-get-user-by-username.model';
 export * from './query-get-user.model';
 export * from './query-list-materials.model';

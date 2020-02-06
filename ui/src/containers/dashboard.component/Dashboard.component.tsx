@@ -94,6 +94,10 @@ class DashboardComponent extends React.Component<DashboardProps, AppState> {
                         height
                     }
                     created
+                    createdBy {
+                        id
+                        username
+                    }
                     favoritedCount
                 }
             }
@@ -110,6 +114,10 @@ class DashboardComponent extends React.Component<DashboardProps, AppState> {
                             height
                         }
                         created
+                        createdBy {
+                            id
+                            username
+                        }
                         favoritedCount
                     }
                 }
@@ -135,24 +143,6 @@ class DashboardComponent extends React.Component<DashboardProps, AppState> {
         planId: string,
         toggleFavOn: boolean
     ): void {}
-
-    // private toPlanModel(plan: any): Plan {
-    //     return {
-    //         id: plan.id,
-    //         name: plan.name,
-    //         description: plan.description,
-    //         isFavoritedByUser: false, // TODO: Add logic
-    //         favoritedCount: plan.favoritedCount,
-    //         pdfS3Key: plan.pdfS3Key,
-    //         imageS3Info: {
-    //             key: plan.imageS3Info.key,
-    //         },
-    //         createdDate: plan.created,
-    //         createdBy: plan.createdBy == null ? '' : plan.createdBy.username,
-    //         toolsRequired: [],
-    //         materialsRequired: [],
-    //     };
-    // }
 
     private renderMyPlansList(data: GetUserQuery, loading: boolean): any {
         if (loading) {

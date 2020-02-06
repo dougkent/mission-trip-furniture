@@ -1,5 +1,6 @@
 // React
 import React, { useState } from 'react';
+import * as ReactRouter from 'react-router-dom';
 
 // AWS
 import { S3Image } from 'aws-amplify-react';
@@ -60,6 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
             maxWidth: 175,
             alignItems: 'center',
         },
+        cardTitleLink: {
+            color: 'inherit',
+            textDecoration: 'none',
+        },
         cardActions: {
             display: 'flex',
             justifyContent: 'space-between',
@@ -87,16 +92,28 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
         <Grid item>
             <Card className={classes.card}>
                 <div className={classes.image}>
-                    <S3Image
-                        level='protected'
-                        imgKey={planState.imageS3Info.key}
-                    />
+                    <ReactRouter.Link
+                        to={`/plans/${props.plan.id}`}
+                        className={classes.cardTitleLink}>
+                        <S3Image
+                            level='protected'
+                            imgKey={planState.imageS3Info.key}
+                            identityId={planState.createdBy.id}
+                        />
+                    </ReactRouter.Link>
                 </div>
                 <div className={classes.cardContentContainer}>
                     <CardActions className={classes.cardActions}>
                         <div className={classes.cardTitle}>
-                            <Typography variant='h5' noWrap>
-                                {props.plan.name}
+                            <Typography
+                                variant='h5'
+                                noWrap
+                                title={props.plan.name}>
+                                <ReactRouter.Link
+                                    to={`/plans/${props.plan.id}`}
+                                    className={classes.cardTitleLink}>
+                                    {props.plan.name}
+                                </ReactRouter.Link>
                             </Typography>
                         </div>
                         <PlanFavorite

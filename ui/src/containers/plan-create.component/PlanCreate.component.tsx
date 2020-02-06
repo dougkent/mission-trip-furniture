@@ -6,7 +6,7 @@ import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
 import { Connect, withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
 
-// Material
+// Material UI
 import {
     Button,
     TextField,

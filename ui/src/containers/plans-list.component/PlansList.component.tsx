@@ -31,6 +31,11 @@ class PlansListComponent extends React.Component<AppProps, AppState> {
                     width
                     height
                 }
+                created
+                createdBy {
+                    id
+                    username
+                }
                 favoritedCount
                 favoritedBy  {
                     items {
@@ -60,26 +65,6 @@ class PlansListComponent extends React.Component<AppProps, AppState> {
         planId: string,
         toggleFavOn: boolean
     ): void {}
-    // private toPlanModel(plan: any): Plan {
-    //     return {
-    //         id: plan.id,
-    //         name: plan.name,
-    //         description: plan.description,
-    //         pdfS3Key: plan.pdfS3Key,
-    //         imageS3Info: {
-    //             key: plan.imageS3Info.key,
-    //         },
-    //         createdDate: plan.created,
-    //         createdBy: plan.createdBy == null ? '' : plan.createdBy.username,
-    //         toolsRequired: [],
-    //         materialsRequired: [],
-    //         isFavoritedByUser: plan.favoritedBy.items
-    //             .map((user: any): string => user.id)
-    //             .indexOf(this.state.userId),
-    //         favoritedCount: plan.favoritedCount,
-    //     };
-    // }
-
     private renderPlansList(data: ListPlansQuery, loading: boolean): any {
         if (loading) {
             return <Typography variant='h4'>Loading...</Typography>;

@@ -8,7 +8,8 @@
             "DeploymentBucketName": "missiontripfurniture-develop-20191227214024-deployment",
             "UnauthRoleName": "missiontripfurniture-develop-20191227214024-unauthRole",
             "StackName": "missiontripfurniture-develop-20191227214024",
-            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/missiontripfurniture-develop-20191227214024/c7528690-2923-11ea-b1bd-0a73b7e234e0"
+            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/missiontripfurniture-develop-20191227214024/c7528690-2923-11ea-b1bd-0a73b7e234e0",
+            "AmplifyAppId": "d26riepzj941ad"
         },
         "categories": {
             "auth": {

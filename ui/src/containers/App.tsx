@@ -58,6 +58,7 @@ class App extends React.Component<{}, AppProps> {
 
     async setUserId() {
         const userInfo = await Auth.currentUserInfo();
+
         if (userInfo) {
             var userId = await this.tryGetUserId(userInfo.username);
 
@@ -100,20 +101,20 @@ class App extends React.Component<{}, AppProps> {
     }
 
     private async createUserIfNotExists() {
-        const user = await Auth.currentAuthenticatedUser();
+        const user = await Auth.currentUserInfo();
 
         const userId = await this.tryGetUserId(user.username);
 
         if (!userId) {
-            await this.createUserByUsername(user.username);
+            await this.createUserByUsername(user.id, user.username);
         } else {
             this.setState({ userId: userId });
         }
     }
 
-    private async createUserByUsername(username: string) {
+    private async createUserByUsername(id: string, username: string) {
         var createUserInput: CreateUserInput = {
-            id: uuid(),
+            id: id,
             username: username,
         };
 
@@ -131,7 +132,7 @@ class App extends React.Component<{}, AppProps> {
     render() {
         return (
             <Router>
-                <Nav />
+                <Nav userId={this.state.userId} />
                 <Container maxWidth='xl'>
                     <Route
                         exact
@@ -148,9 +149,12 @@ class App extends React.Component<{}, AppProps> {
                         )}
                     />
                     <Route
-                        path='/plans/:planUrl'
-                        render={() => (
-                            <PlanViewComponent userId={this.state.userId} />
+                        path='/plans/:planId'
+                        render={props => (
+                            <PlanViewComponent
+                                userId={this.state.userId}
+                                planId={props.match.params.planId}
+                            />
                         )}
                     />
                     <Route
