@@ -1,4 +1,4 @@
-import { Material } from '../material.model';
+import { Material } from '../api-models';
 
 export interface MaterialSelectorProps {
     loading: boolean;

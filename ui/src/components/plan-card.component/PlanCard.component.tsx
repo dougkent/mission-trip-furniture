@@ -1,5 +1,6 @@
 // React
-import React from 'react';
+import React, { useState } from 'react';
+import * as ReactRouter from 'react-router-dom';
 
 // AWS
 import { S3Image } from 'aws-amplify-react';
@@ -17,6 +18,7 @@ import {
 } from '@material-ui/core';
 
 // MTF
+import PlanFavorite from '../../components/plan-favorite.component/PlanFavorite.component';
 import { PlanCardProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
 
@@ -59,6 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
             maxWidth: 175,
             alignItems: 'center',
         },
+        cardTitleLink: {
+            color: 'inherit',
+            textDecoration: 'none',
+        },
         cardActions: {
             display: 'flex',
             justifyContent: 'space-between',
@@ -71,22 +77,52 @@ const useStyles = makeStyles((theme: Theme) =>
 const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
     const classes = useStyles(mtfTheme);
 
+    const [planState, setPlanState] = useState(props.plan);
+
+    const handleToggleFavorite = (toggleFavOn: boolean) => {
+        // setPlanState({
+        //     ...planState,
+        //     isFavoritedByUser: toggleFavOn,
+        // });
+
+        props.onToggleFavorite(planState.id, toggleFavOn);
+    };
+
     return (
         <Grid item>
             <Card className={classes.card}>
                 <div className={classes.image}>
-                    <S3Image
-                        level='protected'
-                        imgKey={props.plan.imageS3Info.key}
-                    />
+                    <ReactRouter.Link
+                        to={`/plans/${props.plan.id}`}
+                        className={classes.cardTitleLink}>
+                        <S3Image
+                            level='protected'
+                            imgKey={planState.imageS3Info.key}
+                            identityId={planState.createdBy.id}
+                        />
+                    </ReactRouter.Link>
                 </div>
                 <div className={classes.cardContentContainer}>
                     <CardActions className={classes.cardActions}>
                         <div className={classes.cardTitle}>
-                            <Typography variant='h5' noWrap>
-                                {props.plan.name}
+                            <Typography
+                                variant='h5'
+                                noWrap
+                                title={props.plan.name}>
+                                <ReactRouter.Link
+                                    to={`/plans/${props.plan.id}`}
+                                    className={classes.cardTitleLink}>
+                                    {props.plan.name}
+                                </ReactRouter.Link>
                             </Typography>
                         </div>
+                        <PlanFavorite
+                            planId={props.plan.id}
+                            disabled={false}
+                            isFavoritedByUser={false}
+                            favoritedCount={props.plan.favoritedCount}
+                            onToggleFavorite={handleToggleFavorite}
+                        />
                     </CardActions>
                     <CardContent className={classes.cardContent}>
                         <Typography variant='body1' noWrap>

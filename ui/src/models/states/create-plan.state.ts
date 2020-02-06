@@ -2,9 +2,10 @@ import {
     CreatePlanMaterialInput,
     CreatePlanToolInput,
     CreatePlanInput,
-} from '../api.models';
+} from '../api-models';
+import { AppState } from './app.state';
 
-export interface CreatePlanState {
+export interface CreatePlanState extends AppState {
     planMaterials: CreatePlanMaterialInput[];
     planTools: CreatePlanToolInput[];
     plan: CreatePlanInput;

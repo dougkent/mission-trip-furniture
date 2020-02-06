@@ -994,6 +994,13 @@ export type ListPlansQuery = {
       favoritedCount: number,
       favoritedBy:  {
         __typename: "ModelFavoriteConnection",
+        items: {
+          __typename: "Favorite",
+          user: {
+            __typename: "User",
+            id: string,
+          }
+        },
         nextToken: string | null,
       } | null,
       materialsRequired:  {

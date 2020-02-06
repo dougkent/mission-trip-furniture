@@ -1,4 +1,4 @@
-import { Tool } from '../tool.model';
+import { Tool } from '../api-models';
 
 export interface ToolsSelectorProps {
     loading: boolean;

@@ -20,6 +20,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
 import HotelSharpIcon from '@material-ui/icons/HotelSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
+import { AppProps } from '../../models/props';
 
 // MTF
 import { mtfTheme, mtfAmplifyTheme, mtfAmplifyMobileTheme } from '../../themes';
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'space-between',
         },
         mobileMenu: {
-            width: 200,
+            width: 300,
         },
         mobileMenuItem: {
             margin: theme.spacing(4),
@@ -80,10 +81,30 @@ const useStyles = makeStyles((theme: Theme) =>
         myAccountLink: {
             marginRight: theme.spacing(4),
         },
+
+        signInLink: {
+            background: 'none',
+            border: '2px solid',
+            borderColor: theme.palette.secondary.main,
+            color: theme.palette.secondary.main,
+            display: 'block',
+            fontFamily: mtfTheme.typography.h1.fontFamily,
+            fontSize: '1.15rem',
+            fontWeight: 400,
+            lineHeight: 1,
+            minWidth: 'auto',
+            padding: '10px 20px',
+            textAlign: 'center',
+            textDecoration: 'none',
+        },
+        mobileSignInItem: {
+            display: 'flex',
+            justifyContent: 'center',
+        },
     })
 );
 
-const Nav: React.FC = () => {
+const Nav: React.FC<AppProps> = (props: AppProps) => {
     const classes = useStyles(mtfTheme);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState<boolean>(
         false
@@ -119,33 +140,70 @@ const Nav: React.FC = () => {
                         </ReactRouter.Link>
                     </Typography>
                 </ListItemText>
-                <ListItemText>
-                    <Typography
-                        variant='h5'
-                        noWrap
-                        color='primary'
-                        className={classes.mobileMenuItem}>
-                        <ReactRouter.Link
-                            to='/my-mtf'
-                            className={classes.mobileNavLink}
-                            onClick={handleMobileMenuClose}>
-                            My Account
-                        </ReactRouter.Link>
-                    </Typography>
-                </ListItemText>
+
+                {(() => {
+                    if (props.userId) {
+                        return (
+                            <ListItemText>
+                                <Typography
+                                    variant='h5'
+                                    noWrap
+                                    color='primary'
+                                    className={classes.mobileMenuItem}>
+                                    <ReactRouter.Link
+                                        to='/my-mtf'
+                                        className={classes.mobileNavLink}
+                                        onClick={handleMobileMenuClose}>
+                                        My Account
+                                    </ReactRouter.Link>
+                                </Typography>
+                            </ListItemText>
+                        );
+                    }
+                })()}
             </List>
             <Divider />
-            <Typography
-                variant='h5'
-                noWrap
-                color='primary'
-                className={classes.mobileSignOut}>
-                <Authenticator hideDefault={true} theme={mtfAmplifyMobileTheme}>
-                    <Greetings
-                        inGreeting={(username: string): string => null}
-                    />
-                </Authenticator>
-            </Typography>
+            {(() => {
+                if (props.userId) {
+                    return (
+                        <>
+                            <Typography
+                                variant='h5'
+                                noWrap
+                                color='primary'
+                                className={classes.mobileSignOut}>
+                                <Authenticator
+                                    hideDefault={true}
+                                    theme={mtfAmplifyMobileTheme}>
+                                    <Greetings
+                                        inGreeting={(
+                                            username: string
+                                        ): string => null}
+                                    />
+                                </Authenticator>
+                            </Typography>
+                        </>
+                    );
+                } else {
+                    return (
+                        <Typography
+                            variant='h5'
+                            noWrap
+                            color='primary'
+                            className={`${classes.mobileMenuItem} ${classes.mobileSignInItem}`}>
+                            <ReactRouter.Link
+                                to='/my-mtf'
+                                className={`${classes.signInLink}  ${classes.mobileNavLink}`}>
+                                Sign In
+                                <br />
+                                or
+                                <br />
+                                Create an Account
+                            </ReactRouter.Link>
+                        </Typography>
+                    );
+                }
+            })()}
         </SwipeableDrawer>
     );
 
@@ -185,18 +243,32 @@ const Nav: React.FC = () => {
                             </ReactRouter.Link>
                         </Typography>
                         <div className={classes.grow}></div>
-                        <Typography
-                            variant='h5'
-                            noWrap
-                            color='primary'
-                            className={classes.myAccountLink}>
-                            <ReactRouter.Link
-                                to='/my-mtf'
-                                className={classes.navLink}>
-                                <AccountCircleSharpIcon />
-                                &nbsp;My Account
-                            </ReactRouter.Link>
-                        </Typography>
+                        {(() => {
+                            if (props.userId) {
+                                return (
+                                    <Typography
+                                        variant='h5'
+                                        noWrap
+                                        color='primary'
+                                        className={classes.myAccountLink}>
+                                        <ReactRouter.Link
+                                            to='/my-mtf'
+                                            className={classes.navLink}>
+                                            <AccountCircleSharpIcon />
+                                            &nbsp;My Account
+                                        </ReactRouter.Link>
+                                    </Typography>
+                                );
+                            } else {
+                                return (
+                                    <ReactRouter.Link
+                                        to='/my-mtf'
+                                        className={classes.signInLink}>
+                                        Sign In or Create an Account
+                                    </ReactRouter.Link>
+                                );
+                            }
+                        })()}
                         <Typography variant='h5' noWrap color='primary'>
                             <Authenticator
                                 hideDefault={true}

@@ -9,11 +9,12 @@ import { withAuthenticator } from 'aws-amplify-react';
 // MTF
 import { signUpConfig } from '../../models/sign-up-config.model';
 import { AppProps } from '../../models/props';
+import { AppState } from '../../models/states';
 
 // Configure
 Amplify.configure(aws_exports);
 
-class PlanEditComponent extends React.Component<AppProps, AppProps> {
+class PlanEditComponent extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
 

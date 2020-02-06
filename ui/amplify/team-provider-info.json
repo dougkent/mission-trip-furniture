@@ -8,7 +8,8 @@
             "DeploymentBucketName": "missiontripfurniture-develop-20191227214024-deployment",
             "UnauthRoleName": "missiontripfurniture-develop-20191227214024-unauthRole",
             "StackName": "missiontripfurniture-develop-20191227214024",
-            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/missiontripfurniture-develop-20191227214024/c7528690-2923-11ea-b1bd-0a73b7e234e0"
+            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/missiontripfurniture-develop-20191227214024/c7528690-2923-11ea-b1bd-0a73b7e234e0",
+            "AmplifyAppId": "d26riepzj941ad"
         },
         "categories": {
             "auth": {
@@ -16,20 +17,23 @@
             }
         }
     },
-    "seoplanid": {
+    "favplans": {
         "awscloudformation": {
-            "AuthRoleName": "missiontripfurniture-seoplanid-20191227220753-authRole",
-            "UnauthRoleArn": "arn:aws:iam::866938331794:role/missiontripfurniture-seoplanid-20191227220753-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::866938331794:role/missiontripfurniture-seoplanid-20191227220753-authRole",
+            "AuthRoleName": "missiontripfurniture-favplans-20200126085857-authRole",
+            "UnauthRoleArn": "arn:aws:iam::866938331794:role/missiontripfurniture-favplans-20200126085857-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::866938331794:role/missiontripfurniture-favplans-20200126085857-authRole",
             "Region": "us-west-2",
-            "DeploymentBucketName": "missiontripfurniture-seoplanid-20191227220753-deployment",
-            "UnauthRoleName": "missiontripfurniture-seoplanid-20191227220753-unauthRole",
-            "StackName": "missiontripfurniture-seoplanid-20191227220753",
-            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/missiontripfurniture-seoplanid-20191227220753/9e46b9c0-2927-11ea-bfe6-02f6ffa9fe66"
+            "DeploymentBucketName": "missiontripfurniture-favplans-20200126085857-deployment",
+            "UnauthRoleName": "missiontripfurniture-favplans-20200126085857-unauthRole",
+            "StackName": "missiontripfurniture-favplans-20200126085857",
+            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/missiontripfurniture-favplans-20200126085857/609a5280-404c-11ea-9249-02e60452d3a4"
         },
         "categories": {
             "auth": {
                 "missiontripfurniture41b1791f41b1791f": {}
+            },
+            "function": {
+                "missiontripfurniture": {}
             }
         }
     }

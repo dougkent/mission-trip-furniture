@@ -24,9 +24,10 @@ import AddSharpIcon from '@material-ui/icons/AddSharp';
 import PlanCard from '../../components/plan-card.component/PlanCard.component';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import { AppProps } from '../../models/props';
-import { Plan } from '../../models';
+import { AppState } from '../../models/states';
+// import { Plan } from '../../models';
 import { mtfAmplifyTheme, mtfTheme } from '../../themes';
-import { GetUserQuery } from '../../models/api.models';
+import { GqlQuery, GetUserQuery } from '../../models/api-models';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -78,7 +79,7 @@ const styles = (theme: Theme) =>
 
 export interface DashboardProps extends AppProps, WithStyles<typeof styles> {}
 
-class DashboardComponent extends React.Component<DashboardProps, AppProps> {
+class DashboardComponent extends React.Component<DashboardProps, AppState> {
     private getUserQuery = `query GetUser($id: ID!) {
         getUser(id: $id) {
             createdPlans {
@@ -93,6 +94,10 @@ class DashboardComponent extends React.Component<DashboardProps, AppProps> {
                         height
                     }
                     created
+                    createdBy {
+                        id
+                        username
+                    }
                     favoritedCount
                 }
             }
@@ -109,6 +114,10 @@ class DashboardComponent extends React.Component<DashboardProps, AppProps> {
                             height
                         }
                         created
+                        createdBy {
+                            id
+                            username
+                        }
                         favoritedCount
                     }
                 }
@@ -130,22 +139,10 @@ class DashboardComponent extends React.Component<DashboardProps, AppProps> {
         }
     }
 
-    private toPlanModel(plan: any): Plan {
-        return {
-            id: plan.id,
-            name: plan.name,
-            description: plan.description,
-            pdfS3Key: plan.pdfS3Key,
-            imageS3Info: {
-                key: plan.imageS3Info.key,
-            },
-            createdDate: plan.created,
-            createdBy: plan.createdBy == null ? '' : plan.createdBy.username,
-            toolsRequired: [],
-            materialsRequired: [],
-            favoritedBy: [],
-        };
-    }
+    private handleTogglePlanFavorite(
+        planId: string,
+        toggleFavOn: boolean
+    ): void {}
 
     private renderMyPlansList(data: GetUserQuery, loading: boolean): any {
         if (loading) {
@@ -161,7 +158,11 @@ class DashboardComponent extends React.Component<DashboardProps, AppProps> {
             return (
                 <Grid container spacing={2}>
                     {data.getUser.createdPlans.items.map(plan => (
-                        <PlanCard plan={this.toPlanModel(plan)} />
+                        <PlanCard
+                            plan={plan}
+                            userId={this.state.userId}
+                            onToggleFavorite={this.handleTogglePlanFavorite}
+                        />
                     ))}
                 </Grid>
             );
@@ -186,8 +187,12 @@ class DashboardComponent extends React.Component<DashboardProps, AppProps> {
         ) {
             return (
                 <Grid container spacing={2}>
-                    {data.getUser.favoritedPlans.items.map(plan => (
-                        <PlanCard plan={this.toPlanModel(plan)} />
+                    {data.getUser.favoritedPlans.items.map(favorite => (
+                        <PlanCard
+                            plan={favorite.plan}
+                            userId={this.state.userId}
+                            onToggleFavorite={this.handleTogglePlanFavorite}
+                        />
                     ))}
                 </Grid>
             );
@@ -206,13 +211,7 @@ class DashboardComponent extends React.Component<DashboardProps, AppProps> {
                         query={graphqlOperation(this.getUserQuery, {
                             id: this.state.userId,
                         })}>
-                        {({
-                            data,
-                            loading,
-                        }: {
-                            data: GetUserQuery;
-                            loading: boolean;
-                        }) => {
+                        {({ data, loading }: GqlQuery<GetUserQuery>) => {
                             return (
                                 <>
                                     <div className={classes.listContainer}>

@@ -6,8 +6,9 @@ import { Typography } from '@material-ui/core';
 
 //MTF
 import { AppProps } from '../../models/props';
+import { AppState } from '../../models/states';
 
-class HomeComponent extends React.Component<AppProps, AppProps> {
+class HomeComponent extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
 
