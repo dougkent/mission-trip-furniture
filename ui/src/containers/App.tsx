@@ -9,9 +9,6 @@ import aws_exports from '../aws-exports';
 // Material UI
 import { Container } from '@material-ui/core';
 
-// uuid
-import { v4 as uuid } from 'uuid';
-
 // MTF
 import HomeComponent from './home.component/Home.component';
 import PlansListComponent from './plans-list.component/PlansList.component';
@@ -19,7 +16,6 @@ import PlanViewComponent from './plan-view.component/PlanView.component';
 import Nav from '../components/nav.component/Nav.component';
 import DashboardComponent from './dashboard.component/Dashboard.component';
 import PlanCreateComponent from './plan-create.component/PlanCreate.component';
-import PlanEditComponent from './plan-edit.componet/PlanEdit.component';
 import { AppProps } from '../models/props';
 import {
     GqlQuery,
@@ -169,12 +165,6 @@ class App extends React.Component<{}, AppProps> {
                         path='/my-mtf/create-plan'
                         render={() => (
                             <PlanCreateComponent userId={this.state.userId} />
-                        )}
-                    />
-                    <Route
-                        path='/my-mtf/plans/:planUrl'
-                        render={() => (
-                            <PlanEditComponent userId={this.state.userId} />
                         )}
                     />
                 </Container>
