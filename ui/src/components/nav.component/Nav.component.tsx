@@ -47,6 +47,8 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+
+            marginRight: theme.spacing(4),
         },
         mobileMenu: {
             width: 300,
@@ -75,11 +77,11 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         homeMenuLink: {
-            marginRight: theme.spacing(4),
+            //marginRight: theme.spacing(4),
             minWidth: 223,
         },
         myAccountLink: {
-            marginRight: theme.spacing(4),
+            //marginRight: theme.spacing(4),
         },
 
         signInLink: {
@@ -137,6 +139,20 @@ const Nav: React.FC<AppProps> = (props: AppProps) => {
                             className={classes.mobileNavLink}
                             onClick={handleMobileMenuClose}>
                             Plans
+                        </ReactRouter.Link>
+                    </Typography>
+                </ListItemText>
+                <ListItemText>
+                    <Typography
+                        variant='h5'
+                        noWrap
+                        color='primary'
+                        className={classes.mobileMenuItem}>
+                        <ReactRouter.Link
+                            to='/about'
+                            className={classes.mobileNavLink}
+                            onClick={handleMobileMenuClose}>
+                            The Mission
                         </ReactRouter.Link>
                     </Typography>
                 </ListItemText>
@@ -240,6 +256,13 @@ const Nav: React.FC<AppProps> = (props: AppProps) => {
                                 className={classes.navLink}
                                 to='/plans'>
                                 Plans
+                            </ReactRouter.Link>
+                        </Typography>
+                        <Typography variant='h5' noWrap color='primary'>
+                            <ReactRouter.Link
+                                className={classes.navLink}
+                                to='/about'>
+                                The Mission
                             </ReactRouter.Link>
                         </Typography>
                         <div className={classes.grow}></div>

@@ -1,7 +1,7 @@
 // React
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-// Material UI
 // Material UI
 import {
     Button,
@@ -16,7 +16,7 @@ import {
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
 import { mtfTheme } from '../../themes';
-import * as homeBackgroundImage from '../assets/home-background.JPG';
+import * as homeBackgroundImage from '../../assets/home-background.JPG';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -39,11 +39,14 @@ const styles = (theme: Theme) =>
             left: 0,
         },
         homeContainer: {
-            marginTop: theme.spacing(15),
+            marginTop: theme.spacing(10),
             display: 'flex',
             justifyContent: 'center',
             textAlign: 'center',
             flexWrap: 'wrap',
+            [theme.breakpoints.up('sm')]: {
+                marginTop: theme.spacing(15),
+            },
             [theme.breakpoints.up('lg')]: {
                 marginTop: theme.spacing(22),
             },
@@ -53,16 +56,18 @@ const styles = (theme: Theme) =>
         },
         learnMore: {
             marginTop: theme.spacing(15),
+            textDecoration: 'none',
+        },
+        learnMoreButton: {
             border: `2px solid ${theme.palette.secondary.main}`,
-            background: 'rgba(244, 244, 246, 0.4)',
+            background: 'rgba(244, 244, 246, 0.45)',
             padding: '10px 20px',
             '&:hover': {
                 border: `2px solid ${theme.palette.secondary.main}`,
-                background: 'rgba(244, 244, 246, 0.4)',
+                background: 'rgba(244, 244, 246, 0.45)',
             },
         },
         learnMoreText: {
-            fontFamily: mtfTheme.typography.fontFamily,
             fontWeight: 400,
             textTransform: 'none',
         },
@@ -96,18 +101,20 @@ class HomeComponent extends React.Component<HomeProps, AppState> {
                     <Typography variant='h2' className={classes.title}>
                         Mission Trip Furniture
                     </Typography>
-                    <Button
-                        variant='outlined'
-                        color='secondary'
-                        className={classes.learnMore}
-                        size='large'
-                        href='/about'>
-                        <Typography
-                            variant='h5'
-                            className={classes.learnMoreText}>
-                            Learn More
-                        </Typography>
-                    </Button>
+                    <Link to='/about' className={classes.learnMore}>
+                        <Button
+                            variant='outlined'
+                            color='secondary'
+                            className={classes.learnMoreButton}
+                            size='large'
+                            href='/about'>
+                            <Typography
+                                variant='h5'
+                                className={classes.learnMoreText}>
+                                Learn More
+                            </Typography>
+                        </Button>
+                    </Link>
                 </div>
             </>
         );
