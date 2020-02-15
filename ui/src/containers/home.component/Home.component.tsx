@@ -16,7 +16,7 @@ import {
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
 import { mtfTheme } from '../../themes';
-import * as homeBackgroundImage from '../../assets/home-background.JPG';
+import * as homeBackgroundImage from '../../assets/home-background.jpg';
 
 const styles = (theme: Theme) =>
     createStyles({

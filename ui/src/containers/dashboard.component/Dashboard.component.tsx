@@ -26,7 +26,6 @@ import PlanCard from '../../components/plan-card.component/PlanCard.component';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
-// import { Plan } from '../../models';
 import { mtfAmplifyTheme, mtfTheme } from '../../themes';
 import { GqlQuery, GetUserQuery } from '../../models/api-models';
 

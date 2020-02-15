@@ -1,6 +1,6 @@
 /// <reference types="react-scripts" />
 declare module 'aws-amplify-react';
-declare module '*.JPG' {
+declare module '*.jpg' {
     const content: any;
     export default content;
 }
