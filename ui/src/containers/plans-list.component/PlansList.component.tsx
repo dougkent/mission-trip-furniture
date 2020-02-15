@@ -7,19 +7,40 @@ import { Connect } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
 
 // Material UI
-import { Typography, Grid } from '@material-ui/core';
+import {
+    CircularProgress,
+    createStyles,
+    Grid,
+    Theme,
+    Typography,
+    withStyles,
+    WithStyles,
+} from '@material-ui/core';
 
 // MTF
 import PlanCard from '../../components/plan-card.component/PlanCard.component';
-//import { Plan } from '../../models';
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
 import { GqlQuery, ListPlansQuery } from '../../models/api-models';
+import { mtfTheme } from '../../themes';
 
 // Configure
 Amplify.configure(aws_exports);
 
-class PlansListComponent extends React.Component<AppProps, AppState> {
+const styles = (theme: Theme) =>
+    createStyles({
+        loading: {
+            margin: `${theme.spacing(4)}px auto`,
+            width: theme.spacing(12),
+        },
+        plansListContainer: {
+            marginTop: theme.spacing(4),
+        },
+    });
+
+export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
+
+class PlansListComponent extends React.Component<PlanListProps, AppState> {
     private listPlansQuery = `query ListPlans {
         listPlans {
             items {
@@ -48,7 +69,7 @@ class PlansListComponent extends React.Component<AppProps, AppState> {
         }
     }`;
 
-    constructor(props: AppProps) {
+    constructor(props: PlanListProps) {
         super(props);
 
         this.state = {
@@ -56,7 +77,7 @@ class PlansListComponent extends React.Component<AppProps, AppState> {
         };
     }
 
-    componentDidUpdate(prevProps: AppProps) {
+    componentDidUpdate(prevProps: PlanListProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState({ userId: this.props.userId });
         }
@@ -66,8 +87,14 @@ class PlansListComponent extends React.Component<AppProps, AppState> {
         toggleFavOn: boolean
     ): void {}
     private renderPlansList(data: ListPlansQuery, loading: boolean): any {
+        const { classes } = this.props;
+
         if (loading) {
-            return <Typography variant='h4'>Loading...</Typography>;
+            return (
+                <div className={classes.loading}>
+                    <CircularProgress color='secondary' size='100px' />
+                </div>
+            );
         } else if (!loading && data && data.listPlans && data.listPlans.items) {
             return (
                 <Grid container spacing={2}>
@@ -86,17 +113,19 @@ class PlansListComponent extends React.Component<AppProps, AppState> {
     }
 
     render() {
+        const { classes } = this.props;
+
         return (
-            <>
+            <div className={classes.plansListContainer}>
                 <Typography variant='h2'>Plans</Typography>
                 <Connect query={graphqlOperation(this.listPlansQuery)}>
                     {({ data, loading }: GqlQuery<ListPlansQuery>) => {
                         return this.renderPlansList(data, loading);
                     }}
                 </Connect>
-            </>
+            </div>
         );
     }
 }
 
-export default PlansListComponent;
+export default withStyles(styles(mtfTheme))(PlansListComponent);

@@ -10,6 +10,7 @@ import { withAuthenticator, Connect } from 'aws-amplify-react';
 // Material UI
 import {
     Button,
+    CircularProgress,
     Typography,
     Grid,
     createStyles,
@@ -25,7 +26,6 @@ import PlanCard from '../../components/plan-card.component/PlanCard.component';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
-// import { Plan } from '../../models';
 import { mtfAmplifyTheme, mtfTheme } from '../../themes';
 import { GqlQuery, GetUserQuery } from '../../models/api-models';
 
@@ -39,6 +39,10 @@ const styles = (theme: Theme) =>
                 display: 'flex',
                 justifyContent: 'space-evenly',
             },
+        },
+
+        loading: {
+            margin: `${theme.spacing(4)}px auto`,
         },
         listContainer: {
             padding: 20,
@@ -145,8 +149,14 @@ class DashboardComponent extends React.Component<DashboardProps, AppState> {
     ): void {}
 
     private renderMyPlansList(data: GetUserQuery, loading: boolean): any {
+        const { classes } = this.props;
+
         if (loading) {
-            return <Typography variant='h4'>Loading...</Typography>;
+            return (
+                <div className={classes.loading}>
+                    <CircularProgress color='secondary' size='100px' />
+                </div>
+            );
         } else if (
             !loading &&
             data &&
@@ -175,8 +185,14 @@ class DashboardComponent extends React.Component<DashboardProps, AppState> {
         data: GetUserQuery,
         loading: boolean
     ): any {
+        const { classes } = this.props;
+
         if (loading) {
-            return <Typography variant='h4'>Loading...</Typography>;
+            return (
+                <div className={classes.loading}>
+                    <CircularProgress color='secondary' size='100px' />
+                </div>
+            );
         } else if (
             !loading &&
             data &&
