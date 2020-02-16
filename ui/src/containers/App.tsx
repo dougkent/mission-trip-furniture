@@ -12,6 +12,7 @@ import { Container } from '@material-ui/core';
 // MTF
 import HomeComponent from './home.component/Home.component';
 import AboutComponent from './about.component/About.component';
+import ContactComponent from './contact.component/Contact.component';
 import PlansListComponent from './plans-list.component/PlansList.component';
 import PlanViewComponent from './plan-view.component/PlanView.component';
 import Nav from '../components/nav.component/Nav.component';
@@ -143,6 +144,13 @@ class App extends React.Component<{}, AppProps> {
                         path='/about'
                         render={() => (
                             <AboutComponent userId={this.state.userId} />
+                        )}
+                    />
+                    <Route
+                        exact
+                        path='/contact'
+                        render={() => (
+                            <ContactComponent userId={this.state.userId} />
                         )}
                     />
                     <Route

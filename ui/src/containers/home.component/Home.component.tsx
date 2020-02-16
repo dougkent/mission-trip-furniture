@@ -84,7 +84,7 @@ class HomeComponent extends React.Component<HomeProps, AppState> {
         };
     }
 
-    componentDidUpdate(prevProps: AppProps) {
+    componentDidUpdate(prevProps: HomeProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState({ userId: this.props.userId });
         }

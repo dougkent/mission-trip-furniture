@@ -167,7 +167,7 @@ class AboutComponent extends React.Component<AboutProps, AppState> {
         };
     }
 
-    componentDidUpdate(prevProps: AppProps) {
+    componentDidUpdate(prevProps: AboutProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState({ userId: this.props.userId });
         }
