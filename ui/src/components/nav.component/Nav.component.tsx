@@ -156,7 +156,20 @@ const Nav: React.FC<AppProps> = (props: AppProps) => {
                         </ReactRouter.Link>
                     </Typography>
                 </ListItemText>
-
+                <ListItemText>
+                    <Typography
+                        variant='h5'
+                        noWrap
+                        color='primary'
+                        className={classes.mobileMenuItem}>
+                        <ReactRouter.Link
+                            to='/contact'
+                            className={classes.mobileNavLink}
+                            onClick={handleMobileMenuClose}>
+                            Contact
+                        </ReactRouter.Link>
+                    </Typography>
+                </ListItemText>
                 {(() => {
                     if (props.userId) {
                         return (
@@ -263,6 +276,13 @@ const Nav: React.FC<AppProps> = (props: AppProps) => {
                                 className={classes.navLink}
                                 to='/about'>
                                 The Mission
+                            </ReactRouter.Link>
+                        </Typography>
+                        <Typography variant='h5' noWrap color='primary'>
+                            <ReactRouter.Link
+                                className={classes.navLink}
+                                to='/contact'>
+                                Contact
                             </ReactRouter.Link>
                         </Typography>
                         <div className={classes.grow}></div>
