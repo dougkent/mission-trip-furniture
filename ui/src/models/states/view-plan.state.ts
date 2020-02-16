@@ -6,4 +6,10 @@ export interface ViewPlanState extends AppState {
     plan: Plan;
     downloadUrl: string;
     loading: boolean;
+    planMenuAnchor: HTMLElement | null;
+    editing: boolean;
+    editDescription: string;
+    saving: boolean;
+    deleteDialogOpen: boolean;
+    deleteComplete: boolean;
 }
