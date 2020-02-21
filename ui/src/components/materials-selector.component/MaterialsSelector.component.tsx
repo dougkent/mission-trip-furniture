@@ -15,6 +15,7 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
     const getOptionLabel = (option: Material): string => {
         return option.name;
     };
+
     const handleChange = (event: object, value: Material[]) => {
         props.onSelect(value);
     };

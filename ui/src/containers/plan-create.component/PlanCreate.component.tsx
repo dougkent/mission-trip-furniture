@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 // AWS
 import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
@@ -47,10 +48,10 @@ Amplify.configure(aws_exports);
 const styles = (theme: Theme) =>
     createStyles({
         formContainer: {
-            padding: 20,
-            marginTop: 40,
+            padding: theme.spacing(2),
+            marginTop: theme.spacing(4),
             [theme.breakpoints.up('md')]: {
-                padding: 40,
+                padding: theme.spacing(5),
                 width: '70%',
                 marginLeft: 'auto',
                 marginRight: 'auto',
@@ -63,8 +64,8 @@ const styles = (theme: Theme) =>
         formRow: {
             width: '100%',
             flexGrow: 1,
-            marginBottom: 10,
-            marginTop: 10,
+            marginBottom: theme.spacing(1),
+            marginTop: theme.spacing(1),
         },
         textField: {
             width: '100%',
@@ -132,6 +133,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         planMaterials: [],
         planTools: [],
         loading: false,
+        createComplete: false,
         userId: this.props.userId,
     };
 
@@ -238,33 +240,40 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             },
         }));
 
-        this.uploadPdf();
-        this.uploadImage();
-
         const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
             graphqlOperation(this.createPlanMutation, {
                 input: this.state.plan,
             })
         );
 
-        this.state.planMaterials.forEach(material => {
-            API.graphql(
-                graphqlOperation(this.createPlanMaterialMutation, {
-                    input: material,
-                })
-            );
-        });
-
-        this.state.planTools.forEach(tool => {
-            API.graphql(
-                graphqlOperation(this.createPlanToolMutation, {
-                    input: tool,
-                })
-            );
-        });
-
         if (planResult.data.createPlan.id) {
-            this.setState(this.initialState);
+            await this.uploadPdf();
+            await this.uploadImage();
+
+            this.state.planMaterials.forEach(async material => {
+                await API.graphql(
+                    graphqlOperation(this.createPlanMaterialMutation, {
+                        input: material,
+                    })
+                );
+            });
+
+            this.state.planTools.forEach(async tool => {
+                await API.graphql(
+                    graphqlOperation(this.createPlanToolMutation, {
+                        input: tool,
+                    })
+                );
+            });
+
+            setTimeout(
+                () =>
+                    this.setState(prevState => ({
+                        ...prevState,
+                        createComplete: true,
+                    })),
+                1000
+            );
         }
     };
 
@@ -318,14 +327,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    private uploadImage = () => {
+    private uploadImage = async () => {
         Storage.put(this.state.plan.imageS3Info.key, this.state.imageFile, {
             level: 'protected',
             metadata: { owner: this.state.plan.planCreatedById },
         });
     };
 
-    private uploadPdf = () => {
+    private uploadPdf = async () => {
         Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
             level: 'protected',
             contentType: 'application/pdf',
@@ -336,102 +345,113 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     render() {
         const { classes } = this.props;
 
-        return (
-            <Paper className={classes.formContainer}>
-                <Typography variant='h2' noWrap>
-                    Create Plan
-                </Typography>
-                <form onSubmit={this.handleSubmit} className={classes.form}>
-                    <div className={classes.formRow}>
-                        <TextField
-                            inputProps={{ maxLength: 50 }}
-                            name='name'
-                            onChange={this.handleTextChange}
-                            label='Name'
-                            required
-                            className={classes.textField}
-                        />
-                    </div>
-                    <div className={classes.formRow}>
-                        <TextField
-                            inputProps={{ maxLength: 500 }}
-                            multiline
-                            name='description'
-                            onChange={this.handleTextChange}
-                            label='Description'
-                            required
-                            rows='4'
-                            className={classes.textField}
-                        />
-                    </div>
-                    <div
-                        className={`${classes.formRow} ${classes.multiCardRow}`}>
-                        <PdfUploader
-                            onDeselect={this.handlePdfDeselect}
-                            onSelect={this.handlePdfSelect}
-                            pdfFile={this.state.pdfFile}
-                        />
-                    </div>
-                    <div className={classes.formRow}>
-                        <Connect query={graphqlOperation(this.listToolsQuery)}>
-                            {({
-                                data: { listTools },
-                                loading,
-                            }: GqlQuery<ListToolsQuery>) => {
-                                return (
-                                    <ToolsSelector
-                                        tools={
-                                            !!listTools ? listTools.items : null
-                                        }
-                                        loading={loading}
-                                        onSelect={this.handleToolSelected}
-                                    />
-                                );
-                            }}
-                        </Connect>
-                    </div>
-                    <div className={classes.formRow}>
-                        <Connect
-                            query={graphqlOperation(this.listMaterialsQuery)}>
-                            {({
-                                data: { listMaterials },
-                                loading,
-                            }: GqlQuery<ListMaterialsQuery>) => {
-                                return (
-                                    <MaterialsSelector
-                                        materials={
-                                            !!listMaterials
-                                                ? listMaterials.items
-                                                : null
-                                        }
-                                        loading={loading}
-                                        onSelect={this.handleMaterialSelected}
-                                    />
-                                );
-                            }}
-                        </Connect>
-                    </div>
-                    <div
-                        className={`${classes.formRow} ${classes.multiCardRow}`}>
-                        <ImageUploader
-                            image={this.state.imageFile}
-                            onDeselect={this.handleImageDeselect}
-                            onSelect={this.handleImageSelect}
-                        />
-                    </div>
-                    <div
-                        className={`${classes.formRow} ${classes.submitButtonRow}`}>
-                        <Button
-                            color='secondary'
-                            type='submit'
-                            variant='contained'
-                            disabled={this.state.loading}>
-                            Create Plan
-                        </Button>
-                    </div>
-                </form>
-            </Paper>
-        );
+        if (this.state.createComplete) {
+            return <Redirect to='/my-mtf' />;
+        } else {
+            return (
+                <Paper className={classes.formContainer}>
+                    <Typography variant='h2' noWrap>
+                        Create Plan
+                    </Typography>
+                    <form onSubmit={this.handleSubmit} className={classes.form}>
+                        <div className={classes.formRow}>
+                            <TextField
+                                inputProps={{ maxLength: 50 }}
+                                name='name'
+                                onChange={this.handleTextChange}
+                                label='Name'
+                                required
+                                className={classes.textField}
+                            />
+                        </div>
+                        <div className={classes.formRow}>
+                            <TextField
+                                inputProps={{ maxLength: 500 }}
+                                multiline
+                                name='description'
+                                onChange={this.handleTextChange}
+                                label='Description'
+                                required
+                                rows='4'
+                                className={classes.textField}
+                            />
+                        </div>
+                        <div
+                            className={`${classes.formRow} ${classes.multiCardRow}`}>
+                            <PdfUploader
+                                onDeselect={this.handlePdfDeselect}
+                                onSelect={this.handlePdfSelect}
+                                pdfFile={this.state.pdfFile}
+                            />
+                        </div>
+                        <div className={classes.formRow}>
+                            <Connect
+                                query={graphqlOperation(this.listToolsQuery)}>
+                                {({
+                                    data: { listTools },
+                                    loading,
+                                }: GqlQuery<ListToolsQuery>) => {
+                                    return (
+                                        <ToolsSelector
+                                            tools={
+                                                !!listTools
+                                                    ? listTools.items
+                                                    : null
+                                            }
+                                            loading={loading}
+                                            onSelect={this.handleToolSelected}
+                                        />
+                                    );
+                                }}
+                            </Connect>
+                        </div>
+                        <div className={classes.formRow}>
+                            <Connect
+                                query={graphqlOperation(
+                                    this.listMaterialsQuery
+                                )}>
+                                {({
+                                    data: { listMaterials },
+                                    loading,
+                                }: GqlQuery<ListMaterialsQuery>) => {
+                                    return (
+                                        <MaterialsSelector
+                                            materials={
+                                                !!listMaterials
+                                                    ? listMaterials.items
+                                                    : null
+                                            }
+                                            loading={loading}
+                                            onSelect={
+                                                this.handleMaterialSelected
+                                            }
+                                        />
+                                    );
+                                }}
+                            </Connect>
+                        </div>
+                        <div
+                            className={`${classes.formRow} ${classes.multiCardRow}`}>
+                            <ImageUploader
+                                image={this.state.imageFile}
+                                onDeselect={this.handleImageDeselect}
+                                onSelect={this.handleImageSelect}
+                            />
+                        </div>
+                        <div
+                            className={`${classes.formRow} ${classes.submitButtonRow}`}>
+                            <Button
+                                color='secondary'
+                                type='submit'
+                                variant='contained'
+                                disabled={this.state.loading}>
+                                Create Plan
+                            </Button>
+                        </div>
+                    </form>
+                </Paper>
+            );
+        }
     }
 }
 

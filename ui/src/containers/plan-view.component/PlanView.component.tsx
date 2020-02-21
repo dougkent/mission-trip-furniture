@@ -144,6 +144,7 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             favoritedCount
             materialsRequired {
                 items {
+                    id
                     material {
                         name
                     }
@@ -151,6 +152,7 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             }
             toolsRequired {
                 items {
+                    id
                     tool {
                         name
                     }
@@ -176,6 +178,7 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             favoritedCount
             materialsRequired {
                 items {
+                    id
                     material {
                         name
                     }
@@ -183,6 +186,7 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             }
             toolsRequired {
                 items {
+                    id
                     tool {
                         name
                     }
@@ -310,10 +314,14 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             });
         }
 
-        this.setState(prevState => ({
-            ...prevState,
-            deleteComplete: true,
-        }));
+        setTimeout(
+            () =>
+                this.setState(prevState => ({
+                    ...prevState,
+                    deleteComplete: true,
+                })),
+            1000
+        );
     };
 
     private handleDeleteDialogOpen = () => {
