@@ -11,7 +11,6 @@ import { ErrorMessageProps } from '../../models/props/error-message.props';
 const ErrorMessage: React.FC<ErrorMessageProps> = (
     props: ErrorMessageProps
 ) => {
-    debugger;
     const [error, setError] = React.useState<string>(props.error);
 
     React.useEffect(() => {
@@ -26,7 +25,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = (
 
     return (
         <Snackbar open={!!error} onClose={handleClearError}>
-            <Alert severity='error' onClose={handleClearError} variant='filled'>
+            <Alert severity='error' onClose={handleClearError}>
                 <Typography variant='subtitle1'>{error}</Typography>
             </Alert>
         </Snackbar>

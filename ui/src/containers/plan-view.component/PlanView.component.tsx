@@ -108,6 +108,11 @@ const styles = (theme: Theme) =>
         buttonRow: {
             marginTop: theme.spacing(3),
         },
+        editButtonRow: {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+        },
         editTextField: {
             marginBottom: theme.spacing(1),
         },
@@ -385,6 +390,15 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleSave = async () => {
+        if (!this.state.editDescription.length) {
+            this.setState(prevState => ({
+                ...prevState,
+                saving: false,
+                error: 'Please enter a description.',
+            }));
+            return;
+        }
+
         this.setState(prevState => ({
             ...prevState,
             saving: true,
@@ -399,13 +413,22 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             graphqlOperation(this.updatePlanMutation, { input: input })
         );
 
-        this.setState(prevState => ({
-            ...prevState,
-            plan: planResult.data.updatePlan,
-            editing: false,
-            editDescription: planResult.data.updatePlan.description,
-            saving: false,
-        }));
+        if (planResult && planResult.data && planResult.data.updatePlan) {
+            this.setState(prevState => ({
+                ...prevState,
+                plan: planResult.data.updatePlan,
+                editing: false,
+                editDescription: planResult.data.updatePlan.description,
+                saving: false,
+            }));
+        } else {
+            this.setState(prevState => ({
+                ...prevState,
+                saving: false,
+                error:
+                    "An unexpected error occurred when updating this plan's description. Please try again.",
+            }));
+        }
     };
 
     private handleTextChange = (event: React.ChangeEvent) => {
@@ -436,22 +459,30 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
                         value={this.state.editDescription}
                         className={classes.editTextField}
                     />
-                    <Button
-                        color='secondary'
-                        variant='contained'
-                        onClick={this.handleSave}
-                        className={classes.editButton}
-                        disabled={this.state.saving}>
-                        Save
-                    </Button>
-                    <Button
-                        color='primary'
-                        variant='contained'
-                        onClick={this.handleEditingOff}
-                        className={classes.editButton}
-                        disabled={this.state.saving}>
-                        Cancel
-                    </Button>
+                    <div className={classes.editButtonRow}>
+                        {this.state.saving && (
+                            <CircularProgress
+                                size='24px'
+                                className={classes.editButton}
+                            />
+                        )}
+                        <Button
+                            color='secondary'
+                            variant='contained'
+                            onClick={this.handleSave}
+                            className={classes.editButton}
+                            disabled={this.state.saving}>
+                            Save
+                        </Button>
+                        <Button
+                            color='primary'
+                            variant='contained'
+                            onClick={this.handleEditingOff}
+                            className={classes.editButton}
+                            disabled={this.state.saving}>
+                            Cancel
+                        </Button>
+                    </div>
                 </>
             );
         } else {
