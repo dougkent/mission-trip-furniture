@@ -12,4 +12,5 @@ export interface CreatePlanState extends AppState {
     pdfFile: File;
     imageFile: File;
     loading: boolean;
+    createComplete: boolean;
 }

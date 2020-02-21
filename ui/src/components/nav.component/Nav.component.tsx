@@ -289,18 +289,30 @@ const Nav: React.FC<AppProps> = (props: AppProps) => {
                         {(() => {
                             if (props.userId) {
                                 return (
-                                    <Typography
-                                        variant='h5'
-                                        noWrap
-                                        color='primary'
-                                        className={classes.myAccountLink}>
-                                        <ReactRouter.Link
-                                            to='/my-mtf'
-                                            className={classes.navLink}>
-                                            <AccountCircleSharpIcon />
-                                            &nbsp;My Account
-                                        </ReactRouter.Link>
-                                    </Typography>
+                                    <>
+                                        <Typography
+                                            variant='h5'
+                                            noWrap
+                                            color='primary'
+                                            className={classes.myAccountLink}>
+                                            <ReactRouter.Link
+                                                to='/my-mtf'
+                                                className={classes.navLink}>
+                                                <AccountCircleSharpIcon />
+                                                &nbsp;My Account
+                                            </ReactRouter.Link>
+                                        </Typography>
+                                        <Typography
+                                            variant='h5'
+                                            noWrap
+                                            color='primary'>
+                                            <Authenticator
+                                                hideDefault={true}
+                                                theme={mtfAmplifyTheme}>
+                                                <Greetings />
+                                            </Authenticator>
+                                        </Typography>
+                                    </>
                                 );
                             } else {
                                 return (
@@ -312,13 +324,6 @@ const Nav: React.FC<AppProps> = (props: AppProps) => {
                                 );
                             }
                         })()}
-                        <Typography variant='h5' noWrap color='primary'>
-                            <Authenticator
-                                hideDefault={true}
-                                theme={mtfAmplifyTheme}>
-                                <Greetings />
-                            </Authenticator>
-                        </Typography>
                     </div>
                 </Toolbar>
             </AppBar>

@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 100,
             objectFit: 'cover',
             [theme.breakpoints.up('sm')]: {
-                width: 200,
-                height: 200,
+                width: theme.spacing(25),
+                height: theme.spacing(25),
             },
         },
         cardContentContainer: {
@@ -44,12 +44,12 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         cardContent: {
-            maxWidth: 260,
+            maxWidth: theme.spacing(32),
             paddingTop: 0,
         },
         cardTitle: {
             display: 'flex',
-            maxWidth: 175,
+            maxWidth: theme.spacing(21),
             alignItems: 'center',
         },
         cardActions: {
@@ -114,7 +114,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (
                     </CardActions>
                     <CardContent className={classes.cardContent}>
                         <Typography variant='body1' noWrap>
-                            Size: {props.image.size} KB
+                            Size: {Math.round(props.image.size / 1000)} KB
                         </Typography>
 
                         <Typography variant='body1' noWrap>
