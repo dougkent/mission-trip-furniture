@@ -45,6 +45,7 @@ import {
     UpdatePlanMutation,
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
+import ErrorMessage from '../../components/error-message.component/ErrorMessage';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -228,6 +229,7 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             saving: false,
             deleteDialogOpen: false,
             deleteComplete: false,
+            error: null,
         };
     }
 
@@ -265,6 +267,13 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
         }
     }
 
+    private handleClearError = () => {
+        this.setState(prevState => ({
+            ...prevState,
+            error: null,
+        }));
+    };
+
     private handleDelete = async () => {
         this.setState(prevState => ({
             ...prevState,
@@ -279,7 +288,7 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             graphqlOperation(this.deletePlanMutation, { input: input })
         );
 
-        if (deleteResult.data) {
+        if (deleteResult && deleteResult.data) {
             await Storage.remove(this.state.plan.imageS3Info.key, {
                 level: 'protected',
             });
@@ -312,16 +321,19 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
                     })
                 );
             });
-        }
 
-        setTimeout(
-            () =>
-                this.setState(prevState => ({
-                    ...prevState,
-                    deleteComplete: true,
-                })),
-            1000
-        );
+            this.setState(prevState => ({
+                ...prevState,
+                deleteComplete: true,
+            }));
+        } else {
+            this.setState(prevState => ({
+                ...prevState,
+                saving: false,
+                error:
+                    'An unexpected error occurred when deleteing this plan. Please try again.',
+            }));
+        }
     };
 
     private handleDeleteDialogOpen = () => {
@@ -332,10 +344,12 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleDeleteDialogClose = () => {
-        this.setState(prevState => ({
-            ...prevState,
-            deleteDialogOpen: false,
-        }));
+        if (!this.state.saving) {
+            this.setState(prevState => ({
+                ...prevState,
+                deleteDialogOpen: false,
+            }));
+        }
     };
 
     private handleEditingOff = () => {
@@ -475,14 +489,18 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleDeleteDialogClose}>
-                        Cancel
-                    </Button>
+                    {this.state.saving && <CircularProgress size='24px' />}
                     <Button
                         className={classes.deleteDialog}
-                        onClick={this.handleDelete}>
+                        onClick={this.handleDelete}
+                        disabled={this.state.saving}>
                         <DeleteOutlineSharpIcon />
                         &nbsp;Delete
+                    </Button>
+                    <Button
+                        onClick={this.handleDeleteDialogClose}
+                        disabled={this.state.saving}>
+                        Cancel
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -592,6 +610,10 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
                         </div>
                     </div>
                     {this.renderDeleteDialog()}
+                    <ErrorMessage
+                        error={this.state.error}
+                        onClearError={this.handleClearError}
+                    />
                 </div>
             );
         }
