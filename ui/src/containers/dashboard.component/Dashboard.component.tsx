@@ -83,7 +83,7 @@ const styles = (theme: Theme) =>
 
 export interface DashboardProps extends AppProps, WithStyles<typeof styles> {}
 
-class DashboardComponent extends React.Component<DashboardProps, AppState> {
+class Dashboard extends React.Component<DashboardProps, AppState> {
     private getUserQuery = `query GetUser($id: ID!) {
         getUser(id: $id) {
             createdPlans {
@@ -285,7 +285,7 @@ class DashboardComponent extends React.Component<DashboardProps, AppState> {
 }
 
 export default withStyles(styles(mtfTheme))(
-    withAuthenticator(DashboardComponent, {
+    withAuthenticator(Dashboard, {
         signUpConfig: signUpConfig,
         theme: mtfAmplifyTheme,
     })

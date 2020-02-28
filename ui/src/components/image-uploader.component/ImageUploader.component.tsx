@@ -68,7 +68,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (
     props: ImageUploaderProps
 ) => {
     const classes = useStyles(mtfTheme);
-    const [imageUrl, setImageUrl] = useState();
+    const [imageUrl, setImageUrl] = useState(null);
 
     const handleImageDeselect = () => {
         setImageUrl(null);

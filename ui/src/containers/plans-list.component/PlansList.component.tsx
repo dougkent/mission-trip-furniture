@@ -40,7 +40,7 @@ const styles = (theme: Theme) =>
 
 export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
 
-class PlansListComponent extends React.Component<PlanListProps, AppState> {
+class PlansList extends React.Component<PlanListProps, AppState> {
     private listPlansQuery = `query ListPlans {
         listPlans {
             items {
@@ -128,4 +128,4 @@ class PlansListComponent extends React.Component<PlanListProps, AppState> {
     }
 }
 
-export default withStyles(styles(mtfTheme))(PlansListComponent);
+export default withStyles(styles(mtfTheme))(PlansList);

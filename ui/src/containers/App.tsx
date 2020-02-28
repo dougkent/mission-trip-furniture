@@ -1,6 +1,6 @@
 // React
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // AWS
 import Amplify, { API, graphqlOperation, Auth, Hub } from 'aws-amplify';
@@ -10,14 +10,15 @@ import aws_exports from '../aws-exports';
 import { Container } from '@material-ui/core';
 
 // MTF
-import HomeComponent from './home.component/Home.component';
-import AboutComponent from './about.component/About.component';
-import ContactComponent from './contact.component/Contact.component';
-import PlansListComponent from './plans-list.component/PlansList.component';
-import PlanViewComponent from './plan-view.component/PlanView.component';
+import Home from './home.component/Home.component';
+import About from './about.component/About.component';
+import Contact from './contact.component/Contact.component';
+import PlansList from './plans-list.component/PlansList.component';
+import PlanView from './plan-view.component/PlanView.component';
 import Nav from '../components/nav.component/Nav.component';
-import DashboardComponent from './dashboard.component/Dashboard.component';
-import PlanCreateComponent from './plan-create.component/PlanCreate.component';
+import Dashboard from './dashboard.component/Dashboard.component';
+import CreatePlan from './plan-create.component/PlanCreate.component';
+import NotFound from './not-found.component/NotFound.component';
 import { AppProps } from '../models/props';
 import {
     GqlQuery,
@@ -132,57 +133,61 @@ class App extends React.Component<{}, AppProps> {
             <Router>
                 <Nav userId={this.state.userId} />
                 <Container maxWidth='xl'>
-                    <Route
-                        exact
-                        path='/'
-                        render={() => (
-                            <HomeComponent userId={this.state.userId} />
-                        )}
-                    />
-                    <Route
-                        exact
-                        path='/about'
-                        render={() => (
-                            <AboutComponent userId={this.state.userId} />
-                        )}
-                    />
-                    <Route
-                        exact
-                        path='/contact'
-                        render={() => (
-                            <ContactComponent userId={this.state.userId} />
-                        )}
-                    />
-                    <Route
-                        exact
-                        path='/plans'
-                        render={() => (
-                            <PlansListComponent userId={this.state.userId} />
-                        )}
-                    />
-                    <Route
-                        path='/plans/:planId'
-                        render={props => (
-                            <PlanViewComponent
-                                userId={this.state.userId}
-                                planId={props.match.params.planId}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact
-                        path='/my-mtf'
-                        render={() => (
-                            <DashboardComponent userId={this.state.userId} />
-                        )}
-                    />
-                    <Route
-                        exact
-                        path='/my-mtf/create-plan'
-                        render={() => (
-                            <PlanCreateComponent userId={this.state.userId} />
-                        )}
-                    />
+                    <Switch>
+                        <Route
+                            exact
+                            path='/'
+                            render={() => <Home userId={this.state.userId} />}
+                        />
+                        <Route
+                            exact
+                            path='/about'
+                            render={() => <About userId={this.state.userId} />}
+                        />
+                        <Route
+                            exact
+                            path='/contact'
+                            render={() => (
+                                <Contact userId={this.state.userId} />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path='/plans'
+                            render={() => (
+                                <PlansList userId={this.state.userId} />
+                            )}
+                        />
+                        <Route
+                            path='/plans/:planId'
+                            render={props => (
+                                <PlanView
+                                    userId={this.state.userId}
+                                    planId={props.match.params.planId}
+                                />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path='/my-mtf'
+                            render={() => (
+                                <Dashboard userId={this.state.userId} />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path='/my-mtf/create-plan'
+                            render={() => (
+                                <CreatePlan userId={this.state.userId} />
+                            )}
+                        />
+                        <Route
+                            path='*'
+                            render={() => (
+                                <NotFound userId={this.state.userId} />
+                            )}
+                        />
+                    </Switch>
                 </Container>
             </Router>
         );

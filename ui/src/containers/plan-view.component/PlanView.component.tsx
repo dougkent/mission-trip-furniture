@@ -46,6 +46,7 @@ import {
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
 import ErrorMessage from '../../components/error-message.component/ErrorMessage';
+import NotFound from '../not-found.component/NotFound.component';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -132,7 +133,7 @@ const styles = (theme: Theme) =>
 export interface ViewPlanProps extends AppProps, WithStyles<typeof styles> {
     planId: string;
 }
-class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
+class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     private getPlanQuery = `query GetPlan($id: ID!) {
         getPlan(id: $id) {
             id
@@ -245,22 +246,29 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
             })
         );
 
-        const downloadUrl = await Storage.get(
-            planResult.data.getPlan.pdfS3Key,
-            {
-                level: 'protected',
-                identityId: planResult.data.getPlan.createdBy.id,
-            }
-        );
+        if (planResult && planResult.data && planResult.data.getPlan) {
+            const downloadUrl = await Storage.get(
+                planResult.data.getPlan.pdfS3Key,
+                {
+                    level: 'protected',
+                    identityId: planResult.data.getPlan.createdBy.id,
+                }
+            );
 
-        this.setState(prevState => ({
-            ...prevState,
-            planId: this.props.planId,
-            plan: planResult.data.getPlan,
-            downloadUrl: downloadUrl as string,
-            loading: false,
-            editDescription: planResult.data.getPlan.description,
-        }));
+            this.setState(prevState => ({
+                ...prevState,
+                planId: this.props.planId,
+                plan: planResult.data.getPlan,
+                downloadUrl: downloadUrl as string,
+                loading: false,
+                editDescription: planResult.data.getPlan.description,
+            }));
+        } else {
+            this.setState(prevState => ({
+                ...prevState,
+                loading: false,
+            }));
+        }
     }
 
     componentDidUpdate(prevProps: ViewPlanProps) {
@@ -550,7 +558,7 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
         }
         if (this.state.deleteComplete) {
             return <Redirect to='/my-mtf' />;
-        } else {
+        } else if (this.state.plan) {
             return (
                 <div className={classes.viewPlanContainer}>
                     <div className={classes.title}>
@@ -647,8 +655,10 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
                     />
                 </div>
             );
+        } else {
+            return <NotFound userId={this.state.userId} />;
         }
     }
 }
 
-export default withStyles(styles(mtfTheme))(PlanViewComponent);
+export default withStyles(styles(mtfTheme))(PlanView);
