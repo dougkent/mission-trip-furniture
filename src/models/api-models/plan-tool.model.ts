@@ -1,4 +1,4 @@
-import { Plan, Tool } from '.';
+import { Plan, Tool } from '../api-models';
 
 export interface PlanTool {
     __typename: 'PlanTool';

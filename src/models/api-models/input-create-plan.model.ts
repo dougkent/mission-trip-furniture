@@ -1,4 +1,4 @@
-import { S3ImageInfoInput } from '.';
+import { S3ImageInfoInput } from '../api-models';
 
 export interface CreatePlanInput {
     id: string;

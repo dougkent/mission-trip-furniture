@@ -1,4 +1,4 @@
-import { Material, Plan } from '.';
+import { Material, Plan } from '../api-models';
 
 export interface PlanMaterial {
     __typename: 'PlanMaterial';

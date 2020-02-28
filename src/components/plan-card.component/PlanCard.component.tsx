@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core';
 
 // MTF
-import PlanFavorite from '../../components/plan-favorite.component/PlanFavorite.component';
+import PlanFavorite from '../plan-favorite.component/PlanFavorite.component';
 import { PlanCardProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
 

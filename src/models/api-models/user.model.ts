@@ -1,4 +1,4 @@
-import { ModelPlanConnection, ModelFavoriteConnection } from '.';
+import { ModelPlanConnection, ModelFavoriteConnection } from '../api-models';
 
 export interface User {
     __typename: 'User';
