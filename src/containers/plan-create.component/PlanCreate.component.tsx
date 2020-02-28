@@ -128,6 +128,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             imageS3Info: null,
             created: '',
             favoritedCount: 0,
+            downloadedCount: 0,
             planCreatedById: this.props.userId,
         },
         planMaterials: [],

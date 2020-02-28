@@ -1,4 +1,8 @@
-import { ModelPlanConnection, ModelFavoriteConnection } from '../api-models';
+import {
+    ModelPlanConnection,
+    ModelFavoriteConnection,
+    ModelDownloadConnection,
+} from '.';
 
 export interface User {
     __typename: 'User';
@@ -6,4 +10,5 @@ export interface User {
     username: string;
     createdPlans: ModelPlanConnection | null;
     favoritedPlans: ModelFavoriteConnection | null;
+    downloadedPlans: ModelDownloadConnection | null;
 }

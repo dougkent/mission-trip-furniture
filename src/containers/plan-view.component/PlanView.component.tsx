@@ -149,6 +149,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 username
             }
             favoritedCount
+            downloadCount
             materialsRequired {
                 items {
                     id

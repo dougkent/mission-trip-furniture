@@ -8,5 +8,6 @@ export interface CreatePlanInput {
     imageS3Info: S3ImageInfoInput;
     created: string;
     favoritedCount: number;
+    downloadedCount: number;
     planCreatedById: string;
 }

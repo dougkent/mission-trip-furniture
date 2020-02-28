@@ -1,4 +1,4 @@
-import { Favorite } from './favorite.model';
+import { Favorite } from '.';
 
 export interface CreateFavoriteMutation {
     createFavorite: Favorite;

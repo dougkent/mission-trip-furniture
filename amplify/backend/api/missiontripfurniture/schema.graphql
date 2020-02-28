@@ -26,6 +26,7 @@
     username: String!
     createdPlans: [Plan!] @connection(name: "CreatedBy")
     favoritedPlans: [Favorite!] @connection(name: "FavoritedPlans")
+    downloadedPlans: [Download!] @connection(name: "DownloadedPlans")
 }
 
 type Plan
@@ -40,6 +41,8 @@ type Plan
     createdBy: User! @connection(name: "CreatedBy")
     favoritedCount: Int!
     favoritedBy: [Favorite!] @connection(name: "FavoritedBy")
+    downloadedCount: Int!
+    downloadedBy: [Download!] @connection(name: "DownloadedBy")
     materialsRequired: [PlanMaterial!]! @connection(name: "RequiresMaterials")
     toolsRequired: [PlanTool!]! @connection(name: "RequiresTools")
 }
@@ -53,6 +56,17 @@ type Favorite
     id: ID!
     plan: Plan! @connection(name: "FavoritedBy")
     user: User! @connection(name: "FavoritedPlans")
+}
+
+type Download
+    @model(
+        queries: null
+        mutations: { create: "createDownload" }
+        subscriptions: null
+    ) {
+    id: ID!
+    plan: Plan! @connection(name: "DownloadedBy")
+    user: User! @connection(name: "DownloadedPlans")
 }
 
 type PlanMaterial
