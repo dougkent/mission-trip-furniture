@@ -1,6 +1,6 @@
 // React
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // AWS
 import Amplify, { API, graphqlOperation, Auth, Hub } from 'aws-amplify';
@@ -133,49 +133,61 @@ class App extends React.Component<{}, AppProps> {
             <Router>
                 <Nav userId={this.state.userId} />
                 <Container maxWidth='xl'>
-                    <Route
-                        exact
-                        path='/'
-                        render={() => <Home userId={this.state.userId} />}
-                    />
-                    <Route
-                        exact
-                        path='/about'
-                        render={() => <About userId={this.state.userId} />}
-                    />
-                    <Route
-                        exact
-                        path='/contact'
-                        render={() => <Contact userId={this.state.userId} />}
-                    />
-                    <Route
-                        exact
-                        path='/plans'
-                        render={() => <PlansList userId={this.state.userId} />}
-                    />
-                    <Route
-                        path='/plans/:planId'
-                        render={props => (
-                            <PlanView
-                                userId={this.state.userId}
-                                planId={props.match.params.planId}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact
-                        path='/my-mtf'
-                        render={() => <Dashboard userId={this.state.userId} />}
-                    />
-                    <Route
-                        exact
-                        path='/my-mtf/create-plan'
-                        render={() => <CreatePlan userId={this.state.userId} />}
-                    />
-                    <Route
-                        path='*'
-                        render={() => <NotFound userId={this.state.userId} />}
-                    />
+                    <Switch>
+                        <Route
+                            exact
+                            path='/'
+                            render={() => <Home userId={this.state.userId} />}
+                        />
+                        <Route
+                            exact
+                            path='/about'
+                            render={() => <About userId={this.state.userId} />}
+                        />
+                        <Route
+                            exact
+                            path='/contact'
+                            render={() => (
+                                <Contact userId={this.state.userId} />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path='/plans'
+                            render={() => (
+                                <PlansList userId={this.state.userId} />
+                            )}
+                        />
+                        <Route
+                            path='/plans/:planId'
+                            render={props => (
+                                <PlanView
+                                    userId={this.state.userId}
+                                    planId={props.match.params.planId}
+                                />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path='/my-mtf'
+                            render={() => (
+                                <Dashboard userId={this.state.userId} />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path='/my-mtf/create-plan'
+                            render={() => (
+                                <CreatePlan userId={this.state.userId} />
+                            )}
+                        />
+                        <Route
+                            path='*'
+                            render={() => (
+                                <NotFound userId={this.state.userId} />
+                            )}
+                        />
+                    </Switch>
                 </Container>
             </Router>
         );
