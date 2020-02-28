@@ -1,4 +1,4 @@
-import { User } from '.';
+import { User } from '../api-models';
 
 export interface CreateUserMutation {
     createUser: User;

@@ -1,4 +1,4 @@
-import { Plan, User } from '.';
+import { Plan, User } from '../api-models';
 export interface Favorite {
     __typename: 'Favorite';
     id: string;

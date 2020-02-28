@@ -4,7 +4,7 @@ import {
     ModelPlanMaterialConnection,
     ModelPlanToolConnection,
     User,
-} from '.';
+} from '../api-models';
 
 // import { User } from './user.model';
 // import { ModelFavoriteConnection } from './favorite-connection.model';

@@ -1,6 +1,6 @@
 {
-    "name": "ui",
-    "version": "0.1.0",
+    "name": "mission-trip-furniture",
+    "version": "1.0.0",
     "private": true,
     "dependencies": {
         "@aws-amplify/cli": "^4.13.4",
