@@ -132,7 +132,7 @@ const styles = (theme: Theme) =>
 export interface ViewPlanProps extends AppProps, WithStyles<typeof styles> {
     planId: string;
 }
-class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
+class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     private getPlanQuery = `query GetPlan($id: ID!) {
         getPlan(id: $id) {
             id
@@ -651,4 +651,4 @@ class PlanViewComponent extends React.Component<ViewPlanProps, ViewPlanState> {
     }
 }
 
-export default withStyles(styles(mtfTheme))(PlanViewComponent);
+export default withStyles(styles(mtfTheme))(PlanView);

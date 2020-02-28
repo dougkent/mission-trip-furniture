@@ -24,7 +24,7 @@ const styles = (theme: Theme) =>
 
 export interface ContactProps extends AppProps, WithStyles<typeof styles> {}
 
-class ContactComponent extends React.Component<ContactProps, AppState> {
+class Contact extends React.Component<ContactProps, AppState> {
     constructor(props: ContactProps) {
         super(props);
 
@@ -58,4 +58,4 @@ class ContactComponent extends React.Component<ContactProps, AppState> {
     }
 }
 
-export default withStyles(styles(mtfTheme))(ContactComponent);
+export default withStyles(styles(mtfTheme))(Contact);

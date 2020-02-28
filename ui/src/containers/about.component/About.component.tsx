@@ -158,7 +158,7 @@ const styles = (theme: Theme) =>
 
 export interface AboutProps extends AppProps, WithStyles<typeof styles> {}
 
-class AboutComponent extends React.Component<AboutProps, AppState> {
+class About extends React.Component<AboutProps, AppState> {
     constructor(props: AboutProps) {
         super(props);
 
@@ -362,4 +362,4 @@ class AboutComponent extends React.Component<AboutProps, AppState> {
     }
 }
 
-export default withStyles(styles(mtfTheme))(AboutComponent);
+export default withStyles(styles(mtfTheme))(About);

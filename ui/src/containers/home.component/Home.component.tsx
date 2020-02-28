@@ -75,7 +75,7 @@ const styles = (theme: Theme) =>
 
 export interface HomeProps extends AppProps, WithStyles<typeof styles> {}
 
-class HomeComponent extends React.Component<HomeProps, AppState> {
+class Home extends React.Component<HomeProps, AppState> {
     constructor(props: HomeProps) {
         super(props);
 
@@ -121,4 +121,4 @@ class HomeComponent extends React.Component<HomeProps, AppState> {
     }
 }
 
-export default withStyles(styles(mtfTheme))(HomeComponent);
+export default withStyles(styles(mtfTheme))(Home);
