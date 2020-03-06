@@ -19,6 +19,8 @@ import {
 
 // MTF
 import PlanCard from '../../components/plan-card.component/PlanCard.component';
+import Search from '../../components/search.component/Search.component';
+import Filter from '../../components/filter.component/Filter.component';
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
 import { GqlQuery, ListPlansQuery } from '../../models/api-models';
@@ -35,6 +37,17 @@ const styles = (theme: Theme) =>
         },
         plansListContainer: {
             marginTop: theme.spacing(4),
+        },
+        searchFilterBar: {
+            marginTop: theme.spacing(2),
+            marginBottom: theme.spacing(2),
+            display: 'flex',
+            [theme.breakpoints.up('md')]: {
+                width: '75%',
+            },
+            [theme.breakpoints.up('lg')]: {
+                width: '50%',
+            },
         },
     });
 
@@ -119,6 +132,10 @@ class PlansList extends React.Component<PlanListProps, AppState> {
         return (
             <div className={classes.plansListContainer}>
                 <Typography variant='h2'>Plans</Typography>
+                <div className={classes.searchFilterBar}>
+                    <Search />
+                    <Filter />
+                </div>
                 <Connect query={graphqlOperation(this.listPlansQuery)}>
                     {({ data, loading }: GqlQuery<ListPlansQuery>) => {
                         return this.renderPlansList(data, loading);
