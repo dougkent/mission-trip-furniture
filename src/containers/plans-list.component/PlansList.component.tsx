@@ -65,6 +65,7 @@ class PlansList extends React.Component<PlanListProps, AppState> {
                         }
                     }
                 }
+                downloadedCount
             }
         }
     }`;

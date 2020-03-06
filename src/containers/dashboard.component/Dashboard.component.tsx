@@ -103,7 +103,7 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                         username
                     }
                     favoritedCount
-                    downloadCount
+                    downloadedCount
                 }
             }
             favoritedPlans {
@@ -124,7 +124,7 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                             username
                         }
                         favoritedCount
-                        downloadCount
+                        downloadedCount
                     }
                 }
             }

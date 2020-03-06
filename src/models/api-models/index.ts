@@ -16,6 +16,7 @@ export * from './input-s3-image-info.model';
 export * from './input-update-plan.model';
 export * from './material-connection.model';
 export * from './material.model';
+export * from './mutation-create-download.model';
 export * from './mutation-create-favorite.model';
 export * from './mutation-create-plan.model';
 export * from './mutation-create-user.model';

@@ -31,10 +31,14 @@ import MoreVertSharpIcon from '@material-ui/icons/MoreVertSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 import DeleteOutlineSharpIcon from '@material-ui/icons/DeleteOutlineSharp';
 
+// uuid
+import { v4 as uuid } from 'uuid';
+
 // MTF
 import { AppProps } from '../../models/props';
 import { ViewPlanState } from '../../models/states';
 import {
+    CreateDownloadInput,
     DeletePlanInput,
     DeletePlanMaterialInput,
     DeletePlanMutation,
@@ -149,7 +153,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 username
             }
             favoritedCount
-            downloadCount
+            downloadedCount
             materialsRequired {
                 items {
                     id
@@ -184,6 +188,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 username
             }
             favoritedCount
+            downloadedCount
             materialsRequired {
                 items {
                     id
@@ -217,6 +222,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
 
     private deletePlanToolMutation = `mutation DeletePlanTool($input: DeletePlanToolInput!) {
         deletePlanTool(input: $input) {
+            id
+        }
+    }`;
+
+    private createDownloadMutation = `mutation CreateDownload($input: CreateDownloadInput!) {
+        createDownload(input: $input) {
             id
         }
     }`;
@@ -285,6 +296,32 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         this.setState(prevState => ({
             ...prevState,
             error: null,
+        }));
+    };
+
+    private handleCreateDownload = () => {
+        this.setState(prevState => ({
+            ...prevState,
+            saving: true,
+        }));
+
+        const input: CreateDownloadInput = {
+            id: uuid(),
+            downloadPlanId: this.state.planId,
+            downloadUserId: this.state.userId,
+        };
+
+        API.graphql(
+            graphqlOperation(this.createDownloadMutation, { input: input })
+        );
+
+        this.setState(prevState => ({
+            ...prevState,
+            saving: false,
+            plan: {
+                ...prevState.plan,
+                downloadsCount: prevState.plan.downloadedCount++,
+            },
         }));
     };
 
@@ -644,7 +681,10 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 variant='contained'
                                 href={this.state.downloadUrl}
                                 target='_blank'
-                                disabled={this.state.editing}>
+                                disabled={
+                                    this.state.editing || this.state.saving
+                                }
+                                onClick={this.handleCreateDownload}>
                                 Download PDF
                             </Button>
                         </div>
