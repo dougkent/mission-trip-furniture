@@ -28,11 +28,7 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
             onChange={handleChange}
             options={props.materials}
             renderInput={params => (
-                <TextField
-                    {...params}
-                    label='Select Materials Required for this Plan'
-                    fullWidth
-                />
+                <TextField {...params} label={props.label} fullWidth />
             )}
         />
     );

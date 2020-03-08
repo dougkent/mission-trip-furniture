@@ -28,11 +28,7 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
             onChange={handleChange}
             options={props.tools}
             renderInput={params => (
-                <TextField
-                    {...params}
-                    label='Select Tools Required for this Plan'
-                    fullWidth
-                />
+                <TextField {...params} label={props.label} fullWidth />
             )}
         />
     );

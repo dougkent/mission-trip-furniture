@@ -394,6 +394,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 }: GqlQuery<ListToolsQuery>) => {
                                     return (
                                         <ToolsSelector
+                                            label='Select Tools Required for this Plan'
                                             tools={
                                                 !!listTools
                                                     ? listTools.items
@@ -417,6 +418,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 }: GqlQuery<ListMaterialsQuery>) => {
                                     return (
                                         <MaterialsSelector
+                                            label='Select Materials Required for this Plan'
                                             materials={
                                                 !!listMaterials
                                                     ? listMaterials.items

@@ -23,7 +23,12 @@ import Search from '../../components/search.component/Search.component';
 import Filter from '../../components/filter.component/Filter.component';
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
-import { GqlQuery, ListPlansQuery } from '../../models/api-models';
+import {
+    GqlQuery,
+    ListPlansQuery,
+    Material,
+    Tool,
+} from '../../models/api-models';
 import { mtfTheme } from '../../themes';
 
 // Configure
@@ -65,6 +70,24 @@ class PlansList extends React.Component<PlanListProps, AppState> {
                     width
                     height
                 }
+                materialsRequired {
+                    items {
+                        id
+                        material {
+                            id
+                            name
+                        }
+                    }
+                }
+                toolsRequired {
+                    items {
+                        id
+                        tool {
+                            id
+                            name
+                        }
+                    }
+                }
                 created
                 createdBy {
                     id
@@ -96,11 +119,31 @@ class PlansList extends React.Component<PlanListProps, AppState> {
             this.setState({ userId: this.props.userId });
         }
     }
-    private handleTogglePlanFavorite(
+
+    private handleTogglePlanFavorite = (
         planId: string,
         toggleFavOn: boolean
-    ): void {}
-    private renderPlansList(data: ListPlansQuery, loading: boolean): any {
+    ) => {};
+
+    private getFilterMaterials(data: ListPlansQuery): Material[] {
+        return data.listPlans.items
+            .map(plan => {
+                return plan.materialsRequired.items.map(
+                    planMaterial => planMaterial.material
+                );
+            })
+            .reduce((materials1, materials2) => materials1.concat(materials2));
+    }
+
+    private getFilterTools(data: ListPlansQuery): Tool[] {
+        return data.listPlans.items
+            .map(plan => {
+                return plan.toolsRequired.items.map(planTool => planTool.tool);
+            })
+            .reduce((tools1, tools2) => tools1.concat(tools2));
+    }
+
+    private renderPlansList = (data: ListPlansQuery, loading: boolean) => {
         const { classes } = this.props;
 
         if (loading) {
@@ -111,20 +154,37 @@ class PlansList extends React.Component<PlanListProps, AppState> {
             );
         } else if (!loading && data && data.listPlans && data.listPlans.items) {
             return (
-                <Grid container spacing={2}>
-                    {data.listPlans.items.map(plan => (
-                        <PlanCard
-                            plan={plan}
-                            userId={this.state.userId}
-                            onToggleFavorite={this.handleTogglePlanFavorite}
-                        />
-                    ))}
-                </Grid>
+                <>
+                    {this.renderSearchAndFilter(data)}
+                    <Grid container spacing={2}>
+                        {data.listPlans.items.map(plan => (
+                            <PlanCard
+                                plan={plan}
+                                userId={this.state.userId}
+                                onToggleFavorite={this.handleTogglePlanFavorite}
+                            />
+                        ))}
+                    </Grid>
+                </>
             );
         } else {
             return <Typography variant='h4'>No Plans Found</Typography>;
         }
-    }
+    };
+
+    private renderSearchAndFilter = (data: ListPlansQuery) => {
+        const { classes } = this.props;
+
+        return (
+            <div className={classes.searchFilterBar}>
+                <Search />
+                <Filter
+                    materials={this.getFilterMaterials(data)}
+                    tools={this.getFilterTools(data)}
+                />
+            </div>
+        );
+    };
 
     render() {
         const { classes } = this.props;
@@ -132,10 +192,7 @@ class PlansList extends React.Component<PlanListProps, AppState> {
         return (
             <div className={classes.plansListContainer}>
                 <Typography variant='h2'>Plans</Typography>
-                <div className={classes.searchFilterBar}>
-                    <Search />
-                    <Filter />
-                </div>
+
                 <Connect query={graphqlOperation(this.listPlansQuery)}>
                     {({ data, loading }: GqlQuery<ListPlansQuery>) => {
                         return this.renderPlansList(data, loading);
