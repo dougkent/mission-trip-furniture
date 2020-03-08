@@ -8,7 +8,6 @@ import {
     makeStyles,
     TextField,
     Theme,
-    Typography,
 } from '@material-ui/core';
 import SearchSharpIcon from '@material-ui/icons/SearchSharp';
 
