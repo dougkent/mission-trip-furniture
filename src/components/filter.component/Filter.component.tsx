@@ -6,19 +6,21 @@ import {
     Button,
     createStyles,
     Dialog,
-    DialogTitle,
+    DialogActions,
     DialogContent,
+    DialogTitle,
     FormControlLabel,
     FormGroup,
     IconButton,
     makeStyles,
+    Slide,
     Switch,
     Theme,
     Typography,
-    DialogActions,
 } from '@material-ui/core';
 import FilterListSharpIcon from '@material-ui/icons/FilterListSharp';
 import CloseSharpIcon from '@material-ui/icons/CloseSharp';
+import { TransitionProps } from '@material-ui/core/transitions';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
@@ -52,18 +54,31 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'inline',
             },
         },
-        filterDialog: {
-            width: '85vw',
-            height: '85vh',
-        },
         filterDialogTitle: {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
         },
+        filterContent: {
+            overflowY: 'auto',
+        },
         filterRow: {
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacing(3),
+        },
+        centerRow: {
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+            flexWrap: 'wrap',
+        },
+        datePicker: {
+            width: '100%',
+            textAlign: 'center',
+        },
+        datePickerLabel: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
         },
         filterActions: {
             display: 'flex',
@@ -72,36 +87,37 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+const Transition = React.forwardRef<unknown, TransitionProps>(
+    function Transition(props, ref) {
+        return <Slide direction='up' ref={ref} {...props} />;
+    }
+);
+
 const Filter: React.FC<FilterProps> = (props: FilterProps) => {
     const classes = useStyles(mtfTheme);
 
-    const [filterState, setFilterState] = useState<FilterState>({
-        filterOpen: false,
-        filterMaterials: [],
-        filterTools: [],
-        filterFavoritedByUser: false,
-        filterDownloadedByUser: false,
-        filterCreatedByUser: false,
-        filterCreatedRangeStart: null,
-        filterCreatedRangeEnd: null,
-    });
+    const [filterState, setFilterState] = useState<FilterState>(
+        props.filterState
+    );
+
+    const [filterOpen, setFilterOpen] = useState<boolean>(false);
 
     const handleApply = () => {
-        console.log(filterState);
+        props.onApply(filterState);
+
+        setFilterOpen(false);
     };
 
     const handleDateChange = (key: string) => (date: any) => {
         setFilterState({
             ...filterState,
-            [key]: date,
+            [key]: date == null ? null : date._d,
         });
     };
 
     const handleFilterClose = () => {
-        setFilterState({
-            ...filterState,
-            filterOpen: false,
-        });
+        setFilterOpen(false);
+        setFilterState(props.filterState);
     };
 
     const handleMaterialSelect = (materials: Material[]) => {
@@ -129,10 +145,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
     const handleToggleFilter = (event: React.FormEvent) => {
         event.preventDefault();
 
-        setFilterState({
-            ...filterState,
-            filterOpen: true,
-        });
+        setFilterOpen(true);
     };
 
     return (
@@ -151,132 +164,129 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                 />
                 <span className={classes.filterButtonDesktop}>Filter</span>
             </Button>
-            <Dialog open={filterState.filterOpen} onClose={handleFilterClose}>
-                <div className={classes.filterDialog}>
+            <Dialog
+                fullScreen
+                open={filterOpen}
+                onClose={handleFilterClose}
+                scroll='paper'
+                TransitionComponent={Transition}
+                transitionDuration={500}>
+                <DialogTitle
+                    disableTypography
+                    className={classes.filterDialogTitle}>
+                    <Typography variant='h4'>Filter Plans</Typography>
+                    <IconButton onClick={handleFilterClose}>
+                        <CloseSharpIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent dividers>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
-                        <DialogTitle
-                            disableTypography
-                            className={classes.filterDialogTitle}>
-                            <Typography variant='h4'>Filter Plans</Typography>
-                            <IconButton onClick={handleFilterClose}>
-                                <CloseSharpIcon />
-                            </IconButton>
-                        </DialogTitle>
-                        <DialogContent>
-                            <FormGroup>
-                                <div className={classes.filterRow}>
-                                    <ToolsSelector
-                                        label='Select Tools'
-                                        loading={false}
-                                        tools={props.tools}
-                                        onSelect={handleToolSelect}
-                                    />
-                                </div>
-                                <div className={classes.filterRow}>
-                                    <MaterialsSelector
-                                        label='Select Materials'
-                                        loading={false}
-                                        materials={props.materials}
-                                        onSelect={handleMaterialSelect}
-                                    />
-                                </div>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={
-                                                filterState.filterFavoritedByUser
-                                            }
-                                            onChange={handleSwitchChange(
-                                                'filterFavoritedByUser'
-                                            )}
-                                            value={
-                                                filterState.filterFavoritedByUser
-                                            }
-                                            color='secondary'
-                                        />
-                                    }
-                                    label='Is Favorited By You'
-                                    className={classes.filterRow}
+                        <FormGroup>
+                            <div className={classes.filterRow}>
+                                <ToolsSelector
+                                    label='Select Tools'
+                                    loading={false}
+                                    tools={props.tools}
+                                    onSelect={handleToolSelect}
                                 />
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={
-                                                filterState.filterCreatedByUser
-                                            }
-                                            onChange={handleSwitchChange(
-                                                'filterCreatedByUser'
-                                            )}
-                                            value={
-                                                filterState.filterCreatedByUser
-                                            }
-                                            color='secondary'
-                                        />
-                                    }
-                                    label='Was Created By You'
-                                    className={classes.filterRow}
+                            </div>
+                            <div className={classes.filterRow}>
+                                <MaterialsSelector
+                                    label='Select Materials'
+                                    loading={false}
+                                    materials={props.materials}
+                                    onSelect={handleMaterialSelect}
                                 />
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={
-                                                filterState.filterDownloadedByUser
-                                            }
-                                            onChange={handleSwitchChange(
-                                                'filterDownloadedByUser'
-                                            )}
-                                            value={
-                                                filterState.filterDownloadedByUser
-                                            }
-                                            color='secondary'
-                                        />
-                                    }
-                                    label='Was Downloaded By You'
-                                    className={classes.filterRow}
-                                />
-                                <div className={classes.filterRow}>
-                                    <DatePicker
-                                        autoOk
-                                        variant='static'
-                                        disableFuture
-                                        disableToolbar
-                                        openTo='date'
-                                        value={
-                                            filterState.filterCreatedRangeStart
+                            </div>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={
+                                            filterState.filterFavoritedByUser
                                         }
-                                        onChange={handleDateChange(
+                                        onChange={handleSwitchChange(
+                                            'filterFavoritedByUser'
+                                        )}
+                                        value={
+                                            filterState.filterFavoritedByUser
+                                        }
+                                        color='secondary'
+                                    />
+                                }
+                                label='Is Favorited By You'
+                                className={`${classes.filterRow}`}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={
+                                            filterState.filterCreatedByUser
+                                        }
+                                        onChange={handleSwitchChange(
+                                            'filterCreatedByUser'
+                                        )}
+                                        value={filterState.filterCreatedByUser}
+                                        color='secondary'
+                                    />
+                                }
+                                label='Was Created By You'
+                                className={`${classes.filterRow}`}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={
+                                            filterState.filterDownloadedByUser
+                                        }
+                                        onChange={handleSwitchChange(
+                                            'filterDownloadedByUser'
+                                        )}
+                                        value={
+                                            filterState.filterDownloadedByUser
+                                        }
+                                        color='secondary'
+                                    />
+                                }
+                                label='Was Downloaded By You'
+                                className={`${classes.filterRow}`}
+                            />
+                            <div className={classes.centerRow}>
+                                <div
+                                    className={`${classes.datePicker} ${classes.datePickerLabel}`}>
+                                    <Typography>Plan Created After:</Typography>
+                                    <Button
+                                        onClick={handleDateChange(
                                             'filterCreatedRangeStart'
-                                        )}
-                                    />
+                                        )}>
+                                        Clear
+                                    </Button>
                                 </div>
-                                <div className={classes.filterRow}>
-                                    <DatePicker
-                                        autoOk
-                                        variant='static'
-                                        disableFuture
-                                        disableToolbar
-                                        openTo='date'
-                                        value={
-                                            filterState.filterCreatedRangeEnd
-                                        }
-                                        onChange={handleDateChange(
-                                            'filterCreatedRangeEnd'
-                                        )}
-                                    />
-                                </div>
-                            </FormGroup>
-                        </DialogContent>
-                        <DialogActions className={classes.filterActions}>
-                            <Button
-                                color='secondary'
-                                variant='contained'
-                                fullWidth
-                                onClick={handleApply}>
-                                Apply
-                            </Button>
-                        </DialogActions>
+                                <DatePicker
+                                    autoOk
+                                    variant='static'
+                                    disableFuture
+                                    disableToolbar
+                                    clearable
+                                    openTo='date'
+                                    value={filterState.filterCreatedRangeStart}
+                                    onChange={handleDateChange(
+                                        'filterCreatedRangeStart'
+                                    )}
+                                    className={classes.datePicker}
+                                />
+                            </div>
+                        </FormGroup>
                     </MuiPickersUtilsProvider>
-                </div>
+                </DialogContent>
+                <DialogActions className={classes.filterActions}>
+                    <Button
+                        color='secondary'
+                        variant='contained'
+                        fullWidth
+                        onClick={handleApply}>
+                        Apply
+                    </Button>
+                </DialogActions>
             </Dialog>
         </>
     );

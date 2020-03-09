@@ -1,5 +1,4 @@
 export interface FilterState {
-    filterOpen: boolean;
     filterMaterials: string[];
     filterTools: string[];
     filterFavoritedByUser: boolean;

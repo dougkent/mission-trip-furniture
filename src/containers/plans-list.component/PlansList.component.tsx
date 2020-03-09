@@ -22,12 +22,13 @@ import PlanCard from '../../components/plan-card.component/PlanCard.component';
 import Search from '../../components/search.component/Search.component';
 import Filter from '../../components/filter.component/Filter.component';
 import { AppProps } from '../../models/props';
-import { AppState } from '../../models/states';
+import { FilterState, PlanListState } from '../../models/states';
 import {
     GqlQuery,
     ListPlansQuery,
     Material,
     Tool,
+    Plan,
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
 
@@ -58,7 +59,7 @@ const styles = (theme: Theme) =>
 
 export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
 
-class PlansList extends React.Component<PlanListProps, AppState> {
+class PlansList extends React.Component<PlanListProps, PlanListState> {
     private listPlansQuery = `query ListPlans {
         listPlans {
             items {
@@ -110,6 +111,15 @@ class PlansList extends React.Component<PlanListProps, AppState> {
         super(props);
 
         this.state = {
+            filterState: {
+                filterMaterials: [],
+                filterTools: [],
+                filterFavoritedByUser: false,
+                filterDownloadedByUser: false,
+                filterCreatedByUser: false,
+                filterCreatedRangeStart: null,
+                filterCreatedRangeEnd: null,
+            },
             userId: props.userId,
         };
     }
@@ -120,10 +130,72 @@ class PlansList extends React.Component<PlanListProps, AppState> {
         }
     }
 
+    private filterPlans = (data: ListPlansQuery): Plan[] => {
+        return data.listPlans.items.filter(plan => {
+            if (!this.state.filterState) return true;
+
+            if (this.state.filterState.filterMaterials.length) {
+                var materialsMatch = plan.materialsRequired.items.filter(
+                    planMaterial => {
+                        let hasMaterial: boolean = true;
+
+                        for (let idx in this.state.filterState
+                            .filterMaterials) {
+                            if (
+                                planMaterial.material.id !==
+                                this.state.filterState.filterMaterials[idx]
+                            ) {
+                                hasMaterial = false;
+                                break;
+                            }
+                        }
+
+                        return hasMaterial;
+                    }
+                );
+
+                if (!materialsMatch.length) {
+                    return false;
+                }
+            }
+
+            if (this.state.filterState.filterTools.length) {
+                var toolsMatch = plan.toolsRequired.items.filter(planTool => {
+                    let hasTool: boolean = true;
+
+                    for (let idx in this.state.filterState.filterTools) {
+                        if (
+                            planTool.tool.id !==
+                            this.state.filterState.filterTools[idx]
+                        ) {
+                            hasTool = false;
+                            break;
+                        }
+                    }
+
+                    return hasTool;
+                });
+
+                if (!toolsMatch.length) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+    };
+
     private handleTogglePlanFavorite = (
         planId: string,
         toggleFavOn: boolean
     ) => {};
+
+    private handleApplyFilter = (filterState: FilterState) => {
+        this.setState(prevState => ({
+            ...prevState,
+            filterState: filterState,
+        }));
+    };
 
     private getFilterMaterials(data: ListPlansQuery): Material[] {
         return data.listPlans.items
@@ -143,7 +215,23 @@ class PlansList extends React.Component<PlanListProps, AppState> {
             .reduce((tools1, tools2) => tools1.concat(tools2));
     }
 
-    private renderPlansList = (data: ListPlansQuery, loading: boolean) => {
+    private renderPlansList = (data: ListPlansQuery) => {
+        const filteredPlans = this.filterPlans(data);
+
+        return (
+            <Grid container spacing={2}>
+                {filteredPlans.map(plan => (
+                    <PlanCard
+                        plan={plan}
+                        userId={this.state.userId}
+                        onToggleFavorite={this.handleTogglePlanFavorite}
+                    />
+                ))}
+            </Grid>
+        );
+    };
+
+    private renderPlans = (data: ListPlansQuery, loading: boolean) => {
         const { classes } = this.props;
 
         if (loading) {
@@ -156,15 +244,7 @@ class PlansList extends React.Component<PlanListProps, AppState> {
             return (
                 <>
                     {this.renderSearchAndFilter(data)}
-                    <Grid container spacing={2}>
-                        {data.listPlans.items.map(plan => (
-                            <PlanCard
-                                plan={plan}
-                                userId={this.state.userId}
-                                onToggleFavorite={this.handleTogglePlanFavorite}
-                            />
-                        ))}
-                    </Grid>
+                    {this.renderPlansList(data)}
                 </>
             );
         } else {
@@ -179,8 +259,10 @@ class PlansList extends React.Component<PlanListProps, AppState> {
             <div className={classes.searchFilterBar}>
                 <Search />
                 <Filter
+                    filterState={this.state.filterState}
                     materials={this.getFilterMaterials(data)}
                     tools={this.getFilterTools(data)}
+                    onApply={this.handleApplyFilter}
                 />
             </div>
         );
@@ -195,7 +277,7 @@ class PlansList extends React.Component<PlanListProps, AppState> {
 
                 <Connect query={graphqlOperation(this.listPlansQuery)}>
                     {({ data, loading }: GqlQuery<ListPlansQuery>) => {
-                        return this.renderPlansList(data, loading);
+                        return this.renderPlans(data, loading);
                     }}
                 </Connect>
             </div>
