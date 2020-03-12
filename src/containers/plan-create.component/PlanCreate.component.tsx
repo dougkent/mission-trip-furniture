@@ -402,6 +402,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                             }
                                             loading={loading}
                                             onSelect={this.handleToolSelected}
+                                            selectedTools={[]}
                                         />
                                     );
                                 }}
@@ -428,6 +429,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                             onSelect={
                                                 this.handleMaterialSelected
                                             }
+                                            selectedMaterials={[]}
                                         />
                                     );
                                 }}

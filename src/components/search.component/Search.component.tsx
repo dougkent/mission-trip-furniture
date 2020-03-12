@@ -19,6 +19,12 @@ const useStyles = makeStyles((theme: Theme) =>
         searchBarContainer: {
             display: 'flex',
             width: '100%',
+            [theme.breakpoints.up('md')]: {
+                width: '75%',
+            },
+            [theme.breakpoints.up('lg')]: {
+                width: '50%',
+            },
         },
         searchButton: {
             paddingLeft: theme.spacing(3),

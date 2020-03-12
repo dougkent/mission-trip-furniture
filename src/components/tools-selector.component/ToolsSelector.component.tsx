@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Material UI
-import { TextField } from '@material-ui/core';
+import { Chip, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 // MTF
@@ -30,6 +30,19 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
             renderInput={params => (
                 <TextField {...params} label={props.label} fullWidth />
             )}
+            renderTags={(value, getTagProps) =>
+                value.map((tool, index) => (
+                    <Chip
+                        variant='outlined'
+                        color='secondary'
+                        label={tool.name}
+                        size='small'
+                        {...getTagProps({ index })}
+                    />
+                ))
+            }
+            value={props.selectedTools}
+            disableOpenOnFocus
         />
     );
 };

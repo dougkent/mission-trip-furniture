@@ -28,7 +28,6 @@ import {
     ListPlansQuery,
     Material,
     Tool,
-    Plan,
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
 
@@ -49,10 +48,7 @@ const styles = (theme: Theme) =>
             marginBottom: theme.spacing(2),
             display: 'flex',
             [theme.breakpoints.up('md')]: {
-                width: '75%',
-            },
-            [theme.breakpoints.up('lg')]: {
-                width: '50%',
+                flexWrap: 'wrap',
             },
         },
     });
@@ -130,61 +126,6 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }
     }
 
-    private filterPlans = (data: ListPlansQuery): Plan[] => {
-        return data.listPlans.items.filter(plan => {
-            if (!this.state.filterState) return true;
-
-            if (this.state.filterState.filterMaterials.length) {
-                var materialsMatch = plan.materialsRequired.items.filter(
-                    planMaterial => {
-                        let hasMaterial: boolean = true;
-
-                        for (let idx in this.state.filterState
-                            .filterMaterials) {
-                            if (
-                                planMaterial.material.id !==
-                                this.state.filterState.filterMaterials[idx]
-                            ) {
-                                hasMaterial = false;
-                                break;
-                            }
-                        }
-
-                        return hasMaterial;
-                    }
-                );
-
-                if (!materialsMatch.length) {
-                    return false;
-                }
-            }
-
-            if (this.state.filterState.filterTools.length) {
-                var toolsMatch = plan.toolsRequired.items.filter(planTool => {
-                    let hasTool: boolean = true;
-
-                    for (let idx in this.state.filterState.filterTools) {
-                        if (
-                            planTool.tool.id !==
-                            this.state.filterState.filterTools[idx]
-                        ) {
-                            hasTool = false;
-                            break;
-                        }
-                    }
-
-                    return hasTool;
-                });
-
-                if (!toolsMatch.length) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-    };
-
     private handleTogglePlanFavorite = (
         planId: string,
         toggleFavOn: boolean
@@ -216,11 +157,9 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
     }
 
     private renderPlansList = (data: ListPlansQuery) => {
-        const filteredPlans = this.filterPlans(data);
-
         return (
             <Grid container spacing={2}>
-                {filteredPlans.map(plan => (
+                {data.listPlans.items.map(plan => (
                     <PlanCard
                         plan={plan}
                         userId={this.state.userId}

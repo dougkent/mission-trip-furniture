@@ -34,25 +34,23 @@ import ToolsSelector from '../tools-selector.component/ToolsSelector.component';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        filterButton: {
-            paddingLeft: theme.spacing(3),
-            paddingRight: theme.spacing(3),
-        },
-        filterIcon: {
-            [theme.breakpoints.up('md')]: {
-                marginRight: theme.spacing(1),
-            },
-        },
-        filterButtonMobile: {
+        mobileDisplay: {
             [theme.breakpoints.up('md')]: {
                 display: 'none',
             },
         },
-        filterButtonDesktop: {
+        desktopDisplay: {
             display: 'none',
             [theme.breakpoints.up('md')]: {
-                display: 'inline',
+                display: 'inherit',
             },
+        },
+        filterButton: {
+            paddingLeft: theme.spacing(3),
+            paddingRight: theme.spacing(3),
+        },
+        filterButtonText: {
+            marginLeft: theme.spacing(1),
         },
         filterDialogTitle: {
             display: 'flex',
@@ -62,32 +60,72 @@ const useStyles = makeStyles((theme: Theme) =>
         filterContent: {
             overflowY: 'auto',
         },
-        filterRow: {
+        dialogRow: {
+            [theme.breakpoints.up('sm')]: {
+                width: '70%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+            },
+        },
+        dialogFilterItemRow: {
             marginBottom: theme.spacing(3),
         },
-        centerRow: {
+        dialogFilterDateRow: {
             display: 'flex',
             justifyContent: 'center',
             width: '100%',
             flexWrap: 'wrap',
+            [theme.breakpoints.up('sm')]: {
+                width: '70%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+            },
         },
-        datePicker: {
+        dialogDatePicker: {
             width: '100%',
             textAlign: 'center',
         },
-        datePickerLabel: {
+        dialogDatePickerLabel: {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
         },
-        filterActions: {
+        dialogfilterActions: {
             display: 'flex',
             alignItems: 'bottom',
+        },
+        filterBar: {
+            width: '100%',
+            display: 'flex',
+            flexWrap: 'wrap',
+            paddingTop: theme.spacing(3),
+            paddingBottom: theme.spacing(3),
+        },
+        filterBarItem: {
+            marginRight: theme.spacing(2),
+            minWidth: theme.spacing(10),
+            marginBottom: theme.spacing(2),
+        },
+        filterBarItemFixedWidth: {
+            width: theme.spacing(30),
+        },
+        filterBarToggle: {
+            display: 'flex',
+            alignItems: 'center',
+        },
+        filterBarItemText: {
+            display: 'inline-block',
+            width: theme.spacing(12),
+        },
+        applyButton: {
+            marginLeft: theme.spacing(3),
+            paddingLeft: theme.spacing(3),
+            paddingRight: theme.spacing(3),
         },
     })
 );
 
-const Transition = React.forwardRef<unknown, TransitionProps>(
+const SlideUpTransition = React.forwardRef<unknown, TransitionProps>(
     function Transition(props, ref) {
         return <Slide direction='up' ref={ref} {...props} />;
     }
@@ -100,12 +138,16 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
         props.filterState
     );
 
-    const [filterOpen, setFilterOpen] = useState<boolean>(false);
+    const [filterDialogOpen, setFilterDialogOpen] = useState<boolean>(false);
+    const [filterBarOpen, setFilterBarOpen] = useState<boolean>(false);
 
     const handleApply = () => {
+        console.log(filterState);
+
         props.onApply(filterState);
 
-        setFilterOpen(false);
+        setFilterDialogOpen(false);
+        setFilterBarOpen(false);
     };
 
     const handleDateChange = (key: string) => (date: any) => {
@@ -115,21 +157,22 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
         });
     };
 
-    const handleFilterClose = () => {
-        setFilterOpen(false);
+    const handleFilterDialogClose = () => {
+        setFilterDialogOpen(false);
         setFilterState(props.filterState);
     };
 
     const handleMaterialSelect = (materials: Material[]) => {
         setFilterState({
             ...filterState,
-            filterMaterials: materials.map(material => material.id),
+            filterMaterials: materials,
         });
     };
+
     const handleToolSelect = (tools: Tool[]) => {
         setFilterState({
             ...filterState,
-            filterTools: tools.map(tool => tool.id),
+            filterTools: tools,
         });
     };
 
@@ -142,63 +185,68 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
         });
     };
 
-    const handleToggleFilter = (event: React.FormEvent) => {
+    const handleOpenFilterDialog = (event: React.FormEvent) => {
         event.preventDefault();
 
-        setFilterOpen(true);
+        setFilterDialogOpen(true);
     };
 
-    return (
-        <>
-            <Button
-                type='submit'
-                color='secondary'
-                className={classes.filterButton}
-                onClick={handleToggleFilter}>
-                <FilterListSharpIcon
-                    fontSize='large'
-                    className={classes.filterButtonMobile}
-                />
-                <FilterListSharpIcon
-                    className={`${classes.filterButtonDesktop} ${classes.filterIcon}`}
-                />
-                <span className={classes.filterButtonDesktop}>Filter</span>
-            </Button>
+    const isChanged = (): boolean => {
+        return (
+            JSON.stringify(props.filterState) !== JSON.stringify(filterState)
+        );
+    };
+
+    const toggleFilterBarOpen = () => {
+        setFilterBarOpen(!filterBarOpen);
+    };
+
+    const renderMobileFilterDialog = () => {
+        return (
             <Dialog
+                className={classes.mobileDisplay}
                 fullScreen
-                open={filterOpen}
-                onClose={handleFilterClose}
+                open={filterDialogOpen}
+                onClose={handleFilterDialogClose}
                 scroll='paper'
-                TransitionComponent={Transition}
+                TransitionComponent={SlideUpTransition}
                 transitionDuration={500}>
                 <DialogTitle
                     disableTypography
                     className={classes.filterDialogTitle}>
                     <Typography variant='h4'>Filter Plans</Typography>
-                    <IconButton onClick={handleFilterClose}>
+                    <IconButton onClick={handleFilterDialogClose}>
                         <CloseSharpIcon />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent dividers>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <FormGroup>
-                            <div className={classes.filterRow}>
+                            <div
+                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}>
                                 <ToolsSelector
                                     label='Select Tools'
                                     loading={false}
                                     tools={props.tools}
                                     onSelect={handleToolSelect}
+                                    selectedTools={filterState.filterTools}
                                 />
                             </div>
-                            <div className={classes.filterRow}>
+                            <div
+                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}>
                                 <MaterialsSelector
                                     label='Select Materials'
                                     loading={false}
                                     materials={props.materials}
                                     onSelect={handleMaterialSelect}
+                                    selectedMaterials={
+                                        filterState.filterMaterials
+                                    }
                                 />
                             </div>
                             <FormControlLabel
+                                label='You Favorited'
+                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}
                                 control={
                                     <Switch
                                         checked={
@@ -213,10 +261,10 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                         color='secondary'
                                     />
                                 }
-                                label='Is Favorited By You'
-                                className={`${classes.filterRow}`}
                             />
                             <FormControlLabel
+                                label='You Created'
+                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}
                                 control={
                                     <Switch
                                         checked={
@@ -229,10 +277,10 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                         color='secondary'
                                     />
                                 }
-                                label='Was Created By You'
-                                className={`${classes.filterRow}`}
                             />
                             <FormControlLabel
+                                label='You Downloaded'
+                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}
                                 control={
                                     <Switch
                                         checked={
@@ -247,12 +295,10 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                         color='secondary'
                                     />
                                 }
-                                label='Was Downloaded By You'
-                                className={`${classes.filterRow}`}
                             />
-                            <div className={classes.centerRow}>
+                            <div className={`${classes.dialogFilterDateRow}`}>
                                 <div
-                                    className={`${classes.datePicker} ${classes.datePickerLabel}`}>
+                                    className={`${classes.dialogDatePicker} ${classes.dialogDatePickerLabel}`}>
                                     <Typography>Plan Created After:</Typography>
                                     <Button
                                         onClick={handleDateChange(
@@ -272,22 +318,138 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     onChange={handleDateChange(
                                         'filterCreatedRangeStart'
                                     )}
-                                    className={classes.datePicker}
+                                    className={classes.dialogDatePicker}
                                 />
                             </div>
                         </FormGroup>
                     </MuiPickersUtilsProvider>
                 </DialogContent>
-                <DialogActions className={classes.filterActions}>
+                <DialogActions
+                    className={`${classes.dialogFilterDateRow} ${classes.dialogfilterActions}`}>
                     <Button
                         color='secondary'
                         variant='contained'
                         fullWidth
-                        onClick={handleApply}>
+                        onClick={handleApply}
+                        disabled={!isChanged()}>
                         Apply
                     </Button>
                 </DialogActions>
             </Dialog>
+        );
+    };
+
+    const renderFilterBar = () => {
+        return (
+            <div className={`${classes.desktopDisplay} ${classes.filterBar}`}>
+                <div
+                    className={`${classes.filterBarItem} ${classes.filterBarItemFixedWidth}`}>
+                    <ToolsSelector
+                        label='Select Tools'
+                        loading={false}
+                        tools={props.tools}
+                        onSelect={handleToolSelect}
+                        selectedTools={filterState.filterTools}
+                    />
+                </div>
+                <div
+                    className={`${classes.filterBarItem} ${classes.filterBarItemFixedWidth}`}>
+                    <MaterialsSelector
+                        label='Select Materials'
+                        loading={false}
+                        materials={props.materials}
+                        onSelect={handleMaterialSelect}
+                        selectedMaterials={filterState.filterMaterials}
+                    />
+                </div>
+                <div
+                    className={`${classes.filterBarItem} ${classes.filterBarToggle}`}>
+                    <Switch
+                        checked={filterState.filterFavoritedByUser}
+                        onChange={handleSwitchChange('filterFavoritedByUser')}
+                        value={filterState.filterFavoritedByUser}
+                        color='secondary'
+                    />
+                    <Typography noWrap className={classes.filterBarItemText}>
+                        You Favorited
+                    </Typography>
+                </div>
+                <div
+                    className={`${classes.filterBarItem} ${classes.filterBarToggle}`}>
+                    <Switch
+                        checked={filterState.filterCreatedByUser}
+                        onChange={handleSwitchChange('filterCreatedByUser')}
+                        value={filterState.filterCreatedByUser}
+                        color='secondary'
+                    />
+                    <Typography noWrap className={classes.filterBarItemText}>
+                        You Created
+                    </Typography>
+                </div>
+                <div
+                    className={`${classes.filterBarItem} ${classes.filterBarToggle}`}>
+                    <Switch
+                        checked={filterState.filterDownloadedByUser}
+                        onChange={handleSwitchChange('filterDownloadedByUser')}
+                        value={filterState.filterDownloadedByUser}
+                        color='secondary'
+                    />
+                    <Typography noWrap className={classes.filterBarItemText}>
+                        You Downloaded
+                    </Typography>
+                </div>
+                <div>
+                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                        <DatePicker
+                            autoOk
+                            disableFuture
+                            disableToolbar
+                            clearable
+                            openTo='date'
+                            label='Plan Created After'
+                            value={filterState.filterCreatedRangeStart}
+                            onChange={handleDateChange(
+                                'filterCreatedRangeStart'
+                            )}
+                        />
+                    </MuiPickersUtilsProvider>
+                </div>
+                <div>
+                    <Button
+                        color='secondary'
+                        variant='contained'
+                        className={`${classes.desktopDisplay} ${classes.applyButton}`}
+                        onClick={handleApply}
+                        disabled={!isChanged()}>
+                        Apply
+                    </Button>
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <>
+            <Button
+                type='submit'
+                color='secondary'
+                className={`${classes.mobileDisplay} ${classes.filterButton}`}
+                onClick={handleOpenFilterDialog}>
+                <FilterListSharpIcon
+                    fontSize='large'
+                    className={classes.mobileDisplay}
+                />
+            </Button>
+            <Button
+                type='submit'
+                color='secondary'
+                className={`${classes.desktopDisplay} ${classes.filterButton}`}
+                onClick={toggleFilterBarOpen}>
+                <FilterListSharpIcon />
+                <span className={classes.filterButtonText}>Filter</span>
+            </Button>
+            {renderMobileFilterDialog()}
+            {filterBarOpen && renderFilterBar()}
         </>
     );
 };

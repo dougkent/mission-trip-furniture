@@ -1,6 +1,8 @@
+import { Material, Tool } from '../api-models';
+
 export interface FilterState {
-    filterMaterials: string[];
-    filterTools: string[];
+    filterMaterials: Material[];
+    filterTools: Tool[];
     filterFavoritedByUser: boolean;
     filterDownloadedByUser: boolean;
     filterCreatedByUser: boolean;
