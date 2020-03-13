@@ -128,6 +128,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             imageS3Info: null,
             created: '',
             favoritedCount: 0,
+            downloadedCount: 0,
             planCreatedById: this.props.userId,
         },
         planMaterials: [],
@@ -393,6 +394,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 }: GqlQuery<ListToolsQuery>) => {
                                     return (
                                         <ToolsSelector
+                                            label='Select Tools Required for this Plan'
                                             tools={
                                                 !!listTools
                                                     ? listTools.items
@@ -400,6 +402,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                             }
                                             loading={loading}
                                             onSelect={this.handleToolSelected}
+                                            selectedTools={[]}
                                         />
                                     );
                                 }}
@@ -416,6 +419,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 }: GqlQuery<ListMaterialsQuery>) => {
                                     return (
                                         <MaterialsSelector
+                                            label='Select Materials Required for this Plan'
                                             materials={
                                                 !!listMaterials
                                                     ? listMaterials.items
@@ -425,6 +429,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                             onSelect={
                                                 this.handleMaterialSelected
                                             }
+                                            selectedMaterials={[]}
                                         />
                                     );
                                 }}

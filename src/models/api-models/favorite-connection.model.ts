@@ -1,4 +1,4 @@
-import { Favorite } from '../api-models';
+import { Favorite } from '.';
 
 export interface ModelFavoriteConnection {
     __typename: 'ModelFavoriteConnection';

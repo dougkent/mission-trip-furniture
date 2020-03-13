@@ -1,15 +1,11 @@
 import {
     S3ImageInfo,
+    ModelDownloadConnection,
     ModelFavoriteConnection,
     ModelPlanMaterialConnection,
     ModelPlanToolConnection,
     User,
-} from '../api-models';
-
-// import { User } from './user.model';
-// import { ModelFavoriteConnection } from './favorite-connection.model';
-// import { ModelPlanMaterialConnection } from './plan-material-connection.model';
-// import { ModelPlanToolConnection } from './plan-tool-connection.model';
+} from '.';
 
 export interface Plan {
     __typename: 'Plan';
@@ -22,6 +18,8 @@ export interface Plan {
     createdBy: User;
     favoritedCount: number;
     favoritedBy: ModelFavoriteConnection | null;
+    downloadedCount: number;
+    downloadedBy: ModelDownloadConnection | null;
     materialsRequired: ModelPlanMaterialConnection | null;
     toolsRequired: ModelPlanToolConnection | null;
 }

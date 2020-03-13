@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Material UI
-import { TextField } from '@material-ui/core';
+import { Chip, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 // MTF
@@ -28,12 +28,21 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
             onChange={handleChange}
             options={props.materials}
             renderInput={params => (
-                <TextField
-                    {...params}
-                    label='Select Materials Required for this Plan'
-                    fullWidth
-                />
+                <TextField {...params} label={props.label} fullWidth />
             )}
+            renderTags={(value, getTagProps) =>
+                value.map((material, index) => (
+                    <Chip
+                        variant='outlined'
+                        color='secondary'
+                        label={material.name}
+                        size='small'
+                        {...getTagProps({ index })}
+                    />
+                ))
+            }
+            value={props.selectedMaterials}
+            disableOpenOnFocus
         />
     );
 };

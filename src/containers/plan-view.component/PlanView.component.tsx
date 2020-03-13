@@ -31,10 +31,14 @@ import MoreVertSharpIcon from '@material-ui/icons/MoreVertSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 import DeleteOutlineSharpIcon from '@material-ui/icons/DeleteOutlineSharp';
 
+// uuid
+import { v4 as uuid } from 'uuid';
+
 // MTF
 import { AppProps } from '../../models/props';
 import { ViewPlanState } from '../../models/states';
 import {
+    CreateDownloadInput,
     DeletePlanInput,
     DeletePlanMaterialInput,
     DeletePlanMutation,
@@ -71,6 +75,7 @@ const styles = (theme: Theme) =>
         image: {
             width: '100%',
             height: theme.spacing(25),
+            marginBottom: theme.spacing(2),
             [theme.breakpoints.up('sm')]: {
                 width: '50%',
                 height: theme.spacing(25),
@@ -149,6 +154,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 username
             }
             favoritedCount
+            downloadedCount
             materialsRequired {
                 items {
                     id
@@ -183,6 +189,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 username
             }
             favoritedCount
+            downloadedCount
             materialsRequired {
                 items {
                     id
@@ -216,6 +223,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
 
     private deletePlanToolMutation = `mutation DeletePlanTool($input: DeletePlanToolInput!) {
         deletePlanTool(input: $input) {
+            id
+        }
+    }`;
+
+    private createDownloadMutation = `mutation CreateDownload($input: CreateDownloadInput!) {
+        createDownload(input: $input) {
             id
         }
     }`;
@@ -284,6 +297,32 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         this.setState(prevState => ({
             ...prevState,
             error: null,
+        }));
+    };
+
+    private handleCreateDownload = () => {
+        this.setState(prevState => ({
+            ...prevState,
+            saving: true,
+        }));
+
+        const input: CreateDownloadInput = {
+            id: uuid(),
+            downloadPlanId: this.state.planId,
+            downloadUserId: this.state.userId,
+        };
+
+        API.graphql(
+            graphqlOperation(this.createDownloadMutation, { input: input })
+        );
+
+        this.setState(prevState => ({
+            ...prevState,
+            saving: false,
+            plan: {
+                ...prevState.plan,
+                downloadsCount: prevState.plan.downloadedCount++,
+            },
         }));
     };
 
@@ -613,6 +652,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             {this.state.plan.materialsRequired?.items?.map(
                                 planMaterial => (
                                     <Chip
+                                        key={planMaterial.id}
                                         size='small'
                                         color='secondary'
                                         label={planMaterial.material.name}
@@ -629,6 +669,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             {this.state.plan.toolsRequired?.items?.map(
                                 planTool => (
                                     <Chip
+                                        key={planTool.id}
                                         size='small'
                                         color='secondary'
                                         label={planTool.tool.name}
@@ -643,7 +684,10 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 variant='contained'
                                 href={this.state.downloadUrl}
                                 target='_blank'
-                                disabled={this.state.editing}>
+                                disabled={
+                                    this.state.editing || this.state.saving
+                                }
+                                onClick={this.handleCreateDownload}>
                                 Download PDF
                             </Button>
                         </div>

@@ -1,7 +1,7 @@
 import { Plan, User } from '.';
 
-export interface Favorite {
-    __typename: 'Favorite';
+export interface Download {
+    __typename: 'Download';
     id: string;
     plan: Plan | null;
     user: User | null;
