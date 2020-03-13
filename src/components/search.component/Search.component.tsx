@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useState } from 'react';
 
 // Material UI
 import {
@@ -13,6 +13,8 @@ import SearchSharpIcon from '@material-ui/icons/SearchSharp';
 
 // MTF
 import { mtfTheme } from '../../themes';
+import { SearchProps } from '../../models/props';
+import { SearchState } from '../../models/states';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,11 +52,26 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Search: React.FC = () => {
+const Search: React.FC<SearchProps> = (props: SearchProps) => {
     const classes = useStyles(mtfTheme);
+
+    const [searchState, setSearchState] = useState<SearchState>(
+        props.searchState
+    );
 
     const handleSearch = (event: React.FormEvent) => {
         event.preventDefault();
+
+        props.onSearch(searchState);
+    };
+
+    const handleTextChange = (event: React.ChangeEvent) => {
+        const element = event.target as HTMLInputElement;
+
+        setSearchState({
+            ...searchState,
+            searchTerm: element.value,
+        });
     };
 
     return (
@@ -65,6 +82,7 @@ const Search: React.FC = () => {
                 label='Search Plans'
                 type='search'
                 fullWidth
+                onChange={handleTextChange}
             />
             <Button
                 variant='contained'

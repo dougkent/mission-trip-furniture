@@ -75,6 +75,7 @@ const styles = (theme: Theme) =>
         image: {
             width: '100%',
             height: theme.spacing(25),
+            marginBottom: theme.spacing(2),
             [theme.breakpoints.up('sm')]: {
                 width: '50%',
                 height: theme.spacing(25),
@@ -651,6 +652,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             {this.state.plan.materialsRequired?.items?.map(
                                 planMaterial => (
                                     <Chip
+                                        key={planMaterial.id}
                                         size='small'
                                         color='secondary'
                                         label={planMaterial.material.name}
@@ -667,6 +669,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             {this.state.plan.toolsRequired?.items?.map(
                                 planTool => (
                                     <Chip
+                                        key={planTool.id}
                                         size='small'
                                         color='secondary'
                                         label={planTool.tool.name}

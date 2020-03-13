@@ -1,5 +1,6 @@
-import { AppState, FilterState } from '.';
+import { AppState, FilterState, SearchState } from '.';
 
 export interface PlanListState extends AppState {
     filterState: FilterState;
+    searchState: SearchState;
 }

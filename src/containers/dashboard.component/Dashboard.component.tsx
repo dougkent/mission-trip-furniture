@@ -171,6 +171,7 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                 <Grid container spacing={2}>
                     {data.getUser.createdPlans.items.map(plan => (
                         <PlanCard
+                            key={plan.id}
                             plan={plan}
                             userId={this.state.userId}
                             onToggleFavorite={this.handleTogglePlanFavorite}

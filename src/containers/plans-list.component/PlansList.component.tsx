@@ -22,7 +22,7 @@ import PlanCard from '../../components/plan-card.component/PlanCard.component';
 import Search from '../../components/search.component/Search.component';
 import Filter from '../../components/filter.component/Filter.component';
 import { AppProps } from '../../models/props';
-import { FilterState, PlanListState } from '../../models/states';
+import { FilterState, PlanListState, SearchState } from '../../models/states';
 import {
     GqlQuery,
     ListPlansQuery,
@@ -116,6 +116,9 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 filterCreatedRangeStart: null,
                 filterCreatedRangeEnd: null,
             },
+            searchState: {
+                searchTerm: null,
+            },
             userId: props.userId,
         };
     }
@@ -135,6 +138,13 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         this.setState(prevState => ({
             ...prevState,
             filterState: filterState,
+        }));
+    };
+
+    private handleSearch = (searchState: SearchState) => {
+        this.setState(prevState => ({
+            ...prevState,
+            searchState: searchState,
         }));
     };
 
@@ -161,6 +171,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             <Grid container spacing={2}>
                 {data.listPlans.items.map(plan => (
                     <PlanCard
+                        key={plan.id}
                         plan={plan}
                         userId={this.state.userId}
                         onToggleFavorite={this.handleTogglePlanFavorite}
@@ -196,7 +207,10 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
 
         return (
             <div className={classes.searchFilterBar}>
-                <Search />
+                <Search
+                    searchState={this.state.searchState}
+                    onSearch={this.handleSearch}
+                />
                 <Filter
                     filterState={this.state.filterState}
                     materials={this.getFilterMaterials(data)}
