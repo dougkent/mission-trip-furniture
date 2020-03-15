@@ -131,8 +131,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             downloadedCount: 0,
             planCreatedById: this.props.userId,
         },
-        planMaterials: [],
-        planTools: [],
+        selectedMaterials: [],
+        selectedTools: [],
         loading: false,
         createComplete: false,
         userId: this.props.userId,
@@ -189,19 +189,9 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     };
 
     private handleMaterialSelected = (materials: Material[]) => {
-        const planMaterials: CreatePlanMaterialInput[] = materials.map(
-            material => {
-                return {
-                    id: uuid(),
-                    planMaterialMaterialId: material.id,
-                    planMaterialPlanId: this.state.plan.id,
-                };
-            }
-        );
-
         this.setState(prevState => ({
             ...prevState,
-            planMaterials: planMaterials,
+            selectedMaterials: materials,
         }));
     };
 
@@ -251,18 +241,30 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             await this.uploadPdf();
             await this.uploadImage();
 
-            this.state.planMaterials.forEach(async material => {
+            this.state.selectedMaterials.forEach(async material => {
+                const planMaterialInput: CreatePlanMaterialInput = {
+                    id: uuid(),
+                    planMaterialMaterialId: material.id,
+                    planMaterialPlanId: this.state.plan.id,
+                };
+
                 await API.graphql(
                     graphqlOperation(this.createPlanMaterialMutation, {
-                        input: material,
+                        input: planMaterialInput,
                     })
                 );
             });
 
-            this.state.planTools.forEach(async tool => {
+            this.state.selectedTools.forEach(async tool => {
+                const planToolInput: CreatePlanToolInput = {
+                    id: uuid(),
+                    planToolToolId: tool.id,
+                    planToolPlanId: this.state.plan.id,
+                };
+
                 await API.graphql(
                     graphqlOperation(this.createPlanToolMutation, {
-                        input: tool,
+                        input: planToolInput,
                     })
                 );
             });
@@ -289,42 +291,20 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             planId = this.getPlanId(value);
         }
 
-        this.setState(prevState => {
-            const materials = prevState.planMaterials.map(material => {
-                material.planMaterialPlanId = planId;
-                return material;
-            });
-
-            const tools = prevState.planTools.map(tool => {
-                tool.planToolPlanId = planId;
-                return tool;
-            });
-
-            return {
-                ...prevState,
-                planMaterials: materials,
-                planTools: tools,
-                plan: {
-                    ...prevState.plan,
-                    id: planId,
-                    [key]: value,
-                },
-            };
-        });
+        this.setState(prevState => ({
+            ...prevState,
+            plan: {
+                ...prevState.plan,
+                id: planId,
+                [key]: value,
+            },
+        }));
     };
 
     private handleToolSelected = (tools: Tool[]) => {
-        const planTools: CreatePlanToolInput[] = tools.map(tool => {
-            return {
-                id: uuid(),
-                planToolToolId: tool.id,
-                planToolPlanId: this.state.plan.id,
-            };
-        });
-
         this.setState(prevState => ({
             ...prevState,
-            planTools: planTools,
+            selectedTools: tools,
         }));
     };
 
@@ -402,7 +382,9 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                             }
                                             loading={loading}
                                             onSelect={this.handleToolSelected}
-                                            selectedTools={[]}
+                                            selectedTools={
+                                                this.state.selectedTools
+                                            }
                                         />
                                     );
                                 }}
@@ -429,7 +411,9 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                             onSelect={
                                                 this.handleMaterialSelected
                                             }
-                                            selectedMaterials={[]}
+                                            selectedMaterials={
+                                                this.state.selectedMaterials
+                                            }
                                         />
                                     );
                                 }}

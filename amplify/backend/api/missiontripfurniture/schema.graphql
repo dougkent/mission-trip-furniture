@@ -25,7 +25,7 @@
     id: ID!
     username: String!
     createdPlans: [Plan!] @connection(name: "CreatedBy")
-    favoritedPlans: [Favorite!] @connection(name: "FavoritedPlans")
+    favoritedPlans: [Favorite!]
     downloadedPlans: [Download!] @connection(name: "DownloadedPlans")
 }
 
@@ -40,7 +40,7 @@ type Plan
     created: AWSDateTime!
     createdBy: User! @connection(name: "CreatedBy")
     favoritedCount: Int!
-    favoritedBy: [Favorite!] @connection(name: "FavoritedBy")
+    favoritedBy: [Favorite!] @connection(keyName: "favoritedBy", fields: ["id"])
     downloadedCount: Int!
     downloadedBy: [Download!] @connection(name: "DownloadedBy")
     materialsRequired: [PlanMaterial!]! @connection(name: "RequiresMaterials")
@@ -52,10 +52,20 @@ type Favorite
         queries: null
         mutations: { create: "createFavorite", delete: "deleteFavorite" }
         subscriptions: null
+    )
+    @key(
+        name: "favoritedBy"
+        fields: ["planId", "userId"]
+        queryField: "getFavoriteByPlanId"
+    )
+    @key(
+        name: "favoritedPlans"
+        fields: ["userId", "planId"]
+        queryField: "getFavoriteByUserId"
     ) {
     id: ID!
-    plan: Plan! @connection(name: "FavoritedBy")
-    user: User! @connection(name: "FavoritedPlans")
+    planId: ID!
+    userId: ID!
 }
 
 type Download

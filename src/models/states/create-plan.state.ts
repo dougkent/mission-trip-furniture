@@ -1,13 +1,9 @@
-import {
-    CreatePlanMaterialInput,
-    CreatePlanToolInput,
-    CreatePlanInput,
-} from '../api-models';
+import { Material, Tool, CreatePlanInput } from '../api-models';
 import { AppState } from './app.state';
 
 export interface CreatePlanState extends AppState {
-    planMaterials: CreatePlanMaterialInput[];
-    planTools: CreatePlanToolInput[];
+    selectedMaterials: Material[];
+    selectedTools: Tool[];
     plan: CreatePlanInput;
     pdfFile: File;
     imageFile: File;

@@ -115,6 +115,10 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }
     }`;
 
+    private getFavorite = `query GetFavoriteByPlanIdAndUserId($planId: ID!, $userId: ID!) {
+        getFavoriteByPlanId (planId: $planId, )
+    }`;
+
     private deleteFavoriteMutation = `mutation DeleteFavorite($input: DeleteFavoriteInput!) {
         deleteFavorite(input: $input): {
             id
@@ -158,13 +162,11 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 favoriteUserId: this.state.userId,
             };
 
-            var createFavoriteResult: GqlQuery<CreateFavoriteMutation> = await API.graphql(
+            API.graphql(
                 graphqlOperation(this.createFavoriteMutation, {
                     input: createFavoriteInput,
                 })
             );
-
-            const { createFavorite } = createFavoriteResult.data;
         } else {
             const deleteFavoriteInput: DeleteFavoriteInput = {
                 id: uuid(), // TODO: Convert to planId and userId.
