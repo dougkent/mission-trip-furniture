@@ -2,9 +2,12 @@
 import React from 'react';
 
 // AWS
-import Amplify, { graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import { Connect } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
+
+// uuid
+import { v4 as uuid } from 'uuid';
 
 // Material UI
 import {
@@ -28,6 +31,10 @@ import {
     ListPlansQuery,
     Material,
     Tool,
+    CreateFavoriteMutation,
+    CreateFavoriteInput,
+    DeleteFavoriteMutation,
+    DeleteFavoriteInput,
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
 
@@ -102,6 +109,17 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             }
         }
     }`;
+    private createFavoriteMutation = `mutation CreateFavorite($input: CreateFavoriteInput!) {
+        createFavorite(input: $input): {
+            id
+        }
+    }`;
+
+    private deleteFavoriteMutation = `mutation DeleteFavorite($input: DeleteFavoriteInput!) {
+        deleteFavorite(input: $input): {
+            id
+        }
+    }`;
 
     constructor(props: PlanListProps) {
         super(props);
@@ -129,10 +147,38 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }
     }
 
-    private handleTogglePlanFavorite = (
+    private handleTogglePlanFavorite = async (
         planId: string,
         toggleFavOn: boolean
-    ) => {};
+    ) => {
+        if (toggleFavOn) {
+            const createFavoriteInput: CreateFavoriteInput = {
+                id: uuid(),
+                favoritePlanId: planId,
+                favoriteUserId: this.state.userId,
+            };
+
+            var createFavoriteResult: GqlQuery<CreateFavoriteMutation> = await API.graphql(
+                graphqlOperation(this.createFavoriteMutation, {
+                    input: createFavoriteInput,
+                })
+            );
+
+            const { createFavorite } = createFavoriteResult.data;
+        } else {
+            const deleteFavoriteInput: DeleteFavoriteInput = {
+                id: uuid(), // TODO: Convert to planId and userId.
+            };
+
+            var deleteFavoriteResult: GqlQuery<DeleteFavoriteMutation> = await API.graphql(
+                graphqlOperation(this.deleteFavoriteMutation, {
+                    input: deleteFavoriteInput,
+                })
+            );
+
+            const { deleteFavorite } = deleteFavoriteResult.data;
+        }
+    };
 
     private handleApplyFilter = (filterState: FilterState) => {
         this.setState(prevState => ({
@@ -190,7 +236,13 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                     <CircularProgress color='secondary' size='100px' />
                 </div>
             );
-        } else if (!loading && data && data.listPlans && data.listPlans.items) {
+        } else if (
+            !loading &&
+            data &&
+            data.listPlans &&
+            data.listPlans.items &&
+            data.listPlans.items.length
+        ) {
             return (
                 <>
                     {this.renderSearchAndFilter(data)}
