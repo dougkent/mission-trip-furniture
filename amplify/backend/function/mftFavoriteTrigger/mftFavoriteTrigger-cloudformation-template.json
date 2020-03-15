@@ -63,7 +63,7 @@
 							"Fn::Join": [
 								"-",
 								[
-									"PlanTable",
+									"Plan",
 									{
 										"Ref": "apimissiontripfurnitureGraphQLAPIIdOutput"
 									}
@@ -106,7 +106,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "missiontripfurniture-develop-20191227214024-deployment",
-					"S3Key": "amplify-builds/mftFavoriteTrigger-5743456d524653314e71-build.zip"
+					"S3Key": "amplify-builds/mftFavoriteTrigger-6e2f472f2f686f4c7439-build.zip"
 				}
 			}
 		},
