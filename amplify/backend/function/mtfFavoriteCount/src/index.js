@@ -1,10 +1,18 @@
+/* Amplify Params - DO NOT EDIT
+You can access the following resource attributes as environment variables from your Lambda function
+var environment = process.env.ENV
+var region = process.env.REGION
+var apiMissiontripfurniturePlanTableName = process.env.API_MISSIONTRIPFURNITURE_PLANTABLE_NAME
+var apiMissiontripfurniturePlanTableArn = process.env.API_MISSIONTRIPFURNITURE_PLANTABLE_ARN
+var apiMissiontripfurnitureGraphQLAPIIdOutput = process.env.API_MISSIONTRIPFURNITURE_GRAPHQLAPIIDOUTPUT
+
+Amplify Params - DO NOT EDIT */
+
 const AWS = require('aws-sdk');
 const region = process.env.REGION;
 
-const incrementExpression =
-    'set #favoritedCount = #favoritedCount + :favoritedCount';
-const decrementExpression =
-    'set #favoritedCount = #favoritedCount - :favoritedCount';
+const incrementExpression = 'set #FC = #FC + :fc';
+const decrementExpression = 'set #FC = #FC - :fc';
 
 exports.handler = async (event, context) => {
     //eslint-disable-line
@@ -36,7 +44,7 @@ exports.handler = async (event, context) => {
             TableName: `${process.env.API_MISSIONTRIPFURNITURE_PLANTABLE_NAME}-${process.env.ENV}`,
             Key: {
                 id: {
-                    S: favoriteRecord.favoritePlanId,
+                    S: favoriteRecord.planId,
                 },
             },
             UpdateExpression:
@@ -44,10 +52,10 @@ exports.handler = async (event, context) => {
                     ? incrementExpression
                     : decrementExpression,
             ExpressionAttributeNames: {
-                '#favoritedCount': 'favoritedCount',
+                '#FC': 'favoritedCount',
             },
             ExpressionAttributeValues: {
-                ':favoritedCount': {
+                ':fc': {
                     N: '1',
                 },
             },
