@@ -14,6 +14,9 @@
         "categories": {
             "auth": {
                 "missiontripfurniture41b1791f41b1791f": {}
+            },
+            "function": {
+                "mftFavoriteTrigger": {}
             }
         }
     },

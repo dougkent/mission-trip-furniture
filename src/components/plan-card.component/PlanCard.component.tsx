@@ -1,5 +1,5 @@
 // React
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as ReactRouter from 'react-router-dom';
 
 // AWS
@@ -20,6 +20,7 @@ import {
 // MTF
 import PlanFavorite from '../plan-favorite.component/PlanFavorite.component';
 import { PlanCardProps } from '../../models/props';
+import { Plan } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -77,13 +78,30 @@ const useStyles = makeStyles((theme: Theme) =>
 const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
     const classes = useStyles(mtfTheme);
 
-    const [planState, setPlanState] = useState(props.plan);
+    const [planState, setPlanState] = useState<Plan>(props.plan);
+    const [isFavoritedByUser, setIsFavoritedByUser] = useState<boolean>(
+        props.isFavoritedByUser
+    );
+
+    useEffect(() => {
+        setIsFavoritedByUser(props.isFavoritedByUser);
+    }, [props.isFavoritedByUser]);
 
     const handleToggleFavorite = (toggleFavOn: boolean) => {
-        // setPlanState({
-        //     ...planState,
-        //     isFavoritedByUser: toggleFavOn,
-        // });
+        let newFavoritedCount: number;
+
+        if (toggleFavOn) {
+            newFavoritedCount = planState.favoritedCount + 1;
+        } else {
+            newFavoritedCount = planState.favoritedCount - 1;
+        }
+
+        setPlanState({
+            ...planState,
+            favoritedCount: newFavoritedCount,
+        });
+
+        setIsFavoritedByUser(toggleFavOn);
 
         props.onToggleFavorite(planState.id, toggleFavOn);
     };
@@ -93,7 +111,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
             <Card className={classes.card}>
                 <div className={classes.image}>
                     <ReactRouter.Link
-                        to={`/plans/${props.plan.id}`}
+                        to={`/plans/${planState.id}`}
                         className={classes.cardTitleLink}>
                         <S3Image
                             level='protected'
@@ -108,25 +126,25 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                             <Typography
                                 variant='h5'
                                 noWrap
-                                title={props.plan.name}>
+                                title={planState.name}>
                                 <ReactRouter.Link
-                                    to={`/plans/${props.plan.id}`}
+                                    to={`/plans/${planState.id}`}
                                     className={classes.cardTitleLink}>
-                                    {props.plan.name}
+                                    {planState.name}
                                 </ReactRouter.Link>
                             </Typography>
                         </div>
                         <PlanFavorite
-                            planId={props.plan.id}
+                            planId={planState.id}
                             disabled={false}
-                            isFavoritedByUser={false}
-                            favoritedCount={props.plan.favoritedCount}
+                            isFavoritedByUser={isFavoritedByUser}
+                            favoritedCount={planState.favoritedCount}
                             onToggleFavorite={handleToggleFavorite}
                         />
                     </CardActions>
                     <CardContent className={classes.cardContent}>
                         <Typography variant='body1' noWrap>
-                            {props.plan.description}
+                            {planState.description}
                         </Typography>
                     </CardContent>
                 </div>

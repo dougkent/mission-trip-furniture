@@ -35,6 +35,9 @@ import {
     CreateFavoriteInput,
     DeleteFavoriteMutation,
     DeleteFavoriteInput,
+    ModelIdKeyConditionInput,
+    GetFavoriteByPlanIdQuery,
+    Plan,
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
 
@@ -100,9 +103,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 favoritedCount
                 favoritedBy  {
                     items {
-                        user {
-                            id
-                        }
+                        userId
                     }
                 }
                 downloadedCount
@@ -110,17 +111,21 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }
     }`;
     private createFavoriteMutation = `mutation CreateFavorite($input: CreateFavoriteInput!) {
-        createFavorite(input: $input): {
+        createFavorite(input: $input) {
             id
         }
     }`;
 
-    private getFavorite = `query GetFavoriteByPlanIdAndUserId($planId: ID!, $userId: ID!) {
-        getFavoriteByPlanId (planId: $planId, )
+    private getFavorite = `query GetFavoriteByPlanIdAndUserId($planId: ID!, $userId: ModelIDKeyConditionInput!) {
+        getFavoriteByPlanId (planId: $planId, userId: $userId) {
+            items {
+                id
+            }
+        }
     }`;
 
     private deleteFavoriteMutation = `mutation DeleteFavorite($input: DeleteFavoriteInput!) {
-        deleteFavorite(input: $input): {
+        deleteFavorite(input: $input) {
             id
         }
     }`;
@@ -158,8 +163,8 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         if (toggleFavOn) {
             const createFavoriteInput: CreateFavoriteInput = {
                 id: uuid(),
-                favoritePlanId: planId,
-                favoriteUserId: this.state.userId,
+                planId: planId,
+                userId: this.state.userId,
             };
 
             API.graphql(
@@ -168,17 +173,36 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 })
             );
         } else {
-            const deleteFavoriteInput: DeleteFavoriteInput = {
-                id: uuid(), // TODO: Convert to planId and userId.
+            const getFavoriteInput: ModelIdKeyConditionInput = {
+                eq: this.state.userId,
             };
 
-            var deleteFavoriteResult: GqlQuery<DeleteFavoriteMutation> = await API.graphql(
-                graphqlOperation(this.deleteFavoriteMutation, {
-                    input: deleteFavoriteInput,
+            var favoriteResult: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
+                graphqlOperation(this.getFavorite, {
+                    planId: planId,
+                    userId: getFavoriteInput,
                 })
             );
 
-            const { deleteFavorite } = deleteFavoriteResult.data;
+            const { getFavoriteByPlanId } = favoriteResult.data;
+
+            if (
+                getFavoriteByPlanId &&
+                getFavoriteByPlanId.items &&
+                getFavoriteByPlanId.items.length
+            ) {
+                getFavoriteByPlanId.items.forEach(async favorite => {
+                    const deleteFavoriteInput: DeleteFavoriteInput = {
+                        id: favorite.id,
+                    };
+
+                    await API.graphql(
+                        graphqlOperation(this.deleteFavoriteMutation, {
+                            input: deleteFavoriteInput,
+                        })
+                    );
+                });
+            }
         }
     };
 
@@ -196,7 +220,14 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }));
     };
 
-    private getFilterMaterials(data: ListPlansQuery): Material[] {
+    private isFavoritedByUser = (plan: Plan): boolean => {
+        debugger;
+        return plan.favoritedBy.items.some(
+            favoritedBy => favoritedBy.userId === this.state.userId
+        );
+    };
+
+    private getFilterMaterials = (data: ListPlansQuery): Material[] => {
         return data.listPlans.items
             .map(plan => {
                 return plan.materialsRequired.items.map(
@@ -204,15 +235,15 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 );
             })
             .reduce((materials1, materials2) => materials1.concat(materials2));
-    }
+    };
 
-    private getFilterTools(data: ListPlansQuery): Tool[] {
+    private getFilterTools = (data: ListPlansQuery): Tool[] => {
         return data.listPlans.items
             .map(plan => {
                 return plan.toolsRequired.items.map(planTool => planTool.tool);
             })
             .reduce((tools1, tools2) => tools1.concat(tools2));
-    }
+    };
 
     private renderPlansList = (data: ListPlansQuery) => {
         return (
@@ -222,6 +253,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                         key={plan.id}
                         plan={plan}
                         userId={this.state.userId}
+                        isFavoritedByUser={this.isFavoritedByUser(plan)}
                         onToggleFavorite={this.handleTogglePlanFavorite}
                     />
                 ))}

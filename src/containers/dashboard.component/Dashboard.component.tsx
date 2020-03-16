@@ -174,6 +174,7 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                             key={plan.id}
                             plan={plan}
                             userId={this.state.userId}
+                            isFavoritedByUser={false}
                             onToggleFavorite={this.handleTogglePlanFavorite}
                         />
                     ))}
@@ -184,41 +185,41 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
         }
     }
 
-    private renderFavoritedPlansList(
-        data: GetUserQuery,
-        loading: boolean
-    ): any {
-        const { classes } = this.props;
+    // private renderFavoritedPlansList(
+    //     data: GetUserQuery,
+    //     loading: boolean
+    // ): any {
+    //     const { classes } = this.props;
 
-        if (loading) {
-            return (
-                <div className={classes.loading}>
-                    <CircularProgress color='secondary' size='100px' />
-                </div>
-            );
-        } else if (
-            !loading &&
-            data &&
-            data.getUser &&
-            data.getUser.favoritedPlans &&
-            data.getUser.favoritedPlans.items &&
-            data.getUser.favoritedPlans.items.length
-        ) {
-            return (
-                <Grid container spacing={2}>
-                    {data.getUser.favoritedPlans.items.map(favorite => (
-                        <PlanCard
-                            plan={favorite.plan}
-                            userId={this.state.userId}
-                            onToggleFavorite={this.handleTogglePlanFavorite}
-                        />
-                    ))}
-                </Grid>
-            );
-        } else {
-            return <Typography variant='h4'>No Plans Favorited Yet</Typography>;
-        }
-    }
+    //     if (loading) {
+    //         return (
+    //             <div className={classes.loading}>
+    //                 <CircularProgress color='secondary' size='100px' />
+    //             </div>
+    //         );
+    //     } else if (
+    //         !loading &&
+    //         data &&
+    //         data.getUser &&
+    //         data.getUser.favoritedPlans &&
+    //         data.getUser.favoritedPlans.items &&
+    //         data.getUser.favoritedPlans.items.length
+    //     ) {
+    //         return (
+    //             <Grid container spacing={2}>
+    //                 {data.getUser.favoritedPlans.items.map(favorite => (
+    //                     <PlanCard
+    //                         plan={favorite.plan}
+    //                         userId={this.state.userId}
+    //                         onToggleFavorite={this.handleTogglePlanFavorite}
+    //                     />
+    //                 ))}
+    //             </Grid>
+    //         );
+    //     } else {
+    //         return <Typography variant='h4'>No Plans Favorited Yet</Typography>;
+    //     }
+    // }
 
     render() {
         const { classes } = this.props;
@@ -272,10 +273,10 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                                                 Favorited Plans
                                             </Typography>
                                         </div>
-                                        {this.renderFavoritedPlansList(
+                                        {/* this.renderFavoritedPlansList(
                                             data,
                                             loading
-                                        )}
+                                        ) */}
                                     </div>
                                 </>
                             );

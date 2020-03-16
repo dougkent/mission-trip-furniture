@@ -1,5 +1,5 @@
 // React
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Material UI
 import {
@@ -32,10 +32,15 @@ const PlanFavorite: React.FC<PlanFavoriteProps> = (
     props: PlanFavoriteProps
 ) => {
     const classes = useStyles(mtfTheme);
+
     const [isFavoritedByUser, setIsFavoritedByUser] = useState(
         props.isFavoritedByUser
     );
     const [favoritedCount, setFavoritedCount] = useState(props.favoritedCount);
+
+    useEffect(() => {
+        setIsFavoritedByUser(props.isFavoritedByUser);
+    }, [props.isFavoritedByUser]);
 
     const getFavoritedCount = (num: number): string => {
         const symbols = ['', 'k', 'M'];
@@ -54,9 +59,15 @@ const PlanFavorite: React.FC<PlanFavoriteProps> = (
         return scaled.toFixed(digits) + suffix;
     };
 
-    const handleFavoriteToggle = (): void => {
-        setIsFavoritedByUser(!isFavoritedByUser);
-        setFavoritedCount(favoritedCount + 1);
+    const handleFavoriteToggle = async () => {
+        await setIsFavoritedByUser(!isFavoritedByUser);
+
+        if (!isFavoritedByUser) {
+            setFavoritedCount(favoritedCount + 1);
+        } else {
+            setFavoritedCount(favoritedCount - 1);
+        }
+
         props.onToggleFavorite(!isFavoritedByUser);
     };
 
@@ -74,7 +85,7 @@ const PlanFavorite: React.FC<PlanFavoriteProps> = (
                 })()}
             </IconButton>
             <Typography variant='subtitle1'>
-                {getFavoritedCount(props.favoritedCount)}
+                {getFavoritedCount(favoritedCount)}
             </Typography>
         </div>
     );
