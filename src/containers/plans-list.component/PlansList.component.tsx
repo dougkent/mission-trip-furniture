@@ -28,8 +28,10 @@ import {
     ListPlansQuery,
     Material,
     Tool,
+    Plan,
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
+import { PlanFavoriteService } from '../../services';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -93,15 +95,15 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 favoritedCount
                 favoritedBy  {
                     items {
-                        user {
-                            id
-                        }
+                        userId
                     }
                 }
                 downloadedCount
             }
         }
     }`;
+
+    private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: PlanListProps) {
         super(props);
@@ -129,10 +131,22 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }
     }
 
-    private handleTogglePlanFavorite = (
+    private handleTogglePlanFavorite = async (
         planId: string,
         toggleFavOn: boolean
-    ) => {};
+    ) => {
+        if (toggleFavOn) {
+            await this.planFavoriteService.createFavorite(
+                planId,
+                this.state.userId
+            );
+        } else {
+            await this.planFavoriteService.deleteFavorite(
+                planId,
+                this.state.userId
+            );
+        }
+    };
 
     private handleApplyFilter = (filterState: FilterState) => {
         this.setState(prevState => ({
@@ -148,7 +162,14 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }));
     };
 
-    private getFilterMaterials(data: ListPlansQuery): Material[] {
+    private isFavoritedByUser = (plan: Plan): boolean => {
+        return this.planFavoriteService.isFavoritedByUser(
+            this.state.userId,
+            plan
+        );
+    };
+
+    private getFilterMaterials = (data: ListPlansQuery): Material[] => {
         return data.listPlans.items
             .map(plan => {
                 return plan.materialsRequired.items.map(
@@ -156,15 +177,15 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 );
             })
             .reduce((materials1, materials2) => materials1.concat(materials2));
-    }
+    };
 
-    private getFilterTools(data: ListPlansQuery): Tool[] {
+    private getFilterTools = (data: ListPlansQuery): Tool[] => {
         return data.listPlans.items
             .map(plan => {
                 return plan.toolsRequired.items.map(planTool => planTool.tool);
             })
             .reduce((tools1, tools2) => tools1.concat(tools2));
-    }
+    };
 
     private renderPlansList = (data: ListPlansQuery) => {
         return (
@@ -174,6 +195,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                         key={plan.id}
                         plan={plan}
                         userId={this.state.userId}
+                        isFavoritedByUser={this.isFavoritedByUser(plan)}
                         onToggleFavorite={this.handleTogglePlanFavorite}
                     />
                 ))}
@@ -190,7 +212,13 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                     <CircularProgress color='secondary' size='100px' />
                 </div>
             );
-        } else if (!loading && data && data.listPlans && data.listPlans.items) {
+        } else if (
+            !loading &&
+            data &&
+            data.listPlans &&
+            data.listPlans.items &&
+            data.listPlans.items.length
+        ) {
             return (
                 <>
                     {this.renderSearchAndFilter(data)}

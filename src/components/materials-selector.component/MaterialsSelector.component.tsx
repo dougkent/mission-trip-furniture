@@ -42,7 +42,6 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                 ))
             }
             value={props.selectedMaterials}
-            disableOpenOnFocus
         />
     );
 };

@@ -47,10 +47,13 @@ import {
     GetPlanQuery,
     UpdatePlanInput,
     UpdatePlanMutation,
+    Plan,
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
 import ErrorMessage from '../../components/error-message.component/ErrorMessage';
 import NotFound from '../not-found.component/NotFound.component';
+import PlanFavorite from '../../components/plan-favorite.component/PlanFavorite.component';
+import { PlanFavoriteService } from '../../services';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -113,6 +116,15 @@ const styles = (theme: Theme) =>
         },
         buttonRow: {
             marginTop: theme.spacing(3),
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            [theme.breakpoints.up('md')]: {
+                justifyContent: 'flex-start',
+            },
+        },
+        downloadButton: {
+            marginRight: theme.spacing(3),
         },
         editButtonRow: {
             display: 'flex',
@@ -154,6 +166,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 username
             }
             favoritedCount
+            favoritedBy {
+                items {
+                    userId
+                }
+            }
             downloadedCount
             materialsRequired {
                 items {
@@ -232,6 +249,8 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             id
         }
     }`;
+
+    private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: ViewPlanProps) {
         super(props);
@@ -488,6 +507,27 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         }));
     };
 
+    private handleTogglePlanFavorite = (toggleFavOn: boolean) => {
+        if (toggleFavOn) {
+            this.planFavoriteService.createFavorite(
+                this.state.planId,
+                this.state.userId
+            );
+        } else {
+            this.planFavoriteService.deleteFavorite(
+                this.state.planId,
+                this.state.userId
+            );
+        }
+    };
+
+    private isFavoritedByUser = (plan: Plan): boolean => {
+        return this.planFavoriteService.isFavoritedByUser(
+            this.state.userId,
+            plan
+        );
+    };
+
     private renderDescription = () => {
         const { classes } = this.props;
 
@@ -680,6 +720,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         {this.renderDescription()}
                         <div className={classes.buttonRow}>
                             <Button
+                                className={classes.downloadButton}
                                 color='secondary'
                                 variant='contained'
                                 href={this.state.downloadUrl}
@@ -690,6 +731,15 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 onClick={this.handleCreateDownload}>
                                 Download PDF
                             </Button>
+                            <PlanFavorite
+                                planId={this.state.planId}
+                                disabled={false}
+                                isFavoritedByUser={this.isFavoritedByUser(
+                                    this.state.plan
+                                )}
+                                favoritedCount={this.state.plan.favoritedCount}
+                                onToggleFavorite={this.handleTogglePlanFavorite}
+                            />
                         </div>
                     </div>
                     {this.renderDeleteDialog()}

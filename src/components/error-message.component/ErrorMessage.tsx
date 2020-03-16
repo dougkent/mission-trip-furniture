@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Material UI
 import { Snackbar, Typography } from '@material-ui/core';
@@ -11,9 +11,9 @@ import { ErrorMessageProps } from '../../models/props/error-message.props';
 const ErrorMessage: React.FC<ErrorMessageProps> = (
     props: ErrorMessageProps
 ) => {
-    const [error, setError] = React.useState<string>(props.error);
+    const [error, setError] = useState<string>(props.error);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setError(props.error);
     }, [props.error]);
 

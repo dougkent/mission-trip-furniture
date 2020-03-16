@@ -42,7 +42,6 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
                 ))
             }
             value={props.selectedTools}
-            disableOpenOnFocus
         />
     );
 };

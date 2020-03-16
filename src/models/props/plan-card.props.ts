@@ -3,5 +3,6 @@ import { AppProps } from './app.props';
 
 export interface PlanCardProps extends AppProps {
     plan: Plan;
+    isFavoritedByUser: boolean;
     onToggleFavorite(planId: string, toggleFavOn: boolean): void;
 }
