@@ -26,6 +26,7 @@
     username: String!
     createdPlans: [Plan!] @connection(name: "CreatedBy")
     favoritedPlans: [Favorite!]
+        @connection(keyName: "favoritedPlans", fields: ["id"])
     downloadedPlans: [Download!] @connection(name: "DownloadedPlans")
 }
 

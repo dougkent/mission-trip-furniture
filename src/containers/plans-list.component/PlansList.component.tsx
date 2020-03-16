@@ -2,12 +2,9 @@
 import React from 'react';
 
 // AWS
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { graphqlOperation } from 'aws-amplify';
 import { Connect } from 'aws-amplify-react';
 import aws_exports from '../../aws-exports';
-
-// uuid
-import { v4 as uuid } from 'uuid';
 
 // Material UI
 import {
@@ -31,15 +28,10 @@ import {
     ListPlansQuery,
     Material,
     Tool,
-    CreateFavoriteMutation,
-    CreateFavoriteInput,
-    DeleteFavoriteMutation,
-    DeleteFavoriteInput,
-    ModelIdKeyConditionInput,
-    GetFavoriteByPlanIdQuery,
     Plan,
 } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
+import { PlanFavoriteService } from '../../services';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -110,25 +102,8 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             }
         }
     }`;
-    private createFavoriteMutation = `mutation CreateFavorite($input: CreateFavoriteInput!) {
-        createFavorite(input: $input) {
-            id
-        }
-    }`;
 
-    private getFavorite = `query GetFavoriteByPlanIdAndUserId($planId: ID!, $userId: ModelIDKeyConditionInput!) {
-        getFavoriteByPlanId (planId: $planId, userId: $userId) {
-            items {
-                id
-            }
-        }
-    }`;
-
-    private deleteFavoriteMutation = `mutation DeleteFavorite($input: DeleteFavoriteInput!) {
-        deleteFavorite(input: $input) {
-            id
-        }
-    }`;
+    private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: PlanListProps) {
         super(props);
@@ -161,48 +136,15 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         toggleFavOn: boolean
     ) => {
         if (toggleFavOn) {
-            const createFavoriteInput: CreateFavoriteInput = {
-                id: uuid(),
-                planId: planId,
-                userId: this.state.userId,
-            };
-
-            API.graphql(
-                graphqlOperation(this.createFavoriteMutation, {
-                    input: createFavoriteInput,
-                })
+            await this.planFavoriteService.createFavorite(
+                planId,
+                this.state.userId
             );
         } else {
-            const getFavoriteInput: ModelIdKeyConditionInput = {
-                eq: this.state.userId,
-            };
-
-            var favoriteResult: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
-                graphqlOperation(this.getFavorite, {
-                    planId: planId,
-                    userId: getFavoriteInput,
-                })
+            await this.planFavoriteService.deleteFavorite(
+                planId,
+                this.state.userId
             );
-
-            const { getFavoriteByPlanId } = favoriteResult.data;
-
-            if (
-                getFavoriteByPlanId &&
-                getFavoriteByPlanId.items &&
-                getFavoriteByPlanId.items.length
-            ) {
-                getFavoriteByPlanId.items.forEach(async favorite => {
-                    const deleteFavoriteInput: DeleteFavoriteInput = {
-                        id: favorite.id,
-                    };
-
-                    await API.graphql(
-                        graphqlOperation(this.deleteFavoriteMutation, {
-                            input: deleteFavoriteInput,
-                        })
-                    );
-                });
-            }
         }
     };
 
@@ -221,9 +163,9 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
     };
 
     private isFavoritedByUser = (plan: Plan): boolean => {
-        debugger;
-        return plan.favoritedBy.items.some(
-            favoritedBy => favoritedBy.userId === this.state.userId
+        return this.planFavoriteService.isFavoritedByUser(
+            this.state.userId,
+            plan
         );
     };
 

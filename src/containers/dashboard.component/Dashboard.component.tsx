@@ -27,7 +27,13 @@ import { signUpConfig } from '../../models/sign-up-config.model';
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
 import { mtfAmplifyTheme, mtfTheme } from '../../themes';
-import { GqlQuery, GetUserQuery } from '../../models/api-models';
+import {
+    GqlQuery,
+    GetUserQuery,
+    GetPlanQuery,
+    Plan,
+} from '../../models/api-models';
+import { PlanFavoriteService } from '../../services';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -42,15 +48,16 @@ const styles = (theme: Theme) =>
         },
 
         loading: {
+            width: 100,
             margin: `${theme.spacing(4)}px auto`,
         },
         listContainer: {
-            padding: 20,
+            padding: theme.spacing(2),
             width: '100%',
-            marginBottom: 40,
+            marginBottom: theme.spacing(5),
 
             [theme.breakpoints.up('lg')]: {
-                padding: 40,
+                padding: theme.spacing(5),
                 minWidth: 523,
                 width: 'auto',
             },
@@ -100,36 +107,49 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                     created
                     createdBy {
                         id
-                        username
                     }
                     favoritedCount
+                    favoritedBy  {
+                        items {
+                            userId
+                        }
+                    }
                     downloadedCount
                 }
             }
             favoritedPlans {
                 items {
-                    plan {
-                        id
-                        name
-                        description
-                        pdfS3Key
-                        imageS3Info {
-                            key
-                            width
-                            height
-                        }
-                        created
-                        createdBy {
-                            id
-                            username
-                        }
-                        favoritedCount
-                        downloadedCount
-                    }
+                    planId
                 }
             }
         }
     }`;
+
+    private getPlanQuery = `query GetPlan($id: ID!) {
+        getPlan(id: $id) {
+            id
+            name
+            description
+            pdfS3Key
+            imageS3Info {
+                key   
+            }
+            created
+            createdBy {
+                id
+                username
+            }
+            favoritedCount
+            favoritedBy  {
+                items {
+                    userId
+                }
+            }
+            downloadedCount
+        }
+    }`;
+
+    private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: DashboardProps) {
         super(props);
@@ -145,12 +165,30 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
         }
     }
 
-    private handleTogglePlanFavorite(
+    private handleTogglePlanFavorite = async (
         planId: string,
         toggleFavOn: boolean
-    ): void {}
+    ) => {
+        if (toggleFavOn) {
+            await this.planFavoriteService.createFavorite(
+                planId,
+                this.state.userId
+            );
+        } else {
+            await this.planFavoriteService.deleteFavorite(
+                planId,
+                this.state.userId
+            );
+        }
+    };
 
-    private renderMyPlansList(data: GetUserQuery, loading: boolean): any {
+    private isFavoritedByUser = (plan: Plan): boolean => {
+        return this.planFavoriteService.isFavoritedByUser(
+            this.state.userId,
+            plan
+        );
+    };
+    private renderMyPlansList = (data: GetUserQuery, loading: boolean) => {
         const { classes } = this.props;
 
         if (loading) {
@@ -174,7 +212,7 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                             key={plan.id}
                             plan={plan}
                             userId={this.state.userId}
-                            isFavoritedByUser={false}
+                            isFavoritedByUser={this.isFavoritedByUser(plan)}
                             onToggleFavorite={this.handleTogglePlanFavorite}
                         />
                     ))}
@@ -183,108 +221,138 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
         } else {
             return <Typography variant='h4'>No Plans Created Yet</Typography>;
         }
-    }
+    };
 
-    // private renderFavoritedPlansList(
-    //     data: GetUserQuery,
-    //     loading: boolean
-    // ): any {
-    //     const { classes } = this.props;
+    private renderFavoritedPlansList = (
+        data: GetUserQuery,
+        loading: boolean
+    ) => {
+        const { classes } = this.props;
 
-    //     if (loading) {
-    //         return (
-    //             <div className={classes.loading}>
-    //                 <CircularProgress color='secondary' size='100px' />
-    //             </div>
-    //         );
-    //     } else if (
-    //         !loading &&
-    //         data &&
-    //         data.getUser &&
-    //         data.getUser.favoritedPlans &&
-    //         data.getUser.favoritedPlans.items &&
-    //         data.getUser.favoritedPlans.items.length
-    //     ) {
-    //         return (
-    //             <Grid container spacing={2}>
-    //                 {data.getUser.favoritedPlans.items.map(favorite => (
-    //                     <PlanCard
-    //                         plan={favorite.plan}
-    //                         userId={this.state.userId}
-    //                         onToggleFavorite={this.handleTogglePlanFavorite}
-    //                     />
-    //                 ))}
-    //             </Grid>
-    //         );
-    //     } else {
-    //         return <Typography variant='h4'>No Plans Favorited Yet</Typography>;
-    //     }
-    // }
+        if (loading) {
+            return (
+                <div className={classes.loading}>
+                    <CircularProgress color='secondary' size='100px' />
+                </div>
+            );
+        } else if (
+            !loading &&
+            data &&
+            data.getUser &&
+            data.getUser.favoritedPlans &&
+            data.getUser.favoritedPlans.items &&
+            data.getUser.favoritedPlans.items.length
+        ) {
+            return (
+                <Grid container spacing={2}>
+                    {data.getUser.favoritedPlans.items.map(favorite =>
+                        this.renderFavoritedPlan(favorite.planId)
+                    )}
+                </Grid>
+            );
+        } else {
+            return <Typography variant='h4'>No Plans Favorited Yet</Typography>;
+        }
+    };
+
+    private renderFavoritedPlan = (planId: string) => {
+        return (
+            <Connect
+                query={graphqlOperation(this.getPlanQuery, {
+                    id: planId,
+                })}>
+                {({ data, loading }: GqlQuery<GetPlanQuery>) => {
+                    if (!loading && data.getPlan)
+                        return (
+                            <PlanCard
+                                plan={data.getPlan}
+                                userId={this.state.userId}
+                                isFavoritedByUser={this.isFavoritedByUser(
+                                    data.getPlan
+                                )}
+                                onToggleFavorite={this.handleTogglePlanFavorite}
+                            />
+                        );
+                }}
+            </Connect>
+        );
+    };
 
     render() {
         const { classes } = this.props;
 
-        return (
-            <>
-                <div className={classes.dashboardContainer}>
-                    <Connect
-                        query={graphqlOperation(this.getUserQuery, {
-                            id: this.state.userId,
-                        })}>
-                        {({ data, loading }: GqlQuery<GetUserQuery>) => {
-                            return (
-                                <>
-                                    <div className={classes.listContainer}>
-                                        <div className={classes.listTitle}>
-                                            <Typography variant='h2'>
-                                                My Plans
-                                            </Typography>
-                                            <Link
-                                                to='/my-mtf/create-plan'
-                                                className={
-                                                    classes.createNewPlanLink
-                                                }>
-                                                <AddBoxSharpIcon
-                                                    color='secondary'
-                                                    fontSize='large'
-                                                    className={
-                                                        classes.mobileDisplay
-                                                    }
-                                                />
-                                                <Button
-                                                    variant='contained'
-                                                    color='secondary'
-                                                    className={
-                                                        classes.desktopDisplay
-                                                    }
-                                                    startIcon={
-                                                        <AddSharpIcon />
-                                                    }>
-                                                    Create New Plan
-                                                </Button>
-                                            </Link>
-                                        </div>
-
-                                        {this.renderMyPlansList(data, loading)}
-                                    </div>
-                                    <div className={classes.listContainer}>
-                                        <div className={classes.listTitle}>
-                                            <Typography variant='h2'>
-                                                Favorited Plans
-                                            </Typography>
-                                        </div>
-                                        {/* this.renderFavoritedPlansList(
-                                            data,
-                                            loading
-                                        ) */}
-                                    </div>
-                                </>
-                            );
-                        }}
-                    </Connect>
+        if (!this.state.userId) {
+            return (
+                <div className={classes.loading}>
+                    <CircularProgress color='secondary' size='100px' />
                 </div>
-            </>
-        );
+            );
+        } else {
+            return (
+                <>
+                    <div className={classes.dashboardContainer}>
+                        <Connect
+                            query={graphqlOperation(this.getUserQuery, {
+                                id: this.state.userId,
+                            })}>
+                            {({ data, loading }: GqlQuery<GetUserQuery>) => {
+                                return (
+                                    <>
+                                        <div className={classes.listContainer}>
+                                            <div className={classes.listTitle}>
+                                                <Typography variant='h2'>
+                                                    My Plans
+                                                </Typography>
+                                                <Link
+                                                    to='/my-mtf/create-plan'
+                                                    className={
+                                                        classes.createNewPlanLink
+                                                    }>
+                                                    <AddBoxSharpIcon
+                                                        color='secondary'
+                                                        fontSize='large'
+                                                        className={
+                                                            classes.mobileDisplay
+                                                        }
+                                                    />
+                                                    <Button
+                                                        variant='contained'
+                                                        color='secondary'
+                                                        className={
+                                                            classes.desktopDisplay
+                                                        }
+                                                        startIcon={
+                                                            <AddSharpIcon />
+                                                        }>
+                                                        Create New Plan
+                                                    </Button>
+                                                </Link>
+                                            </div>
+
+                                            {this.renderMyPlansList(
+                                                data,
+                                                loading
+                                            )}
+                                        </div>
+                                        <div className={classes.listContainer}>
+                                            <div className={classes.listTitle}>
+                                                <Typography variant='h2'>
+                                                    Favorited Plans
+                                                </Typography>
+                                            </div>
+                                            {this.renderFavoritedPlansList(
+                                                data,
+                                                loading
+                                            )}
+                                        </div>
+                                    </>
+                                );
+                            }}
+                        </Connect>
+                    </div>
+                </>
+            );
+        }
     }
 }
 
