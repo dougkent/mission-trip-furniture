@@ -27,7 +27,8 @@
     createdPlans: [Plan!] @connection(name: "CreatedBy")
     favoritedPlans: [Favorite!]
         @connection(keyName: "favoritedPlans", fields: ["id"])
-    downloadedPlans: [Download!] @connection(name: "DownloadedPlans")
+    downloadedPlans: [Download!]
+        @connection(keyName: "downloadedPlans", fields: ["id"])
 }
 
 type Plan
@@ -43,7 +44,8 @@ type Plan
     favoritedCount: Int!
     favoritedBy: [Favorite!] @connection(keyName: "favoritedBy", fields: ["id"])
     downloadedCount: Int!
-    downloadedBy: [Download!] @connection(name: "DownloadedBy")
+    downloadedBy: [Download!]
+        @connection(keyName: "downloadedBy", fields: ["id"])
     materialsRequired: [PlanMaterial!]! @connection(name: "RequiresMaterials")
     toolsRequired: [PlanTool!]! @connection(name: "RequiresTools")
 }
@@ -54,6 +56,7 @@ type Favorite
         mutations: { create: "createFavorite", delete: "deleteFavorite" }
         subscriptions: null
     )
+    @auth(rules: [{ allow: owner, operations: [create, update, delete] }])
     @key(
         name: "favoritedBy"
         fields: ["planId", "userId"]
@@ -74,10 +77,21 @@ type Download
         queries: null
         mutations: { create: "createDownload" }
         subscriptions: null
+    )
+    @auth(rules: [{ allow: owner, operations: [create, update, delete] }])
+    @key(
+        name: "downloadedBy"
+        fields: ["planId", "userId"]
+        queryField: "getDownloadByPlanId"
+    )
+    @key(
+        name: "downloadedPlans"
+        fields: ["userId", "planId"]
+        queryField: "getDownloadedByUserId"
     ) {
     id: ID!
-    plan: Plan! @connection(name: "DownloadedBy")
-    user: User! @connection(name: "DownloadedPlans")
+    planId: ID!
+    userId: ID!
 }
 
 type PlanMaterial

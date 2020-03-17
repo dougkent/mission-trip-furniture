@@ -36,12 +36,12 @@
 				"FunctionName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"mtfFavoriteCount",
+						"mtfDownloadCount",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"mtfFavoriteCount",
+									"mtfDownloadCount",
 									"-",
 									{
 										"Ref": "env"
@@ -106,7 +106,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "missiontripfurniture-develop-20191227214024-deployment",
-					"S3Key": "amplify-builds/mtfFavoriteCount-696333676e3352457537-build.zip"
+					"S3Key": "amplify-builds/mtfDownloadCount-6d4f7233326c4357466e-build.zip"
 				}
 			}
 		},
@@ -116,12 +116,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"missiontripfurnitureLambdaRole1ba165ee",
+						"missiontripfurnitureLambdaRolefcaeb8ad",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"missiontripfurnitureLambdaRole1ba165ee",
+									"missiontripfurnitureLambdaRolefcaeb8ad",
 									"-",
 									{
 										"Ref": "env"
@@ -263,13 +263,13 @@
 				}
 			}
 		},
-		"LambdaTriggerPolicyFavorite": {
+		"LambdaTriggerPolicyDownload": {
 			"DependsOn": [
 				"LambdaExecutionRole"
 			],
 			"Type": "AWS::IAM::Policy",
 			"Properties": {
-				"PolicyName": "amplify-lambda-execution-policy-Favorite",
+				"PolicyName": "amplify-lambda-execution-policy-Download",
 				"Roles": [
 					{
 						"Ref": "LambdaExecutionRole"
@@ -288,7 +288,7 @@
 							],
 							"Resource": {
 								"Fn::ImportValue": {
-									"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:FavoriteTable:StreamArn"
+									"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:DownloadTable:StreamArn"
 								}
 							}
 						}
@@ -296,10 +296,10 @@
 				}
 			}
 		},
-		"LambdaEventSourceMappingFavorite": {
+		"LambdaEventSourceMappingDownload": {
 			"Type": "AWS::Lambda::EventSourceMapping",
 			"DependsOn": [
-				"LambdaTriggerPolicyFavorite",
+				"LambdaTriggerPolicyDownload",
 				"LambdaExecutionRole"
 			],
 			"Properties": {
@@ -307,7 +307,7 @@
 				"Enabled": true,
 				"EventSourceArn": {
 					"Fn::ImportValue": {
-						"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:FavoriteTable:StreamArn"
+						"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:DownloadTable:StreamArn"
 					}
 				},
 				"FunctionName": {
