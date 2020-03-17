@@ -327,8 +327,8 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
 
         const input: CreateDownloadInput = {
             id: uuid(),
-            downloadPlanId: this.state.planId,
-            downloadUserId: this.state.userId,
+            planId: this.state.planId,
+            userId: this.state.userId,
         };
 
         API.graphql(
