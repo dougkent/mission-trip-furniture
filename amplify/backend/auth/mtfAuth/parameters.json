@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "missiontripfurniture41b1791f41b1791f_identitypool_353076d4",
+    "identityPoolName": "mtfAuth_identitypool",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "missio41b1791f",
-    "userPoolName": "missiontripfurniture41b1791f_userpool_41b1791f",
+    "resourceNameTruncated": "mtfAut44346b3c",
+    "userPoolName": "mtfAuth_userpool",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -18,23 +18,28 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-        "email"
+        "email",
+        "name"
     ],
     "userpoolClientGenerateSecret": true,
-    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientRefreshTokenValidity": "14",
     "userpoolClientWriteAttributes": [
         "email"
     ],
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "missio41b1791f_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "mtfAut44346b3c_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "useDefault": "default",
+    "useDefault": "manual",
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "missiontripfurniture41b1791f41b1791f",
+    "resourceName": "mtfAuth",
+    "thirdPartyAuth": false,
+    "userPoolGroups": false,
+    "adminQueries": false,
     "triggers": "{}",
     "hostedUI": false,
+    "userPoolGroupList": [],
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",

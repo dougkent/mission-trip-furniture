@@ -33,7 +33,12 @@
 
 type Plan
     @model
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    @auth(
+        rules: [
+            { allow: owner, operations: [create, update, delete] }
+            { allow: public, operations: [read], provider: iam }
+        ]
+    ) {
     id: ID!
     name: String!
     description: String!
@@ -103,7 +108,12 @@ type PlanMaterial
         }
         subscriptions: null
     )
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    @auth(
+        rules: [
+            { allow: owner, operations: [create, update, delete] }
+            { allow: public, operations: [read], provider: iam }
+        ]
+    ) {
     id: ID!
     material: Material! @connection
     plan: Plan! @connection(name: "RequiresMaterials")
@@ -114,7 +124,8 @@ type Material
         queries: { list: "listMaterials" }
         mutations: null
         subscriptions: null
-    ) {
+    )
+    @auth(rules: [{ allow: public, operations: [read], provider: iam }]) {
     id: ID!
     name: String!
 }
@@ -125,18 +136,20 @@ type PlanTool
         mutations: { create: "createPlanTool", delete: "deletePlanTool" }
         subscriptions: null
     )
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    @auth(
+        rules: [
+            { allow: owner, operations: [create, update, delete] }
+            { allow: public, operations: [read], provider: iam }
+        ]
+    ) {
     id: ID!
     tool: Tool! @connection
     plan: Plan! @connection(name: "RequiresTools")
 }
 
 type Tool
-    @model(
-        queries: { list: "listTools" }
-        mutations: null
-        subscriptions: null
-    ) {
+    @model(queries: { list: "listTools" }, mutations: null, subscriptions: null)
+    @auth(rules: [{ allow: public, operations: [read], provider: iam }]) {
     id: ID!
     name: String!
 }
