@@ -35,7 +35,11 @@ type Plan
     @model
     @auth(
         rules: [
-            { allow: owner, operations: [create, update, delete] }
+            {
+                allow: owner
+                operations: [create, read, update, delete]
+                provider: userPools
+            }
             { allow: public, operations: [read], provider: iam }
         ]
     ) {
@@ -110,7 +114,11 @@ type PlanMaterial
     )
     @auth(
         rules: [
-            { allow: owner, operations: [create, update, delete] }
+            {
+                allow: owner
+                operations: [create, read, update, delete]
+                provider: userPools
+            }
             { allow: public, operations: [read], provider: iam }
         ]
     ) {
@@ -125,7 +133,12 @@ type Material
         mutations: null
         subscriptions: null
     )
-    @auth(rules: [{ allow: public, operations: [read], provider: iam }]) {
+    @auth(
+        rules: [
+            { allow: owner, operations: [read], provider: userPools }
+            { allow: public, operations: [read], provider: iam }
+        ]
+    ) {
     id: ID!
     name: String!
 }
@@ -138,7 +151,11 @@ type PlanTool
     )
     @auth(
         rules: [
-            { allow: owner, operations: [create, update, delete] }
+            {
+                allow: owner
+                operations: [create, update, delete]
+                provider: userPools
+            }
             { allow: public, operations: [read], provider: iam }
         ]
     ) {
@@ -149,7 +166,12 @@ type PlanTool
 
 type Tool
     @model(queries: { list: "listTools" }, mutations: null, subscriptions: null)
-    @auth(rules: [{ allow: public, operations: [read], provider: iam }]) {
+    @auth(
+        rules: [
+            { allow: owner, operations: [read], provider: userPools }
+            { allow: public, operations: [read], provider: iam }
+        ]
+    ) {
     id: ID!
     name: String!
 }
