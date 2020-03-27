@@ -8,3 +8,4 @@ export * from './search.props';
 export * from './download-button.props';
 export * from './plan-delete.props';
 export * from './edit-description.props';
+export * from './plan-date.props';

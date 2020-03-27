@@ -50,6 +50,19 @@ const styles = (theme: Theme) =>
                 flexWrap: 'wrap',
             },
         },
+        gridItem: {
+            width: '100%',
+            [theme.breakpoints.up('sm')]: {
+                width: '50%',
+            },
+            [theme.breakpoints.up('md')]: {
+                width: '50%',
+                height: theme.spacing(29),
+            },
+            [theme.breakpoints.up('lg')]: {
+                width: theme.spacing(63),
+            },
+        },
     });
 
 export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
@@ -206,16 +219,19 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
     };
 
     private renderPlansList = (data: ListPlansQuery) => {
+        const { classes } = this.props;
+
         return (
             <Grid container spacing={2}>
                 {data.listPlans.items.map(plan => (
-                    <PlanCard
-                        key={plan.id}
-                        plan={plan}
-                        userId={this.state.userId}
-                        isFavoritedByUser={this.isFavoritedByUser(plan)}
-                        onToggleFavorite={this.handleTogglePlanFavorite}
-                    />
+                    <Grid item key={plan.id} className={classes.gridItem}>
+                        <PlanCard
+                            plan={plan}
+                            userId={this.state.userId}
+                            isFavoritedByUser={this.isFavoritedByUser(plan)}
+                            onToggleFavorite={this.handleTogglePlanFavorite}
+                        />
+                    </Grid>
                 ))}
             </Grid>
         );
