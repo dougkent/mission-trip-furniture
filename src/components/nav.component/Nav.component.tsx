@@ -20,9 +20,9 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
 import HotelSharpIcon from '@material-ui/icons/HotelSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
-import { AppProps } from '../../models/props';
 
 // MTF
+import { AppProps } from '../../models/props';
 import { mtfTheme, mtfAmplifyTheme, mtfAmplifyMobileTheme } from '../../themes';
 
 const useStyles = makeStyles((theme: Theme) =>

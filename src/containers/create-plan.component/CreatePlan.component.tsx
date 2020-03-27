@@ -10,24 +10,29 @@ import aws_exports from '../../aws-exports';
 // Material UI
 import {
     Button,
-    TextField,
-    Paper,
     createStyles,
+    Paper,
+    TextField,
     Theme,
+    Typography,
     withStyles,
     WithStyles,
-    Typography,
 } from '@material-ui/core';
 
 // uuid
 import { v4 as uuid } from 'uuid';
 
 // MTF
+import { AppProps } from '../../models/props';
+import { CreatePlanState } from '../../models/states';
+import { mtfTheme } from '../../themes';
+import {
+    ImageUploader,
+    MaterialsSelector,
+    PdfUploader,
+    ToolsSelector,
+} from '../../components';
 import { signUpConfig } from '../../models/sign-up-config.model';
-import MaterialsSelector from '../../components/materials-selector.component/MaterialsSelector.component';
-import ToolsSelector from '../../components/tools-selector.component/ToolsSelector.component';
-import PdfUploader from '../../components/pdf-uploader.component/PdfUploader.component';
-import ImageUploader from '../../components/image-uploader.component/ImageUploader.component';
 import {
     GqlQuery,
     ListToolsQuery,
@@ -38,9 +43,6 @@ import {
     Material,
     Tool,
 } from '../../models/api-models';
-import { AppProps } from '../../models/props';
-import { CreatePlanState } from '../../models/states';
-import { mtfTheme } from '../../themes';
 
 // Configure
 Amplify.configure(aws_exports);

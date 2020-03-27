@@ -22,11 +22,11 @@ import AddBoxSharpIcon from '@material-ui/icons/AddBoxSharp';
 import AddSharpIcon from '@material-ui/icons/AddSharp';
 
 // MTF
-import PlanCard from '../../components/plan-card.component/PlanCard.component';
-import { signUpConfig } from '../../models/sign-up-config.model';
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
 import { mtfAmplifyTheme, mtfTheme } from '../../themes';
+import { PlanCard } from '../../components';
+import { signUpConfig } from '../../models/sign-up-config.model';
 import {
     GqlQuery,
     GetUserQuery,

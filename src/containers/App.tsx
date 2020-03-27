@@ -10,15 +10,6 @@ import aws_exports from '../aws-exports';
 import { Container } from '@material-ui/core';
 
 // MTF
-import Home from './home.component/Home.component';
-import About from './about.component/About.component';
-import Contact from './contact.component/Contact.component';
-import PlansList from './plans-list.component/PlansList.component';
-import PlanView from './plan-view.component/PlanView.component';
-import Nav from '../components/nav.component/Nav.component';
-import Dashboard from './dashboard.component/Dashboard.component';
-import CreatePlan from './plan-create.component/PlanCreate.component';
-import NotFound from './not-found.component/NotFound.component';
 import { AppProps } from '../models/props';
 import {
     GqlQuery,
@@ -26,6 +17,17 @@ import {
     GetUserQuery,
     CreateUserMutation,
 } from '../models/api-models';
+import {
+    About,
+    Contact,
+    CreatePlan,
+    Dashboard,
+    Home,
+    NotFound,
+    PlanView,
+    PlansList,
+} from '.';
+import { Nav } from '../components';
 
 // Configure
 Amplify.configure(aws_exports);

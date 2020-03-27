@@ -9,19 +9,12 @@ import { S3Image } from 'aws-amplify-react';
 
 // Material UI
 import {
-    Button,
     Chip,
     CircularProgress,
     createStyles,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
     IconButton,
     Menu,
     MenuItem,
-    TextField,
     Theme,
     Typography,
     withStyles,
@@ -37,6 +30,15 @@ import { v4 as uuid } from 'uuid';
 // MTF
 import { AppProps } from '../../models/props';
 import { ViewPlanState } from '../../models/states';
+import { mtfTheme } from '../../themes';
+import NotFound from '../not-found.component/NotFound.component';
+import {
+    DownloadButton,
+    EditDescription,
+    ErrorMessage,
+    PlanDelete,
+    PlanFavorite,
+} from '../../components';
 import {
     CreateDownloadInput,
     DeletePlanInput,
@@ -49,10 +51,6 @@ import {
     UpdatePlanMutation,
     Plan,
 } from '../../models/api-models';
-import { mtfTheme } from '../../themes';
-import ErrorMessage from '../../components/error-message.component/ErrorMessage';
-import NotFound from '../not-found.component/NotFound.component';
-import PlanFavorite from '../../components/plan-favorite.component/PlanFavorite.component';
 import { PlanFavoriteService } from '../../services';
 
 // Configure
@@ -121,28 +119,6 @@ const styles = (theme: Theme) =>
             alignItems: 'center',
             [theme.breakpoints.up('md')]: {
                 justifyContent: 'flex-start',
-            },
-        },
-        downloadButton: {
-            marginRight: theme.spacing(3),
-        },
-        editButtonRow: {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-        },
-        editTextField: {
-            marginBottom: theme.spacing(1),
-        },
-        editButton: {
-            marginRight: theme.spacing(1),
-        },
-        deleteDialog: {
-            backgroundColor: theme.palette.error.dark,
-            color: '#fff',
-            '&:hover': {
-                backgroundColor: theme.palette.error.dark,
-                color: '#fff',
             },
         },
     });
@@ -249,6 +225,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             id
         }
     }`;
+
     private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: ViewPlanProps) {
@@ -457,8 +434,13 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         }));
     };
 
-    private handleSave = async () => {
-        if (!this.state.editDescription.length) {
+    private handleSave = async (newDescription: string) => {
+        this.setState(prevState => ({
+            ...prevState,
+            saving: true,
+        }));
+
+        if (!newDescription || !newDescription.length) {
             this.setState(prevState => ({
                 ...prevState,
                 saving: false,
@@ -467,14 +449,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             return;
         }
 
-        this.setState(prevState => ({
-            ...prevState,
-            saving: true,
-        }));
-
         const input: UpdatePlanInput = {
             id: this.state.planId,
-            description: this.state.editDescription,
+            description: newDescription,
         };
 
         const planResult: GqlQuery<UpdatePlanMutation> = await API.graphql(
@@ -497,16 +474,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                     "An unexpected error occurred when updating this plan's description. Please try again.",
             }));
         }
-    };
-
-    private handleTextChange = (event: React.ChangeEvent) => {
-        const element = event.target as HTMLInputElement;
-        const description: string = element.value;
-
-        this.setState(prevState => ({
-            ...prevState,
-            editDescription: description,
-        }));
     };
 
     private handleTogglePlanFavorite = (toggleFavOn: boolean) => {
@@ -535,44 +502,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
 
         if (this.state.editing) {
             return (
-                <>
-                    <TextField
-                        inputProps={{ maxLength: 500 }}
-                        multiline
-                        name='description'
-                        onChange={this.handleTextChange}
-                        label='Description'
-                        required
-                        rows='8'
-                        fullWidth
-                        value={this.state.editDescription}
-                        className={classes.editTextField}
-                    />
-                    <div className={classes.editButtonRow}>
-                        {this.state.saving && (
-                            <CircularProgress
-                                size='24px'
-                                className={classes.editButton}
-                            />
-                        )}
-                        <Button
-                            color='secondary'
-                            variant='contained'
-                            onClick={this.handleSave}
-                            className={classes.editButton}
-                            disabled={this.state.saving}>
-                            Save
-                        </Button>
-                        <Button
-                            color='primary'
-                            variant='contained'
-                            onClick={this.handleEditingOff}
-                            className={classes.editButton}
-                            disabled={this.state.saving}>
-                            Cancel
-                        </Button>
-                    </div>
-                </>
+                <EditDescription
+                    description={this.state.plan.description}
+                    saving={this.state.saving}
+                    onCancel={this.handleEditingOff}
+                    onSave={this.handleSave}
+                />
             );
         } else {
             return (
@@ -589,42 +524,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 </>
             );
         }
-    };
-
-    private renderDeleteDialog = () => {
-        const { classes } = this.props;
-
-        return (
-            <Dialog
-                onClose={this.handleDeleteDialogClose}
-                open={this.state.deleteDialogOpen}>
-                <DialogTitle className={classes.deleteDialog}>
-                    Delete {this.state.plan.name}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Are you sure you want to delete this plan? It will
-                        remove it from the website and no one will be able to
-                        access it anymore.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    {this.state.saving && <CircularProgress size='24px' />}
-                    <Button
-                        className={classes.deleteDialog}
-                        onClick={this.handleDelete}
-                        disabled={this.state.saving}>
-                        <DeleteOutlineSharpIcon />
-                        &nbsp;Delete
-                    </Button>
-                    <Button
-                        onClick={this.handleDeleteDialogClose}
-                        disabled={this.state.saving}>
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
     };
 
     render() {
@@ -724,18 +623,13 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         </div>
                         {this.renderDescription()}
                         <div className={classes.buttonRow}>
-                            <Button
-                                className={classes.downloadButton}
-                                color='secondary'
-                                variant='contained'
-                                href={this.state.downloadUrl}
-                                target='_blank'
+                            <DownloadButton
+                                downloadUrl={this.state.downloadUrl}
                                 disabled={
                                     this.state.editing || this.state.saving
                                 }
-                                onClick={this.handleCreateDownload}>
-                                Download PDF
-                            </Button>
+                                onDownload={this.handleCreateDownload}
+                            />
                             <PlanFavorite
                                 planId={this.state.planId}
                                 disabled={
@@ -750,7 +644,13 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             />
                         </div>
                     </div>
-                    {this.renderDeleteDialog()}
+                    <PlanDelete
+                        planName={this.state.plan.name}
+                        dialogOpen={this.state.deleteDialogOpen}
+                        deleting={this.state.saving}
+                        onDelete={this.handleDelete}
+                        onCancel={this.handleDeleteDialogClose}
+                    />
                     <ErrorMessage
                         error={this.state.error}
                         onClearError={this.handleClearError}
