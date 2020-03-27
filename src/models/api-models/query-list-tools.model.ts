@@ -1,4 +1,4 @@
-import { ModelToolConnection } from '../api-models';
+import { ModelToolConnection } from '.';
 
 export interface ListToolsQuery {
     listTools: ModelToolConnection;

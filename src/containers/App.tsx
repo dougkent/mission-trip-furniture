@@ -23,7 +23,7 @@ import { AppProps } from '../models/props';
 import {
     GqlQuery,
     CreateUserInput,
-    GetUserByUsernameQuery,
+    GetUserQuery,
     CreateUserMutation,
 } from '../models/api-models';
 
@@ -31,15 +31,15 @@ import {
 Amplify.configure(aws_exports);
 
 class App extends React.Component<{}, AppProps> {
-    private _getUserQuery = `query GetUserByUsername($username: String!) {
-        getUserByUsername(username: $username) {
+    private getUserQuery = `query GetUser($id: ID!) {
+        getUserByUsername(id: $id) {
             items {
                 id
             }
         }
     }`;
 
-    private _createUserMutation = `mutation CreateUser($input: CreateUserInput!) {
+    private createUserMutation = `mutation CreateUser($input: CreateUserInput!) {
         createUser(input: $input) {
             id
         }
@@ -59,11 +59,7 @@ class App extends React.Component<{}, AppProps> {
         const userInfo = await Auth.currentUserInfo();
 
         if (userInfo) {
-            var userId = await this.tryGetUserId(userInfo.username);
-
-            if (userId) {
-                this.setState({ userId: userId });
-            }
+            this.setState({ userId: userInfo.id });
         }
     }
 
@@ -85,29 +81,23 @@ class App extends React.Component<{}, AppProps> {
         }
     }
 
-    private async tryGetUserId(username: string): Promise<string> {
-        const userResult: GqlQuery<GetUserByUsernameQuery> = await API.graphql(
-            graphqlOperation(this._getUserQuery, { username: username })
+    private async userExists(userId: string): Promise<boolean> {
+        const userResult: GqlQuery<GetUserQuery> = await API.graphql(
+            graphqlOperation(this.getUserQuery, { id: userId })
         );
 
-        const { getUserByUsername } = userResult.data;
+        const { getUser } = userResult.data;
 
-        if (getUserByUsername.items.length) {
-            return getUserByUsername.items[0].id;
-        } else {
-            return null;
-        }
+        return !!getUser;
     }
 
     private async createUserIfNotExists() {
-        const user = await Auth.currentUserInfo();
+        const userInfo = await Auth.currentUserInfo();
 
-        const userId = await this.tryGetUserId(user.username);
-
-        if (!userId) {
-            await this.createUserByUsername(user.id, user.username);
+        if (!(await this.userExists(userInfo.id))) {
+            await this.createUserByUsername(userInfo.id, userInfo.username);
         } else {
-            this.setState({ userId: userId });
+            this.setState({ userId: userInfo.id });
         }
     }
 
@@ -118,7 +108,7 @@ class App extends React.Component<{}, AppProps> {
         };
 
         var createUserResult: GqlQuery<CreateUserMutation> = await API.graphql(
-            graphqlOperation(this._createUserMutation, {
+            graphqlOperation(this.createUserMutation, {
                 input: createUserInput,
             })
         );

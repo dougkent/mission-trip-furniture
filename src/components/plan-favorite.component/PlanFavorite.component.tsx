@@ -73,7 +73,10 @@ const PlanFavorite: React.FC<PlanFavoriteProps> = (
 
     return (
         <div className={classes.flex}>
-            <IconButton size='small' onClick={handleFavoriteToggle}>
+            <IconButton
+                size='small'
+                onClick={handleFavoriteToggle}
+                disabled={props.disabled}>
                 {(() => {
                     if (isFavoritedByUser) {
                         return (

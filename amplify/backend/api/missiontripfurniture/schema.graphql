@@ -1,26 +1,10 @@
-﻿type User
-    @model(
-        queries: { get: "getUser", list: "listUsers" }
-        mutations: {
-            create: "createUser"
-            update: "updateUser"
-            delete: "deleteUser"
-        }
-        subscriptions: null
-    )
+type User
+    @model(queries: { get: "getUser" }, subscriptions: null)
     @auth(
         rules: [
-            {
-                allow: owner
-                ownerField: "username"
-                operations: [create, update, delete]
-            }
+            { allow: private, operations: [read], provider: iam }
+            { allow: owner, operations: [create, read, update, delete] }
         ]
-    )
-    @key(
-        name: "byUsername"
-        fields: ["username"]
-        queryField: "getUserByUsername"
     ) {
     id: ID!
     username: String!
@@ -32,8 +16,14 @@
 }
 
 type Plan
-    @model
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    @model(subscriptions: null)
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: private, operations: [read], provider: userPools }
+            { allow: owner, operations: [create, update, delete] }
+        ]
+    ) {
     id: ID!
     name: String!
     description: String!
@@ -52,11 +42,9 @@ type Plan
 
 type Favorite
     @model(
-        queries: null
         mutations: { create: "createFavorite", delete: "deleteFavorite" }
         subscriptions: null
     )
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }])
     @key(
         name: "favoritedBy"
         fields: ["planId", "userId"]
@@ -66,6 +54,12 @@ type Favorite
         name: "favoritedPlans"
         fields: ["userId", "planId"]
         queryField: "getFavoriteByUserId"
+    )
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: owner, operations: [create, read, update, delete] }
+        ]
     ) {
     id: ID!
     planId: ID!
@@ -73,12 +67,7 @@ type Favorite
 }
 
 type Download
-    @model(
-        queries: null
-        mutations: { create: "createDownload" }
-        subscriptions: null
-    )
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }])
+    @model(mutations: { create: "createDownload" }, subscriptions: null)
     @key(
         name: "downloadedBy"
         fields: ["planId", "userId"]
@@ -88,6 +77,12 @@ type Download
         name: "downloadedPlans"
         fields: ["userId", "planId"]
         queryField: "getDownloadedByUserId"
+    )
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: owner, operations: [create, update, delete] }
+        ]
     ) {
     id: ID!
     planId: ID!
@@ -96,14 +91,18 @@ type Download
 
 type PlanMaterial
     @model(
-        queries: null
         mutations: {
             create: "createPlanMaterial"
             delete: "deletePlanMaterial"
         }
         subscriptions: null
     )
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: owner, operations: [create, update, delete] }
+        ]
+    ) {
     id: ID!
     material: Material! @connection
     plan: Plan! @connection(name: "RequiresMaterials")
@@ -114,6 +113,12 @@ type Material
         queries: { list: "listMaterials" }
         mutations: null
         subscriptions: null
+    )
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: private, operations: [read], provider: userPools }
+        ]
     ) {
     id: ID!
     name: String!
@@ -121,21 +126,27 @@ type Material
 
 type PlanTool
     @model(
-        queries: null
         mutations: { create: "createPlanTool", delete: "deletePlanTool" }
         subscriptions: null
     )
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: owner, operations: [create, update, delete] }
+        ]
+    ) {
     id: ID!
     tool: Tool! @connection
     plan: Plan! @connection(name: "RequiresTools")
 }
 
 type Tool
-    @model(
-        queries: { list: "listTools" }
-        mutations: null
-        subscriptions: null
+    @model(queries: { list: "listTools" }, mutations: null, subscriptions: null)
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: private, operations: [read], provider: userPools }
+        ]
     ) {
     id: ID!
     name: String!

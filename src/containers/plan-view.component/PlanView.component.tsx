@@ -249,7 +249,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             id
         }
     }`;
-
     private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: ViewPlanProps) {
@@ -272,11 +271,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     }
 
     async componentDidMount() {
-        const planResult: GqlQuery<GetPlanQuery> = await API.graphql(
-            graphqlOperation(this.getPlanQuery, {
-                id: this.props.planId,
-            })
-        );
+        const planResult: GqlQuery<GetPlanQuery> = await API.graphql({
+            query: this.getPlanQuery,
+            variables: { id: this.props.planId },
+            // @ts-ignore
+            authMode: 'AWS_IAM',
+        });
 
         if (planResult && planResult.data && planResult.data.getPlan) {
             const downloadUrl = await Storage.get(
@@ -325,15 +325,17 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             saving: true,
         }));
 
-        const input: CreateDownloadInput = {
-            id: uuid(),
-            planId: this.state.planId,
-            userId: this.state.userId,
-        };
+        if (this.state.userId) {
+            const input: CreateDownloadInput = {
+                id: uuid(),
+                planId: this.state.planId,
+                userId: this.state.userId,
+            };
 
-        API.graphql(
-            graphqlOperation(this.createDownloadMutation, { input: input })
-        );
+            API.graphql(
+                graphqlOperation(this.createDownloadMutation, { input: input })
+            );
+        }
 
         this.setState(prevState => ({
             ...prevState,
@@ -644,7 +646,10 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         <Typography variant='h2'>
                             {this.state.plan.name}
                         </Typography>
-                        {this.state.userId === this.state.plan.createdBy.id &&
+                        {this.state.userId &&
+                            this.state.userId.length > 0 &&
+                            this.state.userId ===
+                                this.state.plan.createdBy.id &&
                             !this.state.editing && (
                                 <div>
                                     <IconButton
@@ -733,7 +738,10 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             </Button>
                             <PlanFavorite
                                 planId={this.state.planId}
-                                disabled={false}
+                                disabled={
+                                    !this.props.userId ||
+                                    this.props.userId.length === 0
+                                }
                                 isFavoritedByUser={this.isFavoritedByUser(
                                     this.state.plan
                                 )}

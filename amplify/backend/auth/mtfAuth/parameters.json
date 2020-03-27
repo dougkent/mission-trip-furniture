@@ -1,15 +1,11 @@
 {
-    "identityPoolName": "missiontripfurniture41b1791f41b1791f_identitypool_353076d4",
+    "identityPoolName": "mtfAuth_identitypool",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "missio41b1791f",
-    "userPoolName": "missiontripfurniture41b1791f_userpool_41b1791f",
-    "autoVerifiedAttributes": [
-        "email"
-    ],
+    "resourceNameTruncated": "mtfAut44346b3c",
+    "userPoolName": "mtfAuth_userpool",
+    "autoVerifiedAttributes": ["email"],
     "mfaConfiguration": "OFF",
-    "mfaTypes": [
-        "SMS Text Message"
-    ],
+    "mfaTypes": ["SMS Text Message"],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "Your verification code",
@@ -17,35 +13,26 @@
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
-    "requiredAttributes": [
-        "email"
-    ],
+    "requiredAttributes": ["email", "name"],
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [
-        "email"
-    ],
-    "userpoolClientReadAttributes": [
-        "email"
-    ],
-    "userpoolClientLambdaRole": "missio41b1791f_userpoolclient_lambda_role",
+    "userpoolClientWriteAttributes": ["email"],
+    "userpoolClientReadAttributes": ["email"],
+    "userpoolClientLambdaRole": "mtfAut44346b3c_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
     "useDefault": "default",
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "missiontripfurniture41b1791f41b1791f",
+    "resourceName": "mtfAuth",
+    "userPoolGroups": false,
+    "adminQueries": false,
     "triggers": "{}",
     "hostedUI": false,
+    "userPoolGroupList": [],
     "authRoleArn": {
-        "Fn::GetAtt": [
-            "AuthRole",
-            "Arn"
-        ]
+        "Fn::GetAtt": ["AuthRole", "Arn"]
     },
     "unauthRoleArn": {
-        "Fn::GetAtt": [
-            "UnauthRole",
-            "Arn"
-        ]
+        "Fn::GetAtt": ["UnauthRole", "Arn"]
     },
     "parentStack": {
         "Ref": "AWS::StackId"
