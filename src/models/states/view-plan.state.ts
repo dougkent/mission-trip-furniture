@@ -8,7 +8,6 @@ export interface ViewPlanState extends AppState {
     loading: boolean;
     planMenuAnchor: HTMLElement | null;
     editing: boolean;
-    editDescription: string;
     saving: boolean;
     deleteDialogOpen: boolean;
     deleteComplete: boolean;

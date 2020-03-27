@@ -1,5 +1,5 @@
 // React
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // Material UI
 import {
@@ -39,18 +39,14 @@ const EditDescription: React.FC<EditDescriptionProps> = (
     const [description, setDescription] = useState<string>(props.description);
     const [saving, setSaving] = useState<boolean>(props.saving);
 
-    useEffect(() => {
-        setSaving(props.saving);
-    }, [props.saving]);
-
     const handleCancel = () => {
         props.onCancel();
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setSaving(true);
 
-        props.onSave(description);
+        props.onSave(description).catch(() => setSaving(false));
     };
 
     const handleTextChange = (event: React.ChangeEvent) => {
@@ -72,6 +68,7 @@ const EditDescription: React.FC<EditDescriptionProps> = (
                 fullWidth
                 value={description}
                 className={classes.editTextField}
+                disabled={saving}
             />
             <div className={classes.editButtonRow}>
                 {saving && (

@@ -40,7 +40,7 @@ const PlanDelete: React.FC<PlanDeleteProps> = (props: PlanDeleteProps) => {
     const [dialogOpen, setDialogOpen] = useState<boolean>(props.dialogOpen);
 
     useEffect(() => {
-        setDialogOpen(props.deleting);
+        setDeleting(props.deleting);
     }, [props.deleting]);
 
     useEffect(() => {

@@ -182,6 +182,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 username
             }
             favoritedCount
+            favoritedBy {
+                items {
+                    userId
+                }
+            }
             downloadedCount
             materialsRequired {
                 items {
@@ -239,7 +244,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             loading: true,
             planMenuAnchor: null,
             editing: false,
-            editDescription: null,
             saving: false,
             deleteDialogOpen: false,
             deleteComplete: false,
@@ -446,7 +450,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 saving: false,
                 error: 'Please enter a description.',
             }));
-            return;
+            throw Error('Please enter a description');
         }
 
         const input: UpdatePlanInput = {
@@ -463,7 +467,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 ...prevState,
                 plan: planResult.data.updatePlan,
                 editing: false,
-                editDescription: planResult.data.updatePlan.description,
                 saving: false,
             }));
         } else {
@@ -473,6 +476,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 error:
                     "An unexpected error occurred when updating this plan's description. Please try again.",
             }));
+            throw Error(
+                "An unexpected error occurred when updating this plan's description. Please try again."
+            );
         }
     };
 
