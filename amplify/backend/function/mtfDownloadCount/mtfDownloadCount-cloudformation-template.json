@@ -63,7 +63,7 @@
 							"Fn::Join": [
 								"-",
 								[
-									"PlanTable",
+									"Plan",
 									{
 										"Ref": "apimissiontripfurnitureGraphQLAPIIdOutput"
 									}

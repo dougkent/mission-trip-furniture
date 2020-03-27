@@ -249,7 +249,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             id
         }
     }`;
-
     private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: ViewPlanProps) {
@@ -326,15 +325,17 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             saving: true,
         }));
 
-        const input: CreateDownloadInput = {
-            id: uuid(),
-            planId: this.state.planId,
-            userId: this.state.userId,
-        };
+        if (this.state.userId) {
+            const input: CreateDownloadInput = {
+                id: uuid(),
+                planId: this.state.planId,
+                userId: this.state.userId,
+            };
 
-        API.graphql(
-            graphqlOperation(this.createDownloadMutation, { input: input })
-        );
+            API.graphql(
+                graphqlOperation(this.createDownloadMutation, { input: input })
+            );
+        }
 
         this.setState(prevState => ({
             ...prevState,
