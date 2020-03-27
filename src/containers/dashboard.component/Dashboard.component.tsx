@@ -41,7 +41,7 @@ Amplify.configure(aws_exports);
 const styles = (theme: Theme) =>
     createStyles({
         dashboardContainer: {
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('sm')]: {
                 display: 'flex',
                 justifyContent: 'space-evenly',
             },
@@ -55,6 +55,9 @@ const styles = (theme: Theme) =>
             padding: theme.spacing(2),
             width: '100%',
             marginBottom: theme.spacing(5),
+            [theme.breakpoints.up('md')]: {
+                width: '50%',
+            },
 
             [theme.breakpoints.up('lg')]: {
                 padding: theme.spacing(5),
@@ -86,6 +89,12 @@ const styles = (theme: Theme) =>
                 marginTop: theme.spacing(1),
             },
         },
+        gridItem: {
+            width: '100%',
+            [theme.breakpoints.up('md')]: {
+                height: theme.spacing(29),
+            },
+        },
     });
 
 export interface DashboardProps extends AppProps, WithStyles<typeof styles> {}
@@ -107,6 +116,7 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                     created
                     createdBy {
                         id
+                        username
                     }
                     favoritedCount
                     favoritedBy  {
@@ -115,6 +125,24 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                         }
                     }
                     downloadedCount
+                    materialsRequired {
+                        items {
+                            id
+                            material {
+                                id
+                                name
+                            }
+                        }
+                    }
+                    toolsRequired {
+                        items {
+                            id
+                            tool {
+                                id
+                                name
+                            }
+                        }
+                    }
                 }
             }
             favoritedPlans {
@@ -146,6 +174,24 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                 }
             }
             downloadedCount
+            materialsRequired {
+                items {
+                    id
+                    material {
+                        id
+                        name
+                    }
+                }
+            }
+            toolsRequired {
+                items {
+                    id
+                    tool {
+                        id
+                        name
+                    }
+                }
+            }
         }
     }`;
 
@@ -208,13 +254,14 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
             return (
                 <Grid container spacing={2}>
                     {data.getUser.createdPlans.items.map(plan => (
-                        <PlanCard
-                            key={plan.id}
-                            plan={plan}
-                            userId={this.state.userId}
-                            isFavoritedByUser={this.isFavoritedByUser(plan)}
-                            onToggleFavorite={this.handleTogglePlanFavorite}
-                        />
+                        <Grid item key={plan.id} className={classes.gridItem}>
+                            <PlanCard
+                                plan={plan}
+                                userId={this.state.userId}
+                                isFavoritedByUser={this.isFavoritedByUser(plan)}
+                                onToggleFavorite={this.handleTogglePlanFavorite}
+                            />
+                        </Grid>
                     ))}
                 </Grid>
             );
@@ -245,9 +292,14 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
         ) {
             return (
                 <Grid container spacing={2}>
-                    {data.getUser.favoritedPlans.items.map(favorite =>
-                        this.renderFavoritedPlan(favorite.planId)
-                    )}
+                    {data.getUser.favoritedPlans.items.map(favorite => (
+                        <Grid
+                            item
+                            key={favorite.planId}
+                            className={classes.gridItem}>
+                            {this.renderFavoritedPlan(favorite.planId)}
+                        </Grid>
+                    ))}
                 </Grid>
             );
         } else {
@@ -300,7 +352,7 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                                     <>
                                         <div className={classes.listContainer}>
                                             <div className={classes.listTitle}>
-                                                <Typography variant='h2'>
+                                                <Typography variant='h3'>
                                                     My Plans
                                                 </Typography>
                                                 <Link
@@ -336,7 +388,7 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                                         </div>
                                         <div className={classes.listContainer}>
                                             <div className={classes.listTitle}>
-                                                <Typography variant='h2'>
+                                                <Typography variant='h3'>
                                                     Favorited Plans
                                                 </Typography>
                                             </div>
