@@ -136,7 +136,9 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                         </div>
                         <PlanFavorite
                             planId={planState.id}
-                            disabled={false}
+                            disabled={
+                                !props.userId || props.userId.length === 0
+                            }
                             isFavoritedByUser={isFavoritedByUser}
                             favoritedCount={planState.favoritedCount}
                             onToggleFavorite={handleToggleFavorite}

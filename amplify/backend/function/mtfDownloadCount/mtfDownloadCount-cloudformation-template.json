@@ -63,7 +63,7 @@
 							"Fn::Join": [
 								"-",
 								[
-									"Plan",
+									"PlanTable",
 									{
 										"Ref": "apimissiontripfurnitureGraphQLAPIIdOutput"
 									}
@@ -106,7 +106,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-missiontripfurniture-unauth-162351-deployment",
-					"S3Key": "amplify-builds/mtfDownloadCount-766c4d5176426e626b4c-build.zip"
+					"S3Key": "amplify-builds/mtfDownloadCount-6d4f7233326c4357466e-build.zip"
 				}
 			}
 		},
@@ -116,12 +116,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"missiontripfurnitureLambdaRolefcaeb8ad",
+						"missiontripfurnitureLambdaRolea1453e20",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"missiontripfurnitureLambdaRolefcaeb8ad",
+									"missiontripfurnitureLambdaRolea1453e20",
 									"-",
 									{
 										"Ref": "env"

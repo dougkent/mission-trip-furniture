@@ -106,8 +106,7 @@ class Home extends React.Component<HomeProps, AppState> {
                             variant='outlined'
                             color='secondary'
                             className={classes.learnMoreButton}
-                            size='large'
-                            href='/about'>
+                            size='large'>
                             <Typography
                                 variant='h5'
                                 className={classes.learnMoreText}>

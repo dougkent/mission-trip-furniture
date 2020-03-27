@@ -2,8 +2,7 @@
 import React from 'react';
 
 // AWS
-import Amplify, { graphqlOperation } from 'aws-amplify';
-import { Connect } from 'aws-amplify-react';
+import Amplify, { API } from 'aws-amplify';
 import aws_exports from '../../aws-exports';
 
 // Material UI
@@ -121,8 +120,29 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             searchState: {
                 searchTerm: null,
             },
+            planList: null,
+            loading: false,
             userId: props.userId,
         };
+    }
+
+    async componentDidMount() {
+        this.setState(prevState => ({
+            ...prevState,
+            loading: true,
+        }));
+
+        const result: GqlQuery<ListPlansQuery> = await API.graphql({
+            query: this.listPlansQuery,
+            // @ts-ignore
+            authMode: 'AWS_IAM',
+        });
+
+        this.setState(prevState => ({
+            ...prevState,
+            loading: false,
+            planList: result.data,
+        }));
     }
 
     componentDidUpdate(prevProps: PlanListProps) {
@@ -252,15 +272,16 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
     render() {
         const { classes } = this.props;
 
+        /* return this.renderPlans(data, loading); */
+
         return (
             <div className={classes.plansListContainer}>
                 <Typography variant='h2'>Plans</Typography>
-
-                <Connect query={graphqlOperation(this.listPlansQuery)}>
-                    {({ data, loading }: GqlQuery<ListPlansQuery>) => {
-                        return this.renderPlans(data, loading);
-                    }}
-                </Connect>
+                {(() =>
+                    this.renderPlans(
+                        this.state.planList,
+                        this.state.loading
+                    ))()}
             </div>
         );
     }
