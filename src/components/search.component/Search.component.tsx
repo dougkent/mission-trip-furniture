@@ -12,9 +12,9 @@ import {
 import SearchSharpIcon from '@material-ui/icons/SearchSharp';
 
 // MTF
-import { mtfTheme } from '../../themes';
 import { SearchProps } from '../../models/props';
 import { SearchState } from '../../models/states';
+import { mtfTheme } from '../../themes';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

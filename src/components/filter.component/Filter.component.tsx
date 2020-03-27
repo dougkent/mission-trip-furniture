@@ -25,12 +25,11 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 // MTF
-import { mtfTheme } from '../../themes';
 import { FilterProps } from '../../models/props';
 import { FilterState } from '../../models/states';
+import { mtfTheme } from '../../themes';
+import { MaterialsSelector, ToolsSelector } from '../.';
 import { Material, Tool } from '../../models/api-models';
-import MaterialsSelector from '../materials-selector.component/MaterialsSelector.component';
-import ToolsSelector from '../tools-selector.component/ToolsSelector.component';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

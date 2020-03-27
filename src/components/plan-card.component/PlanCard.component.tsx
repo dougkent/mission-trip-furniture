@@ -18,10 +18,10 @@ import {
 } from '@material-ui/core';
 
 // MTF
-import PlanFavorite from '../plan-favorite.component/PlanFavorite.component';
 import { PlanCardProps } from '../../models/props';
-import { Plan } from '../../models/api-models';
 import { mtfTheme } from '../../themes';
+import { PlanFavorite } from '../.';
+import { Plan } from '../../models/api-models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

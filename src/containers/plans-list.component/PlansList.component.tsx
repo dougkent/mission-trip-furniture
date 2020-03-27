@@ -17,11 +17,10 @@ import {
 } from '@material-ui/core';
 
 // MTF
-import PlanCard from '../../components/plan-card.component/PlanCard.component';
-import Search from '../../components/search.component/Search.component';
-import Filter from '../../components/filter.component/Filter.component';
 import { AppProps } from '../../models/props';
 import { FilterState, PlanListState, SearchState } from '../../models/states';
+import { mtfTheme } from '../../themes';
+import { Filter, PlanCard, Search } from '../../components';
 import {
     GqlQuery,
     ListPlansQuery,
@@ -29,7 +28,6 @@ import {
     Tool,
     Plan,
 } from '../../models/api-models';
-import { mtfTheme } from '../../themes';
 import { PlanFavoriteService } from '../../services';
 
 // Configure

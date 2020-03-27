@@ -6,8 +6,8 @@ import { Chip, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 // MTF
-import { Material } from '../../models/api-models';
 import { MaterialSelectorProps } from '../../models/props';
+import { Material } from '../../models/api-models';
 
 const MaterialsSelector: React.FC<MaterialSelectorProps> = (
     props: MaterialSelectorProps
