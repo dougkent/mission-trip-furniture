@@ -36,6 +36,7 @@ import {
     DownloadButton,
     EditDescription,
     ErrorMessage,
+    PlanDate,
     PlanDelete,
     PlanFavorite,
 } from '../../components';
@@ -69,9 +70,13 @@ const styles = (theme: Theme) =>
         },
         title: {
             width: '100%',
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacing(1),
             display: 'flex',
             justifyContent: 'space-between',
+        },
+        subTitle: {
+            width: '100%',
+            marginBottom: theme.spacing(2),
         },
         image: {
             width: '100%',
@@ -96,6 +101,7 @@ const styles = (theme: Theme) =>
         planContent: {
             width: '100%',
             padding: `0 ${theme.spacing(2)}px`,
+            marginBottom: theme.spacing(2),
             [theme.breakpoints.up('sm')]: {
                 width: '50%',
             },
@@ -274,7 +280,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 plan: planResult.data.getPlan,
                 downloadUrl: downloadUrl as string,
                 loading: false,
-                editDescription: planResult.data.getPlan.description,
             }));
         } else {
             this.setState(prevState => ({
@@ -584,6 +589,15 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                     </Menu>
                                 </div>
                             )}
+                    </div>
+                    <div className={classes.subTitle}>
+                        <Typography>
+                            Created:&nbsp;
+                            <PlanDate
+                                date={new Date(this.state.plan.created)}
+                            />
+                            &nbsp;by&nbsp;{this.state.plan.createdBy.username}
+                        </Typography>
                     </div>
                     <div className={classes.image}>
                         <S3Image

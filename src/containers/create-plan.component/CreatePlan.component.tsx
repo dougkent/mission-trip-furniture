@@ -349,13 +349,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         </div>
                         <div className={classes.formRow}>
                             <TextField
-                                inputProps={{ maxLength: 500 }}
+                                inputProps={{ maxLength: 2000 }}
                                 multiline
                                 name='description'
                                 onChange={this.handleTextChange}
                                 label='Description'
                                 required
-                                rows='4'
+                                rows='16'
                                 className={classes.textField}
                             />
                         </div>
