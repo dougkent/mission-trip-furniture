@@ -3,9 +3,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 // AWS
-import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import { Connect, withAuthenticator } from 'aws-amplify-react';
-import aws_exports from '../../aws-exports';
 
 // Material UI
 import {
@@ -43,9 +42,6 @@ import {
     Material,
     Tool,
 } from '../../models/api-models';
-
-// Configure
-Amplify.configure(aws_exports);
 
 const styles = (theme: Theme) =>
     createStyles({

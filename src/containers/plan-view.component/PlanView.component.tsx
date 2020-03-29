@@ -3,8 +3,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 // AWS
-import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
-import aws_exports from '../../aws-exports';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import { S3Image } from 'aws-amplify-react';
 
 // Material UI
@@ -53,9 +52,6 @@ import {
     Plan,
 } from '../../models/api-models';
 import { PlanFavoriteService } from '../../services';
-
-// Configure
-Amplify.configure(aws_exports);
 
 const styles = (theme: Theme) =>
     createStyles({

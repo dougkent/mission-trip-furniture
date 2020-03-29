@@ -2,8 +2,7 @@
 import React from 'react';
 
 // AWS
-import Amplify, { API } from 'aws-amplify';
-import aws_exports from '../../aws-exports';
+import { API } from 'aws-amplify';
 
 // Material UI
 import {
@@ -15,6 +14,9 @@ import {
     withStyles,
     WithStyles,
 } from '@material-ui/core';
+
+// Google Analytics
+import ReactGA from 'react-ga';
 
 // MTF
 import { AppProps } from '../../models/props';
@@ -29,9 +31,6 @@ import {
     Plan,
 } from '../../models/api-models';
 import { PlanFavoriteService } from '../../services';
-
-// Configure
-Amplify.configure(aws_exports);
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -171,11 +170,21 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 planId,
                 this.state.userId
             );
+
+            ReactGA.event({
+                category: 'favorite',
+                action: 'User Favorited Plan',
+            });
         } else {
             await this.planFavoriteService.deleteFavorite(
                 planId,
                 this.state.userId
             );
+
+            ReactGA.event({
+                category: 'favorite',
+                action: 'User Unfavorited Plan',
+            });
         }
     };
 
@@ -184,6 +193,10 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             ...prevState,
             filterState: filterState,
         }));
+        ReactGA.event({
+            category: 'search',
+            action: 'User Filtered Plan List',
+        });
     };
 
     private handleSearch = (searchState: SearchState) => {
@@ -191,6 +204,10 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             ...prevState,
             searchState: searchState,
         }));
+        ReactGA.event({
+            category: 'search',
+            action: 'User Searched Plan List',
+        });
     };
 
     private isFavoritedByUser = (plan: Plan): boolean => {
