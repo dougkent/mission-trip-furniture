@@ -281,7 +281,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 downloadUrl: downloadUrl as string,
                 loading: false,
             }));
-            console.log(planResult.data.getPlan);
         } else {
             this.setState(prevState => ({
                 ...prevState,
