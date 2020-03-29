@@ -16,7 +16,9 @@
                 "mtfAuth": {}
             },
             "function": {
-                "missiontripfurniture": {}
+                "missiontripfurniture": {},
+                "mtfFavoriteCount": {},
+                "mtfDownloadCount": {}
             }
         }
     }

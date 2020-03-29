@@ -58,13 +58,13 @@ const EditDescription: React.FC<EditDescriptionProps> = (
     return (
         <>
             <TextField
-                inputProps={{ maxLength: 500 }}
+                inputProps={{ maxLength: 2000 }}
                 multiline
                 name='description'
                 onChange={handleTextChange}
                 label='Description'
                 required
-                rows='8'
+                rows='16'
                 fullWidth
                 value={description}
                 className={classes.editTextField}
