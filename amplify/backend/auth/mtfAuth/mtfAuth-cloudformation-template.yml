@@ -58,10 +58,10 @@ Parameters:
         
   userpoolClientGenerateSecret:
     Type: String
-                
+            
   userpoolClientRefreshTokenValidity:
-    Type: Number
-                  
+    Type: String
+                      
   userpoolClientWriteAttributes:
     Type: CommaDelimitedList
               
@@ -106,7 +106,10 @@ Parameters:
               
   dependsOn:
     Type: CommaDelimitedList
-                
+        
+  thirdPartyAuth:
+    Type: String
+                      
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
 

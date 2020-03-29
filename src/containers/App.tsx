@@ -34,10 +34,8 @@ Amplify.configure(aws_exports);
 
 class App extends React.Component<{}, AppProps> {
     private getUserQuery = `query GetUser($id: ID!) {
-        getUserByUsername(id: $id) {
-            items {
-                id
-            }
+        getUser(id: $id) {
+            id
         }
     }`;
 

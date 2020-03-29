@@ -3,24 +3,37 @@
     "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "mtfAut44346b3c",
     "userPoolName": "mtfAuth_userpool",
-    "autoVerifiedAttributes": ["email"],
+    "autoVerifiedAttributes": [
+        "email"
+    ],
     "mfaConfiguration": "OFF",
-    "mfaTypes": ["SMS Text Message"],
-    "smsAuthenticationMessage": "Your authentication code is {####}",
-    "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your Mission Trip Furniture sign in verification code is {####}",
+    "smsVerificationMessage": "Your Mission Trip Furniture new account verification code is {####}",
+    "emailVerificationSubject": "Mission Trip Furniture New Account Verification Code",
+    "emailVerificationMessage": "Your Mission Trip Furniture new account verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
-    "requiredAttributes": ["email", "name"],
+    "requiredAttributes": [
+        "email",
+        "name"
+    ],
     "userpoolClientGenerateSecret": true,
-    "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": ["email"],
-    "userpoolClientReadAttributes": ["email"],
+    "userpoolClientRefreshTokenValidity": "14",
+    "userpoolClientWriteAttributes": [
+        "email",
+        "name"
+    ],
+    "userpoolClientReadAttributes": [
+        "email",
+        "name"
+    ],
     "userpoolClientLambdaRole": "mtfAut44346b3c_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "useDefault": "default",
+    "useDefault": "manual",
     "authSelections": "identityPoolAndUserPool",
     "resourceName": "mtfAuth",
     "userPoolGroups": false,
@@ -29,14 +42,21 @@
     "hostedUI": false,
     "userPoolGroupList": [],
     "authRoleArn": {
-        "Fn::GetAtt": ["AuthRole", "Arn"]
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
     },
     "unauthRoleArn": {
-        "Fn::GetAtt": ["UnauthRole", "Arn"]
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
     },
     "parentStack": {
         "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "dependsOn": []
+    "dependsOn": [],
+    "thirdPartyAuth": false
 }
