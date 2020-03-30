@@ -3,9 +3,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 // AWS
-import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import { Connect, withAuthenticator } from 'aws-amplify-react';
-import aws_exports from '../../aws-exports';
 
 // Material UI
 import {
@@ -21,6 +20,9 @@ import {
 
 // uuid
 import { v4 as uuid } from 'uuid';
+
+// Google Analytics
+import ReactGA from 'react-ga';
 
 // MTF
 import { AppProps } from '../../models/props';
@@ -43,9 +45,6 @@ import {
     Material,
     Tool,
 } from '../../models/api-models';
-
-// Configure
-Amplify.configure(aws_exports);
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -144,6 +143,10 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         super(props);
 
         this.state = this.initialState;
+    }
+
+    componentDidMount() {
+        ReactGA.ga('send', 'pageview', window.location.pathname);
     }
     async componentDidUpdate(prevProps: CreatePlanProps) {
         if (this.props.userId !== prevProps.userId) {
@@ -269,6 +272,11 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         input: planToolInput,
                     })
                 );
+            });
+
+            ReactGA.event({
+                category: 'create',
+                action: 'User Created a Plan',
             });
 
             setTimeout(

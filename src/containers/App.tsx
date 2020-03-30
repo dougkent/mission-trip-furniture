@@ -9,6 +9,9 @@ import aws_exports from '../aws-exports';
 // Material UI
 import { Container } from '@material-ui/core';
 
+// Google Analytics
+import ReactGA from 'react-ga';
+
 // MTF
 import { AppProps } from '../models/props';
 import {
@@ -31,6 +34,7 @@ import { Nav } from '../components';
 
 // Configure
 Amplify.configure(aws_exports);
+ReactGA.initialize('UA-162153255-1');
 
 class App extends React.Component<{}, AppProps> {
     private getUserQuery = `query GetUser($id: ID!) {
@@ -74,9 +78,19 @@ class App extends React.Component<{}, AppProps> {
         switch (payload.event) {
             case 'signIn':
                 await this.createUserIfNotExists();
+
+                const userInfo = await Auth.currentUserInfo();
+                ReactGA.set({
+                    userId: userInfo.id,
+                });
+                ReactGA.event({ category: 'auth', action: 'User Signed In' });
                 break;
             case 'signOut':
                 this.setState({ userId: '' });
+                ReactGA.event({ category: 'auth', action: 'User Signed Out' });
+                break;
+            case 'signUp':
+                ReactGA.event({ category: 'auth', action: 'User Signed Up' });
                 break;
         }
     }

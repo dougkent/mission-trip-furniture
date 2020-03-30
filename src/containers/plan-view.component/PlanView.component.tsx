@@ -3,8 +3,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 // AWS
-import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
-import aws_exports from '../../aws-exports';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import { S3Image } from 'aws-amplify-react';
 
 // Material UI
@@ -26,6 +25,9 @@ import DeleteOutlineSharpIcon from '@material-ui/icons/DeleteOutlineSharp';
 
 // uuid
 import { v4 as uuid } from 'uuid';
+
+// Google Analytics
+import ReactGA from 'react-ga';
 
 // MTF
 import { AppProps } from '../../models/props';
@@ -53,9 +55,6 @@ import {
     Plan,
 } from '../../models/api-models';
 import { PlanFavoriteService } from '../../services';
-
-// Configure
-Amplify.configure(aws_exports);
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -287,6 +286,8 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 loading: false,
             }));
         }
+
+        ReactGA.ga('send', 'pageview', window.location.pathname);
     }
 
     componentDidUpdate(prevProps: ViewPlanProps) {
@@ -331,6 +332,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 downloadsCount: prevState.plan.downloadedCount++,
             },
         }));
+
+        ReactGA.event({
+            category: 'download',
+            action: 'User downloaded a plan',
+        });
     };
 
     private handleDelete = async () => {
@@ -379,6 +385,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         input: toolInput,
                     })
                 );
+            });
+
+            ReactGA.event({
+                category: 'delete',
+                action: 'User deleted a plan',
             });
 
             this.setState(prevState => ({
@@ -474,6 +485,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 editing: false,
                 saving: false,
             }));
+
+            ReactGA.event({
+                category: 'edit',
+                action: 'User edited a plan description',
+            });
         } else {
             this.setState(prevState => ({
                 ...prevState,
@@ -493,11 +509,23 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 this.state.planId,
                 this.state.userId
             );
+
+            ReactGA.event({
+                category: 'favorite',
+                action: 'User Favorited Plan',
+                label: 'favorite on plan view page',
+            });
         } else {
             this.planFavoriteService.deleteFavorite(
                 this.state.planId,
                 this.state.userId
             );
+
+            ReactGA.event({
+                category: 'favorite',
+                action: 'User Unfavorited Plan',
+                label: 'favorite on plan view page',
+            });
         }
     };
 

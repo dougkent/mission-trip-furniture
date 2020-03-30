@@ -4,6 +4,9 @@ import React from 'react';
 // Material UI
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
 
+// Google Analytics
+import ReactGA from 'react-ga';
+
 // MTF
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
@@ -31,6 +34,10 @@ class Contact extends React.Component<ContactProps, AppState> {
         this.state = {
             userId: props.userId,
         };
+    }
+
+    componentDidMount() {
+        ReactGA.ga('send', 'pageview', window.location.pathname);
     }
 
     componentDidUpdate(prevProps: ContactProps) {

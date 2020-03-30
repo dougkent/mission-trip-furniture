@@ -3,8 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 // AWS
-import Amplify, { graphqlOperation } from 'aws-amplify';
-import aws_exports from '../../aws-exports';
+import { graphqlOperation } from 'aws-amplify';
 import { withAuthenticator, Connect } from 'aws-amplify-react';
 
 // Material UI
@@ -21,6 +20,9 @@ import {
 import AddBoxSharpIcon from '@material-ui/icons/AddBoxSharp';
 import AddSharpIcon from '@material-ui/icons/AddSharp';
 
+// Google Analytics
+import ReactGA from 'react-ga';
+
 // MTF
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
@@ -34,9 +36,6 @@ import {
     Plan,
 } from '../../models/api-models';
 import { PlanFavoriteService } from '../../services';
-
-// Configure
-Amplify.configure(aws_exports);
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -205,6 +204,10 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
         };
     }
 
+    componentDidMount() {
+        ReactGA.ga('send', 'pageview', window.location.pathname);
+    }
+
     componentDidUpdate(prevProps: DashboardProps) {
         if (this.props.userId !== prevProps.userId) {
             this.setState({ userId: this.props.userId });
@@ -220,11 +223,23 @@ class Dashboard extends React.Component<DashboardProps, AppState> {
                 planId,
                 this.state.userId
             );
+
+            ReactGA.event({
+                category: 'favorite',
+                action: 'User Favorited Plan',
+                label: 'favorite on plan list page',
+            });
         } else {
             await this.planFavoriteService.deleteFavorite(
                 planId,
                 this.state.userId
             );
+
+            ReactGA.event({
+                category: 'favorite',
+                action: 'User Unfavorited Plan',
+                label: 'favorite on plan list page',
+            });
         }
     };
 
