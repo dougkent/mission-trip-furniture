@@ -12,6 +12,9 @@ import {
     WithStyles,
 } from '@material-ui/core';
 
+// Google Analytics
+import ReactGA from 'react-ga';
+
 //MTF
 import { AppProps } from '../../models/props';
 import { AppState } from '../../models/states';
@@ -82,6 +85,10 @@ class Home extends React.Component<HomeProps, AppState> {
         this.state = {
             userId: props.userId,
         };
+    }
+
+    componentDidMount() {
+        ReactGA.ga('send', 'pageview', window.location.pathname);
     }
 
     componentDidUpdate(prevProps: HomeProps) {

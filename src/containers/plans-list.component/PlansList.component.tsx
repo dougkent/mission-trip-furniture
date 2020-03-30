@@ -153,6 +153,8 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             loading: false,
             planList: result.data,
         }));
+
+        ReactGA.ga('send', 'pageview', window.location.pathname);
     }
 
     componentDidUpdate(prevProps: PlanListProps) {
@@ -174,6 +176,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             ReactGA.event({
                 category: 'favorite',
                 action: 'User Favorited Plan',
+                label: 'favorite on plan list page',
             });
         } else {
             await this.planFavoriteService.deleteFavorite(
@@ -184,6 +187,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             ReactGA.event({
                 category: 'favorite',
                 action: 'User Unfavorited Plan',
+                label: 'favorite on plan list page',
             });
         }
     };
@@ -193,6 +197,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             ...prevState,
             filterState: filterState,
         }));
+
         ReactGA.event({
             category: 'search',
             action: 'User Filtered Plan List',
@@ -204,6 +209,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             ...prevState,
             searchState: searchState,
         }));
+
         ReactGA.event({
             category: 'search',
             action: 'User Searched Plan List',

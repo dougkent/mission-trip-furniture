@@ -21,6 +21,9 @@ import {
 // uuid
 import { v4 as uuid } from 'uuid';
 
+// Google Analytics
+import ReactGA from 'react-ga';
+
 // MTF
 import { AppProps } from '../../models/props';
 import { CreatePlanState } from '../../models/states';
@@ -140,6 +143,10 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         super(props);
 
         this.state = this.initialState;
+    }
+
+    componentDidMount() {
+        ReactGA.ga('send', 'pageview', window.location.pathname);
     }
     async componentDidUpdate(prevProps: CreatePlanProps) {
         if (this.props.userId !== prevProps.userId) {
@@ -265,6 +272,11 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         input: planToolInput,
                     })
                 );
+            });
+
+            ReactGA.event({
+                category: 'create',
+                action: 'User Created a Plan',
             });
 
             setTimeout(
