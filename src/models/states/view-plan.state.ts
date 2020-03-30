@@ -11,5 +11,5 @@ export interface ViewPlanState extends AppState {
     saving: boolean;
     deleteDialogOpen: boolean;
     deleteComplete: boolean;
-    error: string;
+    errors: string[];
 }

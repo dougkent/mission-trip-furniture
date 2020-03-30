@@ -252,7 +252,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             saving: false,
             deleteDialogOpen: false,
             deleteComplete: false,
-            error: null,
+            errors: [],
         };
     }
 
@@ -299,10 +299,10 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         }
     }
 
-    private handleClearError = () => {
+    private handleClearErrors = () => {
         this.setState(prevState => ({
             ...prevState,
-            error: null,
+            errors: [],
         }));
     };
 
@@ -400,8 +400,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             this.setState(prevState => ({
                 ...prevState,
                 saving: false,
-                error:
+                errors: [
                     'An unexpected error occurred when deleteing this plan. Please try again.',
+                ],
             }));
         }
     };
@@ -464,7 +465,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             this.setState(prevState => ({
                 ...prevState,
                 saving: false,
-                error: 'Please enter a description.',
+                errors: ['Please enter a description.'],
             }));
             throw Error('Please enter a description');
         }
@@ -494,8 +495,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             this.setState(prevState => ({
                 ...prevState,
                 saving: false,
-                error:
+                errors: [
                     "An unexpected error occurred when updating this plan's description. Please try again.",
+                ],
             }));
             throw Error(
                 "An unexpected error occurred when updating this plan's description. Please try again."
@@ -700,8 +702,8 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         onCancel={this.handleDeleteDialogClose}
                     />
                     <ErrorMessage
-                        error={this.state.error}
-                        onClearError={this.handleClearError}
+                        errors={this.state.errors}
+                        onClearErrors={this.handleClearErrors}
                     />
                 </div>
             );

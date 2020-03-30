@@ -9,6 +9,7 @@ import { Connect, withAuthenticator } from 'aws-amplify-react';
 // Material UI
 import {
     Button,
+    CircularProgress,
     createStyles,
     Paper,
     TextField,
@@ -29,6 +30,7 @@ import { AppProps } from '../../models/props';
 import { CreatePlanState } from '../../models/states';
 import { mtfTheme } from '../../themes';
 import {
+    ErrorMessage,
     ImageUploader,
     MaterialsSelector,
     PdfUploader,
@@ -44,6 +46,7 @@ import {
     CreatePlanMutation,
     Material,
     Tool,
+    GetPlanQuery,
 } from '../../models/api-models';
 
 const styles = (theme: Theme) =>
@@ -75,7 +78,12 @@ const styles = (theme: Theme) =>
             display: 'flex',
         },
         submitButtonRow: {
-            textAlign: 'right',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+        },
+        loadingIcon: {
+            marginRight: theme.spacing(1),
         },
     });
 
@@ -97,6 +105,12 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                     id
                     name
                 }
+            }
+        }`;
+
+    private getPlanQuery = `query GetPlan($id: ID!) {
+            getPlan(id: $id){
+                id
             }
         }`;
 
@@ -137,6 +151,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         loading: false,
         createComplete: false,
         userId: this.props.userId,
+        errors: [],
     };
 
     constructor(props: CreatePlanProps) {
@@ -160,6 +175,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             }));
         }
     }
+
+    private handleClearErrors = () => {
+        this.setState(prevState => ({
+            ...prevState,
+            errors: [],
+        }));
+    };
 
     private getPlanId = (planName: string) => {
         return planName.toLowerCase().replace(/\s/g, '-');
@@ -236,6 +258,17 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             },
         }));
 
+        const errors = await this.validateForm();
+
+        if (errors.length > 0) {
+            this.setState(prevState => ({
+                ...prevState,
+                loading: false,
+                errors: errors,
+            }));
+            return;
+        }
+
         const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
             graphqlOperation(this.createPlanMutation, {
                 input: this.state.plan,
@@ -287,6 +320,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                     })),
                 1000
             );
+        } else {
+            this.setState(prevState => ({
+                ...prevState,
+                loading: false,
+                errors: [
+                    'An unexpected error occurred when creating this plan. Please try again.',
+                ],
+            }));
         }
     };
 
@@ -316,6 +357,83 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             ...prevState,
             selectedTools: tools,
         }));
+    };
+
+    private isPlanIdAlphaNumeric = (): boolean => {
+        const alphaNumericRegex = /^[\w\- ]+$/;
+
+        return alphaNumericRegex.test(this.state.plan.id);
+    };
+
+    private isPlanIdAlpha = (): boolean => {
+        const alphaRegex = /^(?=.*[a-zA-Z])/;
+
+        return alphaRegex.test(this.state.plan.id);
+    };
+
+    private validateForm = async (): Promise<string[]> => {
+        const errors: string[] = [];
+
+        this.isPlanIdAlphaNumeric();
+
+        if (!this.state.plan.name.length) {
+            errors.push('Please enter a plan name.');
+        } else if (!this.isPlanIdAlphaNumeric()) {
+            errors.push(
+                'Plan names can only be alpha-numeric. Please change your plan name to only contain the characters: A-Z, a-z, 0-9, spaces, or hyphens.'
+            );
+        } else if (!this.isPlanIdAlpha()) {
+            errors.push(
+                'Plan names need at least one alphabet letter in them (A-Z or a-z).'
+            );
+        } else if (await this.planAlreadyExists()) {
+            errors.push(
+                'A plan with that same name already exists. Please enter a different name.'
+            );
+        }
+
+        if (!this.state.plan.description.length) {
+            errors.push('Please enter a plan description.');
+        }
+
+        if (
+            !this.state.pdfFile ||
+            !this.state.pdfFile.name.endsWith('.pdf') ||
+            this.state.pdfFile.type !== 'application/pdf'
+        ) {
+            errors.push('Please select a PDF to upload.');
+        }
+
+        if (
+            !this.state.imageFile ||
+            !this.state.imageFile.type.startsWith('image/')
+        ) {
+            errors.push('Please select an image to upload.');
+        }
+
+        if (!this.state.selectedMaterials.length) {
+            errors.push(
+                'Please select one or more materials your plan requires.'
+            );
+        }
+
+        if (!this.state.selectedTools.length) {
+            errors.push('Please select one or more tools your plan requires.');
+        }
+
+        return errors;
+    };
+
+    private planAlreadyExists = async (): Promise<boolean> => {
+        const planResult: GqlQuery<GetPlanQuery> = await API.graphql(
+            graphqlOperation(this.getPlanQuery, {
+                id: this.state.plan.id,
+            })
+        );
+
+        const { data } = planResult;
+
+        return !!data && !!data.getPlan && !!data.getPlan.id;
     };
 
     private uploadImage = async () => {
@@ -350,8 +468,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 inputProps={{ maxLength: 50 }}
                                 name='name'
                                 onChange={this.handleTextChange}
-                                label='Name'
-                                required
+                                label='Name *'
                                 className={classes.textField}
                             />
                         </div>
@@ -361,8 +478,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 multiline
                                 name='description'
                                 onChange={this.handleTextChange}
-                                label='Description'
-                                required
+                                label='Description *'
                                 rows='16'
                                 className={classes.textField}
                             />
@@ -439,6 +555,12 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         </div>
                         <div
                             className={`${classes.formRow} ${classes.submitButtonRow}`}>
+                            {this.state.loading && (
+                                <CircularProgress
+                                    size='24px'
+                                    className={classes.loadingIcon}
+                                />
+                            )}
                             <Button
                                 color='secondary'
                                 type='submit'
@@ -448,6 +570,10 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                             </Button>
                         </div>
                     </form>
+                    <ErrorMessage
+                        errors={this.state.errors}
+                        onClearErrors={this.handleClearErrors}
+                    />
                 </Paper>
             );
         }
