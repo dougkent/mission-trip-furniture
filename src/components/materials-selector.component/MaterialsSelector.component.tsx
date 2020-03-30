@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Material UI
-import { Chip, TextField } from '@material-ui/core';
+import { Chip, CircularProgress, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 // MTF
@@ -20,30 +20,34 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
         props.onSelect(value);
     };
 
-    return (
-        <Autocomplete
-            getOptionLabel={getOptionLabel}
-            loading={props.loading}
-            multiple
-            onChange={handleChange}
-            options={props.materials}
-            renderInput={params => (
-                <TextField {...params} label={props.label} fullWidth />
-            )}
-            renderTags={(value, getTagProps) =>
-                value.map((material, index) => (
-                    <Chip
-                        variant='outlined'
-                        color='secondary'
-                        label={material.name}
-                        size='small'
-                        {...getTagProps({ index })}
-                    />
-                ))
-            }
-            value={props.selectedMaterials}
-        />
-    );
+    if (props.loading) {
+        return <CircularProgress size='24px' />;
+    } else {
+        return (
+            <Autocomplete
+                getOptionLabel={getOptionLabel}
+                loading={props.loading}
+                multiple
+                onChange={handleChange}
+                options={props.materials}
+                renderInput={params => (
+                    <TextField {...params} label={props.label} fullWidth />
+                )}
+                renderTags={(value, getTagProps) =>
+                    value.map((material, index) => (
+                        <Chip
+                            variant='outlined'
+                            color='secondary'
+                            label={material.name}
+                            size='small'
+                            {...getTagProps({ index })}
+                        />
+                    ))
+                }
+                value={props.selectedMaterials}
+            />
+        );
+    }
 };
 
 export default MaterialsSelector;

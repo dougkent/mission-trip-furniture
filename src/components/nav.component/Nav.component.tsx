@@ -47,8 +47,13 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-
             marginRight: theme.spacing(4),
+            [theme.breakpoints.up('md')]: {
+                marginRight: theme.spacing(2),
+            },
+            [theme.breakpoints.up('lg')]: {
+                marginRight: theme.spacing(4),
+            },
         },
         mobileMenu: {
             width: 300,

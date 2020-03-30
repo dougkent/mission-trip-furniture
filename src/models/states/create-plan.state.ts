@@ -9,4 +9,5 @@ export interface CreatePlanState extends AppState {
     imageFile: File;
     loading: boolean;
     createComplete: boolean;
+    errors: string[];
 }

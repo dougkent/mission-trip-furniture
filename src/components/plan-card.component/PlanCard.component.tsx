@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         cardTitle: {
             display: 'flex',
-            maxWidth: 175,
+            maxWidth: theme.spacing(19),
             alignItems: 'center',
         },
         cardTitleLink: {

@@ -61,7 +61,7 @@ const styles = (theme: Theme) =>
             [theme.breakpoints.up('lg')]: {
                 padding: theme.spacing(5),
                 minWidth: 523,
-                width: 'auto',
+                width: '50%',
             },
         },
         listTitle: {

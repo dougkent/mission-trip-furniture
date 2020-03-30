@@ -2,31 +2,58 @@
 import React, { useState, useEffect } from 'react';
 
 // Material UI
-import { Snackbar, Typography } from '@material-ui/core';
+import {
+    createStyles,
+    makeStyles,
+    Snackbar,
+    Theme,
+    Typography,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
 // MTF
-import { ErrorMessageProps } from '../../models/props/error-message.props';
+import { ErrorMessageProps } from '../../models/props';
+import { mtfTheme } from '../../themes';
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        snackBar: {
+            borderTop: `solid 1px ${theme.palette.error.dark}`,
+            [theme.breakpoints.up('sm')]: {
+                border: `solid 1px ${theme.palette.error.dark}`,
+            },
+        },
+    })
+);
 
 const ErrorMessage: React.FC<ErrorMessageProps> = (
     props: ErrorMessageProps
 ) => {
-    const [error, setError] = useState<string>(props.error);
+    const classes = useStyles(mtfTheme);
+
+    const [errors, setErrors] = useState<string[]>(props.errors);
 
     useEffect(() => {
-        setError(props.error);
-    }, [props.error]);
+        setErrors(props.errors);
+    }, [props.errors]);
 
     const handleClearError = () => {
-        setError(null);
+        setErrors([]);
 
-        props.onClearError();
+        props.onClearErrors();
     };
 
     return (
-        <Snackbar open={!!error} onClose={handleClearError}>
+        <Snackbar
+            open={errors.length > 0}
+            onClose={handleClearError}
+            className={classes.snackBar}>
             <Alert severity='error' onClose={handleClearError}>
-                <Typography variant='subtitle1'>{error}</Typography>
+                {errors.map(error => (
+                    <Typography key={error} variant='subtitle1'>
+                        {error}
+                    </Typography>
+                ))}
             </Alert>
         </Snackbar>
     );
