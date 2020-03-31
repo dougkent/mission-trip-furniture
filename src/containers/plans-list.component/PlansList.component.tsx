@@ -269,13 +269,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                     <CircularProgress color='secondary' size='100px' />
                 </div>
             );
-        } else if (
-            !loading &&
-            data &&
-            data.listPlans &&
-            data.listPlans.items &&
-            data.listPlans.items.length
-        ) {
+        } else if (!loading && data?.listPlans?.items?.length) {
             return (
                 <>
                     {this.renderSearchAndFilter(data)}

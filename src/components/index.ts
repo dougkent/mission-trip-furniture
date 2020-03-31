@@ -5,6 +5,7 @@ export { default as Filter } from './filter.component/Filter.component';
 export { default as ImageUploader } from './image-uploader.component/ImageUploader.component';
 export { default as MaterialsSelector } from './materials-selector.component/MaterialsSelector.component';
 export { default as Nav } from './nav.component/Nav.component';
+export { default as Pager } from './pager.component/Pager.component';
 export { default as PdfUploader } from './pdf-uploader.component/PdfUploader.component';
 export { default as PlanCard } from './plan-card.component/PlanCard.component';
 export { default as PlanDate } from './plan-date.component/PlanDate.component';

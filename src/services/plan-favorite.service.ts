@@ -81,11 +81,7 @@ export class PlanFavoriteService {
 
         const { getFavoriteByPlanId } = favoriteResult.data;
 
-        if (
-            getFavoriteByPlanId &&
-            getFavoriteByPlanId.items &&
-            getFavoriteByPlanId.items.length
-        ) {
+        if (getFavoriteByPlanId?.items?.length) {
             getFavoriteByPlanId.items.forEach(async favorite => {
                 await this.deleteFavoriteById(favorite.id);
             });

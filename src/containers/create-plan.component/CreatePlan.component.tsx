@@ -433,7 +433,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
         const { data } = planResult;
 
-        return !!data && !!data.getPlan && !!data.getPlan.id;
+        return !!data?.getPlan?.id;
     };
 
     private uploadImage = async () => {
