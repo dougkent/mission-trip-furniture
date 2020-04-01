@@ -6,9 +6,7 @@ import { API } from 'aws-amplify';
 
 // Material UI
 import {
-    CircularProgress,
     createStyles,
-    Grid,
     Theme,
     Typography,
     withStyles,
@@ -22,7 +20,7 @@ import ReactGA from 'react-ga';
 import { AppProps } from '../../models/props';
 import { FilterState, PlanListState, SearchState } from '../../models/states';
 import { mtfTheme } from '../../themes';
-import { Filter, PlanCard, Search } from '../../components';
+import { Filter, PlanGrid, Search } from '../../components';
 import {
     GqlQuery,
     ListPlansQuery,
@@ -40,6 +38,7 @@ const styles = (theme: Theme) =>
         },
         plansListContainer: {
             marginTop: theme.spacing(4),
+            marginBottom: theme.spacing(2),
         },
         searchFilterBar: {
             marginTop: theme.spacing(2),
@@ -55,7 +54,6 @@ const styles = (theme: Theme) =>
                 width: '50%',
             },
             [theme.breakpoints.up('md')]: {
-                width: '50%',
                 height: theme.spacing(29),
             },
             [theme.breakpoints.up('lg')]: {
@@ -67,8 +65,9 @@ const styles = (theme: Theme) =>
 export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
 
 class PlansList extends React.Component<PlanListProps, PlanListState> {
-    private listPlansQuery = `query ListPlans {
-        listPlans {
+    private listPlansQuery = `query ListPlans($limit: Int!, $nextToken: String) {
+        listPlans(limit: $limit, nextToken: $nextToken) {
+            nextToken
             items {
                 id
                 name
@@ -130,29 +129,15 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             searchState: {
                 searchTerm: null,
             },
-            planList: null,
             loading: false,
+            plans: [],
+            nextToken: null,
             userId: props.userId,
         };
     }
 
     async componentDidMount() {
-        this.setState(prevState => ({
-            ...prevState,
-            loading: true,
-        }));
-
-        const result: GqlQuery<ListPlansQuery> = await API.graphql({
-            query: this.listPlansQuery,
-            // @ts-ignore
-            authMode: 'AWS_IAM',
-        });
-
-        this.setState(prevState => ({
-            ...prevState,
-            loading: false,
-            planList: result.data,
-        }));
+        this.loadPlans();
 
         ReactGA.ga('send', 'pageview', window.location.pathname);
     }
@@ -162,6 +147,56 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             this.setState({ userId: this.props.userId });
         }
     }
+
+    private getFilterMaterials = (): Material[] => {
+        if (!this.state.plans.length) return [];
+
+        return this.state.plans
+            .map(plan => {
+                return plan.materialsRequired.items.map(
+                    planMaterial => planMaterial.material
+                );
+            })
+            .reduce((materials1, materials2) => materials1.concat(materials2));
+    };
+
+    private getFilterTools = (): Tool[] => {
+        if (!this.state.plans.length) return [];
+
+        return this.state.plans
+            .map(plan => {
+                return plan.toolsRequired.items.map(planTool => planTool.tool);
+            })
+            .reduce((tools1, tools2) => tools1.concat(tools2));
+    };
+
+    private handleApplyFilter = (filterState: FilterState) => {
+        this.setState(prevState => ({
+            ...prevState,
+            filterState: filterState,
+        }));
+
+        ReactGA.event({
+            category: 'search',
+            action: 'User Filtered Plan List',
+        });
+    };
+
+    private handleSearch = (searchState: SearchState) => {
+        this.setState(prevState => ({
+            ...prevState,
+            searchState: searchState,
+        }));
+
+        ReactGA.event({
+            category: 'search',
+            action: 'User Searched Plan List',
+        });
+    };
+
+    private handleNextPage = () => {
+        this.loadPlans();
+    };
 
     private handleTogglePlanFavorite = async (
         planId: string,
@@ -192,30 +227,6 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }
     };
 
-    private handleApplyFilter = (filterState: FilterState) => {
-        this.setState(prevState => ({
-            ...prevState,
-            filterState: filterState,
-        }));
-
-        ReactGA.event({
-            category: 'search',
-            action: 'User Filtered Plan List',
-        });
-    };
-
-    private handleSearch = (searchState: SearchState) => {
-        this.setState(prevState => ({
-            ...prevState,
-            searchState: searchState,
-        }));
-
-        ReactGA.event({
-            category: 'search',
-            action: 'User Searched Plan List',
-        });
-    };
-
     private isFavoritedByUser = (plan: Plan): boolean => {
         return this.planFavoriteService.isFavoritedByUser(
             this.state.userId,
@@ -223,96 +234,61 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         );
     };
 
-    private getFilterMaterials = (data: ListPlansQuery): Material[] => {
-        return data.listPlans.items
-            .map(plan => {
-                return plan.materialsRequired.items.map(
-                    planMaterial => planMaterial.material
-                );
-            })
-            .reduce((materials1, materials2) => materials1.concat(materials2));
-    };
+    private loadPlans = async () => {
+        this.setState(prevState => ({
+            ...prevState,
+            loading: true,
+        }));
 
-    private getFilterTools = (data: ListPlansQuery): Tool[] => {
-        return data.listPlans.items
-            .map(plan => {
-                return plan.toolsRequired.items.map(planTool => planTool.tool);
-            })
-            .reduce((tools1, tools2) => tools1.concat(tools2));
-    };
+        const result: GqlQuery<ListPlansQuery> = await API.graphql({
+            query: this.listPlansQuery,
+            variables: {
+                limit: 10,
+                nextToken: this.state.nextToken,
+            },
+            // @ts-ignore
+            authMode: 'AWS_IAM',
+        });
 
-    private renderPlansList = (data: ListPlansQuery) => {
-        const { classes } = this.props;
+        const { listPlans } = result.data;
 
-        return (
-            <Grid container spacing={2}>
-                {data.listPlans.items.map(plan => (
-                    <Grid item key={plan.id} className={classes.gridItem}>
-                        <PlanCard
-                            plan={plan}
-                            userId={this.state.userId}
-                            isFavoritedByUser={this.isFavoritedByUser(plan)}
-                            onToggleFavorite={this.handleTogglePlanFavorite}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        );
-    };
-
-    private renderPlans = (data: ListPlansQuery, loading: boolean) => {
-        const { classes } = this.props;
-
-        if (loading) {
-            return (
-                <div className={classes.loading}>
-                    <CircularProgress color='secondary' size='100px' />
-                </div>
-            );
-        } else if (!loading && data?.listPlans?.items?.length) {
-            return (
-                <>
-                    {this.renderSearchAndFilter(data)}
-                    {this.renderPlansList(data)}
-                </>
-            );
-        } else {
-            return <Typography variant='h4'>No Plans Found</Typography>;
-        }
-    };
-
-    private renderSearchAndFilter = (data: ListPlansQuery) => {
-        const { classes } = this.props;
-
-        return (
-            <div className={classes.searchFilterBar}>
-                <Search
-                    searchState={this.state.searchState}
-                    onSearch={this.handleSearch}
-                />
-                <Filter
-                    filterState={this.state.filterState}
-                    materials={this.getFilterMaterials(data)}
-                    tools={this.getFilterTools(data)}
-                    onApply={this.handleApplyFilter}
-                />
-            </div>
-        );
+        this.setState(prevState => ({
+            ...prevState,
+            loading: false,
+            plans: prevState.plans.concat(listPlans.items),
+            nextToken: listPlans.nextToken,
+        }));
     };
 
     render() {
         const { classes } = this.props;
 
-        /* return this.renderPlans(data, loading); */
-
         return (
             <div className={classes.plansListContainer}>
                 <Typography variant='h2'>Plans</Typography>
-                {(() =>
-                    this.renderPlans(
-                        this.state.planList,
-                        this.state.loading
-                    ))()}
+                <div className={classes.searchFilterBar}>
+                    <Search
+                        searchState={this.state.searchState}
+                        onSearch={this.handleSearch}
+                    />
+                    <Filter
+                        filterState={this.state.filterState}
+                        materials={this.getFilterMaterials()}
+                        tools={this.getFilterTools()}
+                        onApply={this.handleApplyFilter}
+                    />
+                </div>
+                <PlanGrid
+                    plans={this.state.plans}
+                    userId={this.state.userId}
+                    nextToken={this.state.nextToken}
+                    loading={this.state.loading}
+                    emptyText='No Plans Found'
+                    gridItemClassName={classes.gridItem}
+                    onNextPage={this.handleNextPage}
+                    isFavoritedByUser={this.isFavoritedByUser}
+                    onTogglePlanFavorite={this.handleTogglePlanFavorite}
+                />
             </div>
         );
     }

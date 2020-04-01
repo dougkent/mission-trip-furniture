@@ -1,9 +1,10 @@
 import { AppState, FilterState, SearchState } from '.';
-import { ListPlansQuery } from '../api-models';
+import { Plan } from '../api-models';
 
 export interface PlanListState extends AppState {
     filterState: FilterState;
     searchState: SearchState;
-    planList: ListPlansQuery;
+    plans: Plan[];
+    nextToken: string;
     loading: boolean;
 }
