@@ -10,12 +10,13 @@ import { withAuthenticator } from 'aws-amplify-react';
 import {
     Button,
     CircularProgress,
-    Typography,
-    Grid,
     createStyles,
+    Grid,
+    Hidden,
     Tab,
     Tabs,
     Theme,
+    Typography,
     withStyles,
     WithStyles,
 } from '@material-ui/core';
@@ -74,13 +75,13 @@ const styles = (theme: Theme) =>
             padding: '10px 0',
         },
         mobileDisplay: {
-            [theme.breakpoints.up('md')]: {
+            [theme.breakpoints.up('sm')]: {
                 display: 'none',
             },
         },
         desktopDisplay: {
             display: 'none',
-            [theme.breakpoints.up('md')]: {
+            [theme.breakpoints.up('sm')]: {
                 display: 'inline-flex',
             },
         },
@@ -492,28 +493,36 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         } else {
             return (
                 <>
-                    <Tabs
-                        value={this.state.currentTab}
-                        onChange={this.handleTabChange}
-                        centered
-                        variant='fullWidth'>
-                        <Tab
-                            label='My Created Plans'
-                            value={DashboardTabsEnum.CREATED_PLANS}
-                        />
-                        <Tab
-                            label='My Favorited Plans'
-                            value={DashboardTabsEnum.FAVORITED_PLANS}
-                        />
-                    </Tabs>
-                    <div className={classes.dashboardContainer}>
-                        {this.state.currentTab ===
-                            DashboardTabsEnum.CREATED_PLANS &&
-                            this.renderCreatedPlansList()}
-                        {this.state.currentTab ===
-                            DashboardTabsEnum.FAVORITED_PLANS &&
-                            this.renderFavoritedPlansList()}
-                    </div>
+                    <Hidden mdUp>
+                        <Tabs
+                            value={this.state.currentTab}
+                            onChange={this.handleTabChange}
+                            centered
+                            variant='fullWidth'>
+                            <Tab
+                                label='My Created Plans'
+                                value={DashboardTabsEnum.CREATED_PLANS}
+                            />
+                            <Tab
+                                label='My Favorited Plans'
+                                value={DashboardTabsEnum.FAVORITED_PLANS}
+                            />
+                        </Tabs>
+                        <div className={classes.dashboardContainer}>
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.CREATED_PLANS &&
+                                this.renderCreatedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.FAVORITED_PLANS &&
+                                this.renderFavoritedPlansList()}
+                        </div>
+                    </Hidden>
+                    <Hidden smDown>
+                        <div className={classes.dashboardContainer}>
+                            {this.renderCreatedPlansList()}
+                            {this.renderFavoritedPlansList()}
+                        </div>
+                    </Hidden>
                 </>
             );
         }

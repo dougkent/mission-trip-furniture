@@ -12,7 +12,11 @@ const Pager: React.FC<PagerProps> = (props: PagerProps) => {
         props.onNextPage();
     };
 
-    return <Button onClick={handleNextPage}>Next Page</Button>;
+    return (
+        <div>
+            <Button onClick={handleNextPage}>Next Page</Button>
+        </div>
+    );
 };
 
 export default Pager;
