@@ -264,7 +264,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             authMode: 'AWS_IAM',
         });
 
-        if (planResult && planResult.data && planResult.data.getPlan) {
+        if (planResult?.data?.getPlan) {
             const downloadUrl = await Storage.get(
                 planResult.data.getPlan.pdfS3Key,
                 {
@@ -353,7 +353,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             graphqlOperation(this.deletePlanMutation, { input: input })
         );
 
-        if (deleteResult && deleteResult.data) {
+        if (deleteResult?.data) {
             await Storage.remove(this.state.plan.imageS3Info.key, {
                 level: 'protected',
             });
@@ -479,7 +479,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             graphqlOperation(this.updatePlanMutation, { input: input })
         );
 
-        if (planResult && planResult.data && planResult.data.updatePlan) {
+        if (planResult?.data?.updatePlan) {
             this.setState(prevState => ({
                 ...prevState,
                 plan: planResult.data.updatePlan,
@@ -586,8 +586,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         <Typography variant='h2'>
                             {this.state.plan.name}
                         </Typography>
-                        {this.state.userId &&
-                            this.state.userId.length > 0 &&
+                        {this.state.userId?.length &&
                             this.state.userId ===
                                 this.state.plan.createdBy.id &&
                             !this.state.editing && (

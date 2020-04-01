@@ -10,3 +10,5 @@ export * from './plan-delete.props';
 export * from './edit-description.props';
 export * from './plan-date.props';
 export * from './error-message.props';
+export * from './pager.props';
+export * from './plan-grid.props';
