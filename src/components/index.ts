@@ -11,5 +11,6 @@ export { default as PlanCard } from './plan-card.component/PlanCard.component';
 export { default as PlanDate } from './plan-date.component/PlanDate.component';
 export { default as PlanDelete } from './plan-delete.component/PlanDelete.component';
 export { default as PlanFavorite } from './plan-favorite.component/PlanFavorite.component';
+export { default as PlanGrid } from './plan-grid.component/PlanGrid.component';
 export { default as Search } from './search.component/Search.component';
 export { default as ToolsSelector } from './tools-selector.component/ToolsSelector.component';

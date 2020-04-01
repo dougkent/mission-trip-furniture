@@ -11,7 +11,6 @@ import {
     Button,
     CircularProgress,
     createStyles,
-    Grid,
     Hidden,
     Tab,
     Tabs,
@@ -30,7 +29,7 @@ import ReactGA from 'react-ga';
 import { AppProps } from '../../models/props';
 import { DashboardState, DashboardTabsEnum } from '../../models/states';
 import { mtfAmplifyTheme, mtfTheme } from '../../themes';
-import { PlanCard, Pager } from '../../components';
+import { PlanGrid } from '../../components';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import {
     GqlQuery,
@@ -213,9 +212,10 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             currentTab: DashboardTabsEnum.CREATED_PLANS,
             createdPlans: [],
             createdPlansNextToken: null,
+            createdPlansLoading: false,
             favoritedPlans: [],
             favoritedPlansNextToken: null,
-            loading: false,
+            favoritedPlansLoading: false,
             userId: props.userId,
         };
     }
@@ -306,7 +306,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     private loadCreatedPlans = async () => {
         this.setState(prevState => ({
             ...prevState,
-            loading: true,
+            createdPlansLoading: true,
         }));
 
         const result: GqlQuery<GetUserQuery> = await API.graphql(
@@ -321,7 +321,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         this.setState(prevState => ({
             ...prevState,
-            loading: false,
+            createdPlansLoading: false,
             createdPlans: prevState.createdPlans.concat(createdPlans.items),
             createdPlansNextToken: createdPlans.nextToken,
         }));
@@ -330,7 +330,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     private loadFavoritedPlans = async () => {
         this.setState(prevState => ({
             ...prevState,
-            loading: true,
+            favoritedPlansLoading: true,
         }));
 
         const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
@@ -359,7 +359,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         this.setState(prevState => ({
             ...prevState,
-            loading: false,
+            favoritedPlansLoading: false,
             favoritedPlans: prevState.favoritedPlans.concat(plans),
             favoritedPlansNextToken: getFavoriteByUserId.nextToken,
         }));
@@ -389,43 +389,17 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                         </Button>
                     </Link>
                 </div>
-                {!this.state.loading && !this.state.createdPlans?.length && (
-                    <Typography variant='h4'>No Plans Created Yet</Typography>
-                )}
-                {this.state.createdPlans?.length > 0 && (
-                    <>
-                        <Grid container spacing={2}>
-                            {this.state.createdPlans.map(plan => (
-                                <Grid
-                                    item
-                                    key={plan.id}
-                                    className={classes.gridItem}>
-                                    <PlanCard
-                                        plan={plan}
-                                        userId={this.state.userId}
-                                        isFavoritedByUser={this.isFavoritedByUser(
-                                            plan
-                                        )}
-                                        onToggleFavorite={
-                                            this.handleTogglePlanFavorite
-                                        }
-                                    />
-                                </Grid>
-                            ))}
-                        </Grid>
-                        {!this.state.loading &&
-                            this.state.createdPlansNextToken && (
-                                <Pager
-                                    onNextPage={this.handleNextCreatedPlanPage}
-                                />
-                            )}
-                    </>
-                )}
-                {this.state.loading && (
-                    <div className={classes.loading}>
-                        <CircularProgress color='secondary' size='100px' />
-                    </div>
-                )}
+                <PlanGrid
+                    plans={this.state.createdPlans}
+                    userId={this.state.userId}
+                    nextToken={this.state.createdPlansNextToken}
+                    loading={this.state.createdPlansLoading}
+                    emptyText='No Plans Created Yet'
+                    gridItemClassName={classes.gridItem}
+                    onNextPage={this.handleNextCreatedPlanPage}
+                    isFavoritedByUser={this.isFavoritedByUser}
+                    onTogglePlanFavorite={this.handleTogglePlanFavorite}
+                />
             </div>
         );
     };
@@ -438,45 +412,17 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 <div className={classes.listTitle}>
                     <Typography variant='h3'>Favorited Plans</Typography>
                 </div>
-                {!this.state.loading && !this.state.favoritedPlans?.length && (
-                    <Typography variant='h4'>No Plans Favorited Yet</Typography>
-                )}
-                {this.state.favoritedPlans?.length > 0 && (
-                    <>
-                        <Grid container spacing={2}>
-                            {this.state.favoritedPlans.map(plan => (
-                                <Grid
-                                    item
-                                    key={plan.id}
-                                    className={classes.gridItem}>
-                                    <PlanCard
-                                        plan={plan}
-                                        userId={this.state.userId}
-                                        isFavoritedByUser={this.isFavoritedByUser(
-                                            plan
-                                        )}
-                                        onToggleFavorite={
-                                            this.handleTogglePlanFavorite
-                                        }
-                                    />
-                                </Grid>
-                            ))}
-                        </Grid>
-                        {!this.state.loading &&
-                            this.state.favoritedPlansNextToken && (
-                                <Pager
-                                    onNextPage={
-                                        this.handleNextFavoritedPlanPage
-                                    }
-                                />
-                            )}
-                    </>
-                )}
-                {this.state.loading && (
-                    <div className={classes.loading}>
-                        <CircularProgress color='secondary' size='100px' />
-                    </div>
-                )}
+                <PlanGrid
+                    plans={this.state.favoritedPlans}
+                    userId={this.state.userId}
+                    nextToken={this.state.favoritedPlansNextToken}
+                    loading={this.state.favoritedPlansLoading}
+                    emptyText='No Plans Favorited Yet'
+                    gridItemClassName={classes.gridItem}
+                    onNextPage={this.handleNextFavoritedPlanPage}
+                    isFavoritedByUser={this.isFavoritedByUser}
+                    onTogglePlanFavorite={this.handleTogglePlanFavorite}
+                />
             </div>
         );
     };

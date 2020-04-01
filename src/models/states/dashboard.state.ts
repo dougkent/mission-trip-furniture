@@ -5,9 +5,10 @@ export interface DashboardState extends AppState {
     currentTab: DashboardTabsEnum;
     createdPlans: Plan[];
     createdPlansNextToken: string;
+    createdPlansLoading: boolean;
     favoritedPlans: Plan[];
     favoritedPlansNextToken: string;
-    loading: boolean;
+    favoritedPlansLoading: boolean;
 }
 
 export enum DashboardTabsEnum {
