@@ -20,6 +20,7 @@ type User
 
 type Plan
     @model(subscriptions: null)
+    @searchable
     @auth(
         rules: [
             { allow: public, operations: [read], provider: iam }

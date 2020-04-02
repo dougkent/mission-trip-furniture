@@ -23,7 +23,7 @@ import { mtfTheme } from '../../themes';
 import { Filter, PlanGrid, Search } from '../../components';
 import {
     GqlQuery,
-    ListPlansQuery,
+    SearchPlansQuery,
     Material,
     Tool,
     Plan,
@@ -65,8 +65,8 @@ const styles = (theme: Theme) =>
 export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
 
 class PlansList extends React.Component<PlanListProps, PlanListState> {
-    private listPlansQuery = `query ListPlans($limit: Int!, $nextToken: String) {
-        listPlans(limit: $limit, nextToken: $nextToken) {
+    private searchPlansQuery = `query SearchPlans($limit: Int!, $nextToken: String) {
+        searchPlans(limit: $limit, nextToken: $nextToken) {
             nextToken
             items {
                 id
@@ -240,8 +240,8 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             loading: true,
         }));
 
-        const result: GqlQuery<ListPlansQuery> = await API.graphql({
-            query: this.listPlansQuery,
+        const result: GqlQuery<SearchPlansQuery> = await API.graphql({
+            query: this.searchPlansQuery,
             variables: {
                 limit: 10,
                 nextToken: this.state.nextToken,
@@ -250,13 +250,13 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             authMode: 'AWS_IAM',
         });
 
-        const { listPlans } = result.data;
+        const { searchPlans } = result.data;
 
         this.setState(prevState => ({
             ...prevState,
             loading: false,
-            plans: prevState.plans.concat(listPlans.items),
-            nextToken: listPlans.nextToken,
+            plans: prevState.plans.concat(searchPlans.items),
+            nextToken: searchPlans.nextToken,
         }));
     };
 
