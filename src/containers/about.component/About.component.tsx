@@ -257,7 +257,7 @@ class About extends React.Component<AboutProps, AppState> {
                 </Typography>
                 <div className={classes.flex}>
                     <div className={classes.wrappedLeft}>
-                        <Typography variant='body1' paragraph>
+                        <Typography variant='body1' component='div'>
                             <ul className={classes.list}>
                                 <li>
                                     Utilize Local Skilled Labor: In Haiti, Doug

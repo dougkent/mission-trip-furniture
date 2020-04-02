@@ -1,14 +1,14 @@
 {
-    "unauth": {
+    "develop": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-missiontripfurniture-unauth-162351-authRole",
-            "UnauthRoleArn": "arn:aws:iam::866938331794:role/amplify-missiontripfurniture-unauth-162351-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::866938331794:role/amplify-missiontripfurniture-unauth-162351-authRole",
+            "AuthRoleName": "missiontripfurniture-develop-20191227214024-authRole",
+            "UnauthRoleArn": "arn:aws:iam::866938331794:role/missiontripfurniture-develop-20191227214024-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::866938331794:role/missiontripfurniture-develop-20191227214024-authRole",
             "Region": "us-west-2",
-            "DeploymentBucketName": "amplify-missiontripfurniture-unauth-162351-deployment",
-            "UnauthRoleName": "amplify-missiontripfurniture-unauth-162351-unauthRole",
-            "StackName": "amplify-missiontripfurniture-unauth-162351",
-            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/amplify-missiontripfurniture-unauth-162351/c48f7640-695e-11ea-833e-0a10741d0c78",
+            "DeploymentBucketName": "missiontripfurniture-develop-20191227214024-deployment",
+            "UnauthRoleName": "missiontripfurniture-develop-20191227214024-unauthRole",
+            "StackName": "missiontripfurniture-develop-20191227214024",
+            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/missiontripfurniture-develop-20191227214024/7574d6d0-7418-11ea-99aa-0686cac6f814",
             "AmplifyAppId": "d26riepzj941ad"
         },
         "categories": {
@@ -16,9 +16,9 @@
                 "mtfAuth": {}
             },
             "function": {
-                "missiontripfurniture": {},
                 "mtfFavoriteCount": {},
-                "mtfDownloadCount": {}
+                "mtfDownloadCount": {},
+                "missiontripfurniture": {}
             }
         }
     }
