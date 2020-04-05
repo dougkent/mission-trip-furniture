@@ -2,9 +2,9 @@ import {
     S3ImageInfo,
     ModelDownloadConnection,
     ModelFavoriteConnection,
-    ModelPlanMaterialConnection,
-    ModelPlanToolConnection,
     User,
+    Material,
+    Tool,
 } from '.';
 
 export interface Plan {
@@ -20,6 +20,8 @@ export interface Plan {
     favoritedBy: ModelFavoriteConnection | null;
     downloadedCount: number;
     downloadedBy: ModelDownloadConnection | null;
-    materialsRequired: ModelPlanMaterialConnection | null;
-    toolsRequired: ModelPlanToolConnection | null;
+    requiredMaterialIds: string[] | null;
+    requiredMaterials: Material[] | null;
+    requiredToolIds: string[] | null;
+    requiredTools: Tool[] | null;
 }

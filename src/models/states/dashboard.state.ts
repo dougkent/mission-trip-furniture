@@ -1,8 +1,10 @@
 import { AppState } from '.';
-import { Plan } from '../api-models';
+import { Plan, Material, Tool } from '../api-models';
 
 export interface DashboardState extends AppState {
     currentTab: DashboardTabsEnum;
+    materials: Material[];
+    tools: Tool[];
     createdPlans: Plan[];
     createdPlansNextToken: string;
     createdPlansLoading: boolean;

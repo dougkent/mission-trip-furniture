@@ -41,8 +41,6 @@ import {
     GqlQuery,
     ListToolsQuery,
     ListMaterialsQuery,
-    CreatePlanToolInput,
-    CreatePlanMaterialInput,
     CreatePlanMutation,
     Material,
     Tool,
@@ -91,7 +89,7 @@ export interface CreatePlanProps extends AppProps, WithStyles<typeof styles> {}
 
 class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     private listMaterialsQuery = `query ListMaterials {
-            listMaterials {
+            listMaterials(limit: 999) {
                 items {
                     id
                     name
@@ -100,7 +98,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }`;
 
     private listToolsQuery = `query ListTools {
-            listTools {
+            listTools(limit: 999) {
                 items {
                     id
                     name
@@ -120,18 +118,6 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }
     }`;
 
-    private createPlanMaterialMutation = `mutation CreatePlanMaterial($input: CreatePlanMaterialInput!) {
-        createPlanMaterial(input: $input) {
-            id
-        }
-    }`;
-
-    private createPlanToolMutation = `mutation CreatePlanTool($input: CreatePlanToolInput!) {
-        createPlanTool(input: $input) {
-            id
-        }
-    }`;
-
     private initialState: CreatePlanState = {
         imageFile: null,
         pdfFile: null,
@@ -144,6 +130,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             created: '',
             favoritedCount: 0,
             downloadedCount: 0,
+            requiredMaterialIds: [],
+            requiredToolIds: [],
             planCreatedById: this.props.userId,
         },
         selectedMaterials: [],
@@ -255,6 +243,10 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             plan: {
                 ...prevState.plan,
                 created: new Date().toISOString(),
+                requiredMaterialIds: prevState.selectedMaterials.map(
+                    material => material.id
+                ),
+                requiredToolIds: prevState.selectedTools.map(tool => tool.id),
             },
         }));
 
@@ -278,34 +270,6 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         if (planResult.data.createPlan.id) {
             await this.uploadPdf();
             await this.uploadImage();
-
-            this.state.selectedMaterials.forEach(async material => {
-                const planMaterialInput: CreatePlanMaterialInput = {
-                    id: uuid(),
-                    planMaterialMaterialId: material.id,
-                    planMaterialPlanId: this.state.plan.id,
-                };
-
-                await API.graphql(
-                    graphqlOperation(this.createPlanMaterialMutation, {
-                        input: planMaterialInput,
-                    })
-                );
-            });
-
-            this.state.selectedTools.forEach(async tool => {
-                const planToolInput: CreatePlanToolInput = {
-                    id: uuid(),
-                    planToolToolId: tool.id,
-                    planToolPlanId: this.state.plan.id,
-                };
-
-                await API.graphql(
-                    graphqlOperation(this.createPlanToolMutation, {
-                        input: planToolInput,
-                    })
-                );
-            });
 
             ReactGA.event({
                 category: 'create',

@@ -36,8 +36,11 @@ import {
     GetUserQuery,
     GetFavoriteByUserIdQuery,
     GetPlanQuery,
+    ListToolsQuery,
+    ListMaterialsQuery,
     Plan,
 } from '../../models/api-models';
+import { GraphQLQueries } from '../../models/graphql/GraphQLQueries';
 import { PlanFavoriteService } from '../../services';
 
 const styles = (theme: Theme) =>
@@ -128,24 +131,8 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                         }
                     }
                     downloadedCount
-                    materialsRequired {
-                        items {
-                            id
-                            material {
-                                id
-                                name
-                            }
-                        }
-                    }
-                    toolsRequired {
-                        items {
-                            id
-                            tool {
-                                id
-                                name
-                            }
-                        }
-                    }
+                    requiredMaterialIds
+                    requiredToolIds
                 }
             }
         }
@@ -182,23 +169,25 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 }
             }
             downloadedCount
-            materialsRequired {
-                items {
-                    id
-                    material {
-                        id
-                        name
-                    }
-                }
+            requiredMaterialIds
+            requiredToolIds
+        }
+    }`;
+
+    private listMaterialsQuery = `query ListMaterials {
+        listMaterials(limit: 999) {
+            items {
+                id
+                name
             }
-            toolsRequired {
-                items {
-                    id
-                    tool {
-                        id
-                        name
-                    }
-                }
+        }
+    }`;
+
+    private listToolsQuery = `query ListTools {
+        listTools(limit: 999) {
+            items {
+                id
+                name
             }
         }
     }`;
@@ -210,6 +199,8 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         this.state = {
             currentTab: DashboardTabsEnum.CREATED_PLANS,
+            materials: [],
+            tools: [],
             createdPlans: [],
             createdPlansNextToken: null,
             createdPlansLoading: false,
@@ -230,6 +221,9 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 ...prevState,
                 userId: this.props.userId,
             }));
+
+            await this.loadMaterials();
+            await this.loadTools();
 
             this.loadCreatedPlans();
             this.loadFavoritedPlans();
@@ -296,6 +290,24 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         }
     };
 
+    private includeMaterialsAndToolsOnPlan(plans: Plan[]): Plan[] {
+        const mappedPlans: Plan[] = plans.map(plan => {
+            return {
+                ...plan,
+                requiredMaterials: this.state.materials.filter(material => {
+                    return !!plan.requiredMaterialIds.find(
+                        id => id === material.id
+                    );
+                }),
+                requiredTools: this.state.tools.filter(tool => {
+                    return !!plan.requiredToolIds.find(id => id === tool.id);
+                }),
+            };
+        });
+
+        return mappedPlans;
+    }
+
     private isFavoritedByUser = (plan: Plan): boolean => {
         return this.planFavoriteService.isFavoritedByUser(
             this.state.userId,
@@ -319,10 +331,14 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         const { createdPlans } = result.data.getUser;
 
+        const mappedPlans = this.includeMaterialsAndToolsOnPlan(
+            createdPlans.items
+        );
+
         this.setState(prevState => ({
             ...prevState,
             createdPlansLoading: false,
-            createdPlans: prevState.createdPlans.concat(createdPlans.items),
+            createdPlans: prevState.createdPlans.concat(mappedPlans),
             createdPlansNextToken: createdPlans.nextToken,
         }));
     };
@@ -343,7 +359,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         const { getFavoriteByUserId } = result.data;
 
-        const plans: Plan[] = [];
+        const favoritedPlans: Plan[] = [];
 
         for (const i in getFavoriteByUserId.items) {
             const planId = getFavoriteByUserId.items[i].planId;
@@ -354,14 +370,38 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 })
             );
 
-            plans.push(result.data.getPlan);
+            favoritedPlans.push(result.data.getPlan);
         }
+
+        const mappedPlans = this.includeMaterialsAndToolsOnPlan(favoritedPlans);
 
         this.setState(prevState => ({
             ...prevState,
             favoritedPlansLoading: false,
-            favoritedPlans: prevState.favoritedPlans.concat(plans),
+            favoritedPlans: prevState.favoritedPlans.concat(mappedPlans),
             favoritedPlansNextToken: getFavoriteByUserId.nextToken,
+        }));
+    };
+
+    private loadMaterials = async () => {
+        const result: GqlQuery<ListMaterialsQuery> = await API.graphql(
+            graphqlOperation(this.listMaterialsQuery)
+        );
+
+        this.setState(prevState => ({
+            ...prevState,
+            materials: result?.data?.listMaterials?.items,
+        }));
+    };
+
+    private loadTools = async () => {
+        const result: GqlQuery<ListToolsQuery> = await API.graphql(
+            graphqlOperation(this.listToolsQuery)
+        );
+
+        this.setState(prevState => ({
+            ...prevState,
+            tools: result?.data?.listTools?.items,
         }));
     };
 

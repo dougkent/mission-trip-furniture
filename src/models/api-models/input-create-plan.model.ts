@@ -9,5 +9,7 @@ export interface CreatePlanInput {
     created: string;
     favoritedCount: number;
     downloadedCount: number;
+    requiredMaterialIds: string[];
+    requiredToolIds: string[];
     planCreatedById: string;
 }

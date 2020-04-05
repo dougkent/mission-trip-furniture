@@ -22,6 +22,7 @@ import { PlanCardProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
 import { PlanFavorite, PlanDate } from '../.';
 import { Plan } from '../../models/api-models';
+import { RequiredItem } from '../../models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -113,42 +114,23 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
         props.onToggleFavorite(planState.id, toggleFavOn);
     };
 
-    const renderMaterials = () => {
+    const renderRequiredItems = (
+        label: string,
+        requiredItems: RequiredItem[]
+    ) => {
         return (
             <div className={classes.row}>
-                <label>Materials:</label>
+                <label>{label}:</label>
                 <div>
-                    {planState.materialsRequired?.items
-                        ?.filter((planMaterial, index) => index < 3)
-                        .map(planMaterial => {
+                    {requiredItems
+                        ?.filter((requiredItem, index) => index < 3)
+                        .map(requiredItem => {
                             return (
                                 <Chip
-                                    key={planMaterial.id}
+                                    key={requiredItem.id}
                                     size='small'
                                     color='secondary'
-                                    label={planMaterial.material.name}
-                                />
-                            );
-                        })}
-                </div>
-            </div>
-        );
-    };
-
-    const renderTools = () => {
-        return (
-            <div className={classes.row}>
-                <label>Tools:</label>
-                <div>
-                    {planState.toolsRequired?.items
-                        ?.filter((planTool, index) => index < 3)
-                        .map(planTool => {
-                            return (
-                                <Chip
-                                    key={planTool.id}
-                                    size='small'
-                                    color='secondary'
-                                    label={planTool.tool.name}
+                                    label={requiredItem.name}
                                 />
                             );
                         })}
@@ -190,8 +172,11 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                     />
                 </CardActions>
                 <CardContent className={classes.cardContent}>
-                    {renderMaterials()}
-                    {renderTools()}
+                    {renderRequiredItems(
+                        'Materials',
+                        planState.requiredMaterials
+                    )}
+                    {renderRequiredItems('Tools', planState.requiredTools)}
                     <div className={classes.row}>
                         <Typography>
                             Created:&nbsp;

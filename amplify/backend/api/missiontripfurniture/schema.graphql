@@ -40,8 +40,9 @@ type Plan
     downloadedCount: Int!
     downloadedBy: [Download!]
         @connection(keyName: "downloadedBy", fields: ["id"])
-    materialsRequired: [PlanMaterial!]! @connection(name: "RequiresMaterials")
-    toolsRequired: [PlanTool!]! @connection(name: "RequiresTools")
+    requiredMaterialIds: [ID!]!
+    requiredToolIds: [ID!]!
+    planCreatedById: ID!
 }
 
 type Favorite
@@ -93,26 +94,6 @@ type Download
     userId: ID!
 }
 
-type PlanMaterial
-    @model(
-        mutations: {
-            create: "createPlanMaterial"
-            delete: "deletePlanMaterial"
-        }
-        subscriptions: null
-    )
-    @searchable
-    @auth(
-        rules: [
-            { allow: public, operations: [read], provider: iam }
-            { allow: owner, operations: [create, read, update, delete] }
-        ]
-    ) {
-    id: ID!
-    material: Material! @connection
-    plan: Plan! @connection(name: "RequiresMaterials")
-}
-
 type Material
     @model(
         queries: { list: "listMaterials" }
@@ -127,23 +108,6 @@ type Material
     ) {
     id: ID!
     name: String!
-}
-
-type PlanTool
-    @model(
-        mutations: { create: "createPlanTool", delete: "deletePlanTool" }
-        subscriptions: null
-    )
-    @searchable
-    @auth(
-        rules: [
-            { allow: public, operations: [read], provider: iam }
-            { allow: owner, operations: [create, read, update, delete] }
-        ]
-    ) {
-    id: ID!
-    tool: Tool! @connection
-    plan: Plan! @connection(name: "RequiresTools")
 }
 
 type Tool
