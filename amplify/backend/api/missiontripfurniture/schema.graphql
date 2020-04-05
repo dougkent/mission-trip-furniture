@@ -101,6 +101,7 @@ type PlanMaterial
         }
         subscriptions: null
     )
+    @searchable
     @auth(
         rules: [
             { allow: public, operations: [read], provider: iam }
@@ -133,6 +134,7 @@ type PlanTool
         mutations: { create: "createPlanTool", delete: "deletePlanTool" }
         subscriptions: null
     )
+    @searchable
     @auth(
         rules: [
             { allow: public, operations: [read], provider: iam }
