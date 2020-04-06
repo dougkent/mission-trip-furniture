@@ -14,28 +14,9 @@ import {
     GetFavoriteByPlanIdQuery,
     Plan,
 } from '../models/api-models';
+import * as graphQLQueries from '../graphql/queries';
 
 export class PlanFavoriteService {
-    private createFavoriteMutation = `mutation CreateFavorite($input: CreateFavoriteInput!) {
-        createFavorite(input: $input) {
-            id
-        }
-    }`;
-
-    private getFavorite = `query GetFavoriteByPlanIdAndUserId($planId: ID!, $userId: ModelIDKeyConditionInput!) {
-        getFavoriteByPlanId (planId: $planId, userId: $userId) {
-            items {
-                id
-            }
-        }
-    }`;
-
-    private deleteFavoriteMutation = `mutation DeleteFavorite($input: DeleteFavoriteInput!) {
-        deleteFavorite(input: $input) {
-            id
-        }
-    }`;
-
     createFavorite = async (
         planId: string,
         userId: string
@@ -47,7 +28,7 @@ export class PlanFavoriteService {
         };
 
         const result: GqlQuery<CreateFavoriteMutation> = await API.graphql(
-            graphqlOperation(this.createFavoriteMutation, {
+            graphqlOperation(graphQLQueries.createFavoriteMutation, {
                 input: createFavoriteInput,
             })
         );
@@ -61,7 +42,7 @@ export class PlanFavoriteService {
         };
 
         await API.graphql(
-            graphqlOperation(this.deleteFavoriteMutation, {
+            graphqlOperation(graphQLQueries.deleteFavoriteMutation, {
                 input: deleteFavoriteInput,
             })
         );
@@ -73,7 +54,7 @@ export class PlanFavoriteService {
         };
 
         var favoriteResult: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
-            graphqlOperation(this.getFavorite, {
+            graphqlOperation(graphQLQueries.getFavoriteByPlanAndUserQuery, {
                 planId: planId,
                 userId: getFavoriteInput,
             })

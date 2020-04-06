@@ -4,6 +4,7 @@ export interface PlanGridProps {
     plans: Plan[];
     userId: string;
     nextToken: string;
+    totalCount?: number | null;
     loading: boolean;
     emptyText: string;
     gridItemClassName: string;

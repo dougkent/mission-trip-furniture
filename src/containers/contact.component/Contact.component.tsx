@@ -8,8 +8,8 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
 import ReactGA from 'react-ga';
 
 // MTF
-import { AppProps } from '../../models/props';
-import { AppState } from '../../models/states';
+import { BaseProps } from '../../models/props';
+import { BaseState } from '../../models/states';
 import { mtfTheme } from '../../themes';
 
 const styles = (theme: Theme) =>
@@ -25,9 +25,9 @@ const styles = (theme: Theme) =>
         },
     });
 
-export interface ContactProps extends AppProps, WithStyles<typeof styles> {}
+export interface ContactProps extends BaseProps, WithStyles<typeof styles> {}
 
-class Contact extends React.Component<ContactProps, AppState> {
+class Contact extends React.Component<ContactProps, BaseState> {
     constructor(props: ContactProps) {
         super(props);
 
@@ -42,7 +42,9 @@ class Contact extends React.Component<ContactProps, AppState> {
 
     componentDidUpdate(prevProps: ContactProps) {
         if (this.props.userId !== prevProps.userId) {
-            this.setState({ userId: this.props.userId });
+            this.setState({
+                userId: this.props.userId,
+            });
         }
     }
     render() {

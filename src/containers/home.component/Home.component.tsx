@@ -16,8 +16,8 @@ import {
 import ReactGA from 'react-ga';
 
 //MTF
-import { AppProps } from '../../models/props';
-import { AppState } from '../../models/states';
+import { BaseProps } from '../../models/props';
+import { BaseState } from '../../models/states';
 import { mtfTheme } from '../../themes';
 import * as homeBackgroundImage from '../../assets/home-background.jpg';
 
@@ -76,9 +76,9 @@ const styles = (theme: Theme) =>
         },
     });
 
-export interface HomeProps extends AppProps, WithStyles<typeof styles> {}
+export interface HomeProps extends BaseProps, WithStyles<typeof styles> {}
 
-class Home extends React.Component<HomeProps, AppState> {
+class Home extends React.Component<HomeProps, BaseState> {
     constructor(props: HomeProps) {
         super(props);
 
@@ -93,7 +93,9 @@ class Home extends React.Component<HomeProps, AppState> {
 
     componentDidUpdate(prevProps: HomeProps) {
         if (this.props.userId !== prevProps.userId) {
-            this.setState({ userId: this.props.userId });
+            this.setState({
+                userId: this.props.userId,
+            });
         }
     }
     render() {

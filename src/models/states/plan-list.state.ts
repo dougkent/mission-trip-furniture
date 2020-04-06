@@ -6,5 +6,6 @@ export interface PlanListState extends AppState {
     searchState: SearchState;
     plans: Plan[];
     nextToken: string;
+    totalCount: number;
     loading: boolean;
 }

@@ -36,11 +36,9 @@ import {
     GetUserQuery,
     GetFavoriteByUserIdQuery,
     GetPlanQuery,
-    ListToolsQuery,
-    ListMaterialsQuery,
     Plan,
 } from '../../models/api-models';
-import { GraphQLQueries } from '../../models/graphql/GraphQLQueries';
+import * as graphQLQueries from '../../graphql/queries';
 import { PlanFavoriteService } from '../../services';
 
 const styles = (theme: Theme) =>
@@ -105,109 +103,22 @@ const styles = (theme: Theme) =>
 export interface DashboardProps extends AppProps, WithStyles<typeof styles> {}
 
 class Dashboard extends React.Component<DashboardProps, DashboardState> {
-    private getUserQuery = `query GetUser($id: ID! $limit: Int!, $nextToken: String) {
-        getUser(id: $id) {
-            createdPlans(limit: $limit, nextToken: $nextToken) {
-                nextToken
-                items {
-                    id
-                    name
-                    description
-                    pdfS3Key
-                    imageS3Info {
-                        key
-                        width
-                        height
-                    }
-                    created
-                    createdBy {
-                        id
-                        username
-                    }
-                    favoritedCount
-                    favoritedBy  {
-                        items {
-                            userId
-                        }
-                    }
-                    downloadedCount
-                    requiredMaterialIds
-                    requiredToolIds
-                }
-            }
-        }
-    }`;
-
-    private getFavoritesByUserQuery = `query GetFavoritesByUser($userId: ID!, $limit: Int!, $nextToken: String) {
-        getFavoriteByUserId(userId: $userId, limit: $limit, nextToken: $nextToken) {
-            nextToken
-            items {
-                id
-                planId
-            }
-        }
-    }`;
-
-    private getPlanQuery = `query GetPlan($id: ID!) {
-        getPlan(id: $id) {
-            id
-            name
-            description
-            pdfS3Key
-            imageS3Info {
-                key   
-            }
-            created
-            createdBy {
-                id
-                username
-            }
-            favoritedCount
-            favoritedBy  {
-                items {
-                    userId
-                }
-            }
-            downloadedCount
-            requiredMaterialIds
-            requiredToolIds
-        }
-    }`;
-
-    private listMaterialsQuery = `query ListMaterials {
-        listMaterials(limit: 999) {
-            items {
-                id
-                name
-            }
-        }
-    }`;
-
-    private listToolsQuery = `query ListTools {
-        listTools(limit: 999) {
-            items {
-                id
-                name
-            }
-        }
-    }`;
-
     private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: DashboardProps) {
         super(props);
 
         this.state = {
+            userId: props.userId,
+            materials: props.materials,
+            tools: props.tools,
             currentTab: DashboardTabsEnum.CREATED_PLANS,
-            materials: [],
-            tools: [],
             createdPlans: [],
             createdPlansNextToken: null,
             createdPlansLoading: false,
             favoritedPlans: [],
             favoritedPlansNextToken: null,
             favoritedPlansLoading: false,
-            userId: props.userId,
         };
     }
 
@@ -216,14 +127,17 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     async componentDidUpdate(prevProps: DashboardProps) {
-        if (this.props.userId !== prevProps.userId) {
+        if (
+            this.props.userId !== prevProps.userId ||
+            this.props.materials !== prevProps.materials ||
+            this.props.tools !== prevProps.tools
+        ) {
             await this.setState(prevState => ({
                 ...prevState,
                 userId: this.props.userId,
+                materials: this.props.materials,
+                tools: this.props.tools,
             }));
-
-            await this.loadMaterials();
-            await this.loadTools();
 
             this.loadCreatedPlans();
             this.loadFavoritedPlans();
@@ -322,7 +236,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         }));
 
         const result: GqlQuery<GetUserQuery> = await API.graphql(
-            graphqlOperation(this.getUserQuery, {
+            graphqlOperation(graphQLQueries.getUserQuery, {
                 id: this.state.userId,
                 limit: 5,
                 nextToken: this.state.createdPlansNextToken,
@@ -350,7 +264,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         }));
 
         const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
-            graphqlOperation(this.getFavoritesByUserQuery, {
+            graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
                 nextToken: this.state.favoritedPlansNextToken,
@@ -365,7 +279,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             const planId = getFavoriteByUserId.items[i].planId;
 
             const result: GqlQuery<GetPlanQuery> = await API.graphql(
-                graphqlOperation(this.getPlanQuery, {
+                graphqlOperation(graphQLQueries.getPlanQuery, {
                     id: planId,
                 })
             );
@@ -380,28 +294,6 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             favoritedPlansLoading: false,
             favoritedPlans: prevState.favoritedPlans.concat(mappedPlans),
             favoritedPlansNextToken: getFavoriteByUserId.nextToken,
-        }));
-    };
-
-    private loadMaterials = async () => {
-        const result: GqlQuery<ListMaterialsQuery> = await API.graphql(
-            graphqlOperation(this.listMaterialsQuery)
-        );
-
-        this.setState(prevState => ({
-            ...prevState,
-            materials: result?.data?.listMaterials?.items,
-        }));
-    };
-
-    private loadTools = async () => {
-        const result: GqlQuery<ListToolsQuery> = await API.graphql(
-            graphqlOperation(this.listToolsQuery)
-        );
-
-        this.setState(prevState => ({
-            ...prevState,
-            tools: result?.data?.listTools?.items,
         }));
     };
 

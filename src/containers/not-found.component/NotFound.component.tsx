@@ -16,8 +16,8 @@ import {
 import ReactGA from 'react-ga';
 
 // MTF
-import { AppProps } from '../../models/props';
-import { AppState } from '../../models/states';
+import { BaseProps } from '../../models/props';
+import { BaseState } from '../../models/states';
 import { mtfTheme } from '../../themes';
 
 const styles = (theme: Theme) =>
@@ -51,9 +51,9 @@ const styles = (theme: Theme) =>
         },
     });
 
-export interface NotFoundProps extends AppProps, WithStyles<typeof styles> {}
+export interface NotFoundProps extends BaseProps, WithStyles<typeof styles> {}
 
-class NotFound extends React.Component<NotFoundProps, AppState> {
+class NotFound extends React.Component<NotFoundProps, BaseState> {
     constructor(props: NotFoundProps) {
         super(props);
 
@@ -68,7 +68,9 @@ class NotFound extends React.Component<NotFoundProps, AppState> {
 
     componentDidUpdate(prevProps: NotFoundProps) {
         if (this.props.userId !== prevProps.userId) {
-            this.setState({ userId: this.props.userId });
+            this.setState({
+                userId: this.props.userId,
+            });
         }
     }
 

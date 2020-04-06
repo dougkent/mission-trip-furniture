@@ -71,9 +71,13 @@ const PlanGrid: React.FC<PlanGridProps> = (props: PlanGridProps) => {
                             </Grid>
                         ))}
                     </Grid>
-                    {!loading && props.nextToken && (
-                        <Pager onNextPage={handleNextPage} />
-                    )}
+                    {!loading &&
+                        props.nextToken &&
+                        (!props.totalCount ||
+                            (!!props.totalCount &&
+                                props.totalCount > props.plans.length)) && (
+                            <Pager onNextPage={handleNextPage} />
+                        )}
                 </>
             )}
             {loading && (
