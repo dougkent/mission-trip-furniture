@@ -52,6 +52,12 @@ export const getPlanQuery = `query GetPlan($id: ID!) {
     }
 }`;
 
+export const getUserIdQuery = `query GetUser($id: ID!) {
+    getUser(id: $id) {
+        id
+    }
+}`;
+
 export const getUserQuery = `query GetUser($id: ID! $limit: Int!, $nextToken: String) {
     getUser(id: $id) {
         createdPlans(limit: $limit, nextToken: $nextToken) {
@@ -81,8 +87,8 @@ export const listToolsQuery: string = `query ListTools {
     }
 }`;
 
-export const searchPlansQuery = `query SearchPlans($limit: Int!, $nextToken: String) {
-    searchPlans(limit: $limit, nextToken: $nextToken) {
+export const searchPlansQuery = `query SearchPlans($limit: Int!, $filter: SearchablePlanFilterInput, $nextToken: String) {
+    searchPlans(filter: $filter, limit: $limit, nextToken: $nextToken) {
         nextToken
         total
         items {
@@ -106,6 +112,12 @@ export const createFavoriteMutation = `mutation CreateFavorite($input: CreateFav
 
 export const createPlanMutation = `mutation CreatePlan($input: CreatePlanInput!) {
     createPlan(input: $input) {
+        id
+    }
+}`;
+
+export const createUserMutation = `mutation CreateUser($input: CreateUserInput!) {
+    createUser(input: $input) {
         id
     }
 }`;

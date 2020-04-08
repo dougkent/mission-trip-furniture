@@ -40,18 +40,6 @@ Amplify.configure(aws_exports);
 ReactGA.initialize('UA-162153255-1');
 
 class App extends React.Component<{}, AppProps> {
-    private getUserQuery = `query GetUser($id: ID!) {
-        getUser(id: $id) {
-            id
-        }
-    }`;
-
-    private createUserMutation = `mutation CreateUser($input: CreateUserInput!) {
-        createUser(input: $input) {
-            id
-        }
-    }`;
-
     constructor(props: any) {
         super(props);
 
@@ -79,8 +67,6 @@ class App extends React.Component<{}, AppProps> {
             const { payload } = data;
             this.listenToAuthEvents(payload);
         });
-
-        console.log(this.state);
     }
 
     private async listenToAuthEvents(payload: any) {
@@ -106,7 +92,7 @@ class App extends React.Component<{}, AppProps> {
 
     private async userExists(userId: string): Promise<boolean> {
         const userResult: GqlQuery<GetUserQuery> = await API.graphql(
-            graphqlOperation(this.getUserQuery, { id: userId })
+            graphqlOperation(graphQLQueries.getUserIdQuery, { id: userId })
         );
 
         const { getUser } = userResult.data;
@@ -131,7 +117,7 @@ class App extends React.Component<{}, AppProps> {
         };
 
         var createUserResult: GqlQuery<CreateUserMutation> = await API.graphql(
-            graphqlOperation(this.createUserMutation, {
+            graphqlOperation(graphQLQueries.createUserMutation, {
                 input: createUserInput,
             })
         );

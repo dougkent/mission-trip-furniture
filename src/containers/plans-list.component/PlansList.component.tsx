@@ -21,7 +21,12 @@ import { AppProps } from '../../models/props';
 import { FilterState, PlanListState, SearchState } from '../../models/states';
 import { mtfTheme } from '../../themes';
 import { Filter, PlanGrid, Search } from '../../components';
-import { GqlQuery, SearchPlansQuery, Plan } from '../../models/api-models';
+import {
+    GqlQuery,
+    Plan,
+    SearchPlansQuery,
+    SearchablePlanFilterInput,
+} from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
 import { PlanFavoriteService } from '../../services';
 
@@ -109,17 +114,21 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             filterState: filterState,
         }));
 
+        this.loadPlans();
+
         ReactGA.event({
             category: 'search',
             action: 'User Filtered Plan List',
         });
     };
 
-    private handleSearch = (searchState: SearchState) => {
-        this.setState(prevState => ({
+    private handleSearch = async (searchState: SearchState) => {
+        await this.setState(prevState => ({
             ...prevState,
             searchState: searchState,
         }));
+
+        this.loadPlans();
 
         ReactGA.event({
             category: 'search',
@@ -128,7 +137,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
     };
 
     private handleNextPage = () => {
-        this.loadPlans();
+        this.loadPlans(true);
     };
 
     private handleTogglePlanFavorite = async (
@@ -167,17 +176,40 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         );
     };
 
-    private loadPlans = async () => {
+    private loadPlans = async (isNextPage: boolean = false) => {
         this.setState(prevState => ({
             ...prevState,
             loading: true,
         }));
 
+        let search: SearchablePlanFilterInput = null;
+
+        if (this.state.searchState.searchTerm?.length) {
+            const descriptionSearch: SearchablePlanFilterInput = {
+                description: {
+                    matchPhrase: this.state.searchState.searchTerm,
+                },
+            };
+            const nameSearch: SearchablePlanFilterInput = {
+                name: {
+                    matchPhrase: this.state.searchState.searchTerm,
+                },
+            };
+
+            search = {
+                id: { wildcard: '*' },
+                or: [nameSearch, descriptionSearch],
+            };
+        }
+
+        const nextToken: string = isNextPage ? this.state.nextToken : null;
+
         const result: GqlQuery<SearchPlansQuery> = await API.graphql({
             query: graphQLQueries.searchPlansQuery,
             variables: {
                 limit: 10,
-                nextToken: this.state.nextToken,
+                filter: search,
+                nextToken: nextToken,
             },
             // @ts-ignore
             authMode: 'AWS_IAM',
@@ -202,7 +234,9 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         this.setState(prevState => ({
             ...prevState,
             loading: false,
-            plans: prevState.plans.concat(mappedPlans),
+            plans: isNextPage
+                ? prevState.plans.concat(mappedPlans)
+                : mappedPlans,
             nextToken: searchPlans.nextToken,
             totalCount: searchPlans.total,
         }));
