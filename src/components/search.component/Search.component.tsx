@@ -60,7 +60,6 @@ const Search: React.FC<SearchProps> = (props: SearchProps) => {
     );
 
     const handleSearch = (event: React.FormEvent) => {
-        debugger;
         event.preventDefault();
 
         props.onSearch(searchState);

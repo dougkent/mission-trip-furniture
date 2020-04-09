@@ -10,6 +10,7 @@ import {
     DialogContent,
     DialogTitle,
     FormGroup,
+    Hidden,
     IconButton,
     makeStyles,
     Slide,
@@ -96,7 +97,6 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             flexWrap: 'wrap',
             paddingTop: theme.spacing(3),
-            paddingBottom: theme.spacing(3),
         },
         filterBarItem: {
             marginRight: theme.spacing(2),
@@ -105,6 +105,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         filterBarItemFixedWidth: {
             width: theme.spacing(30),
+            [theme.breakpoints.up('lg')]: {
+                width: 'auto',
+                minWidth: theme.spacing(30),
+                maxWidth: theme.spacing(60),
+            },
         },
         filterBarToggle: {
             display: 'flex',
@@ -142,7 +147,6 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
         props.onApply(filterState);
 
         setFilterDialogOpen(false);
-        setFilterBarOpen(false);
     };
 
     const handleDateChange = (key: string) => (date: any) => {
@@ -236,7 +240,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     <Typography>Plan Created After:</Typography>
                                     <Button
                                         onClick={handleDateChange(
-                                            'filterCreatedRangeStart'
+                                            'filterCreatedAfter'
                                         )}>
                                         Clear
                                     </Button>
@@ -250,7 +254,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     openTo='date'
                                     value={filterState.filterCreatedAfter}
                                     onChange={handleDateChange(
-                                        'filterCreatedRangeStart'
+                                        'filterCreatedAfter'
                                     )}
                                     className={classes.dialogDatePicker}
                                 />
@@ -306,9 +310,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                             openTo='date'
                             label='Plan Created After'
                             value={filterState.filterCreatedAfter}
-                            onChange={handleDateChange(
-                                'filterCreatedRangeStart'
-                            )}
+                            onChange={handleDateChange('filterCreatedAfter')}
                         />
                     </MuiPickersUtilsProvider>
                 </div>
@@ -346,8 +348,8 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                 <FilterListSharpIcon />
                 <span className={classes.filterButtonText}>Filter</span>
             </Button>
-            {renderMobileFilterDialog()}
-            {filterBarOpen && renderFilterBar()}
+            <Hidden mdUp>{renderMobileFilterDialog()}</Hidden>
+            <Hidden smDown>{filterBarOpen && renderFilterBar()}</Hidden>
         </>
     );
 };

@@ -2,16 +2,37 @@
 import React from 'react';
 
 // Material UI
-import { Chip, CircularProgress, TextField } from '@material-ui/core';
+import {
+    Checkbox,
+    Chip,
+    CircularProgress,
+    createStyles,
+    makeStyles,
+    Theme,
+    TextField,
+} from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp';
+import CheckBoxSharpIcon from '@material-ui/icons/CheckBoxSharp';
 
 // MTF
 import { MaterialSelectorProps } from '../../models/props';
+import { mtfTheme } from '../../themes';
 import { Material } from '../../models/api-models';
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        chip: {
+            margin: 3,
+        },
+    })
+);
 
 const MaterialsSelector: React.FC<MaterialSelectorProps> = (
     props: MaterialSelectorProps
 ) => {
+    const classes = useStyles(mtfTheme);
+
     const getOptionLabel = (option: Material): string => {
         return option.name;
     };
@@ -28,22 +49,48 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                 getOptionLabel={getOptionLabel}
                 loading={props.loading}
                 multiple
+                disableCloseOnSelect
                 onChange={handleChange}
                 options={props.materials}
                 renderInput={params => (
                     <TextField {...params} label={props.label} fullWidth />
                 )}
-                renderTags={(value, getTagProps) =>
-                    value.map((material, index) => (
-                        <Chip
-                            variant='outlined'
-                            color='secondary'
-                            label={material.name}
-                            size='small'
-                            {...getTagProps({ index })}
+                renderOption={(material, { selected }) => (
+                    <>
+                        <Checkbox
+                            icon={
+                                <CheckBoxOutlineBlankSharpIcon fontSize='small' />
+                            }
+                            checkedIcon={<CheckBoxSharpIcon fontSize='small' />}
+                            checked={selected}
                         />
-                    ))
-                }
+                        {material.name}
+                    </>
+                )}
+                renderTags={(value, getTagProps) => (
+                    <>
+                        {value
+                            .filter((material, index) => index < 2)
+                            .map((material, index) => (
+                                <Chip
+                                    variant='outlined'
+                                    color='secondary'
+                                    label={material.name}
+                                    size='small'
+                                    {...getTagProps({ index })}
+                                />
+                            ))}
+                        {value.length > 2 && (
+                            <Chip
+                                size='small'
+                                color='secondary'
+                                variant='outlined'
+                                className={classes.chip}
+                                label={'+' + (value.length - 2).toString()}
+                            />
+                        )}
+                    </>
+                )}
                 value={props.selectedMaterials}
             />
         );

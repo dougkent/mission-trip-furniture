@@ -124,6 +124,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     componentDidMount() {
         ReactGA.ga('send', 'pageview', window.location.pathname);
+
+        if (this.state.userId) {
+            this.loadCreatedPlans();
+            this.loadFavoritedPlans();
+        }
     }
 
     async componentDidUpdate(prevProps: DashboardProps) {
@@ -139,8 +144,10 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 tools: this.props.tools,
             }));
 
-            this.loadCreatedPlans();
-            this.loadFavoritedPlans();
+            if (this.props.userId !== prevProps.userId) {
+                this.loadCreatedPlans();
+                this.loadFavoritedPlans();
+            }
         }
     }
 

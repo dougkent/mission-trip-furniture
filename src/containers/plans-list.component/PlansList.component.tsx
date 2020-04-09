@@ -108,8 +108,8 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }
     }
 
-    private handleApplyFilter = (filterState: FilterState) => {
-        this.setState(prevState => ({
+    private handleApplyFilter = async (filterState: FilterState) => {
+        await this.setState(prevState => ({
             ...prevState,
             filterState: filterState,
         }));
@@ -197,9 +197,44 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             };
 
             search = {
-                id: { wildcard: '*' },
                 or: [nameSearch, descriptionSearch],
             };
+        }
+
+        if (this.state.filterState.filterMaterials.length) {
+            let materialSearch = this.state.filterState.filterMaterials.map(
+                (material): SearchablePlanFilterInput => {
+                    return {
+                        requiredMaterialIds: {
+                            eq: material.id,
+                        },
+                    };
+                }
+            );
+
+            if (search?.and) {
+                materialSearch = [...search.and, ...materialSearch];
+            }
+
+            search = { ...search, and: [...materialSearch] };
+        }
+
+        if (this.state.filterState.filterTools.length) {
+            let toolSearch = this.state.filterState.filterTools.map(
+                (tool): SearchablePlanFilterInput => {
+                    return {
+                        requiredToolIds: {
+                            eq: tool.id,
+                        },
+                    };
+                }
+            );
+
+            if (search?.and) {
+                toolSearch = [...search.and, ...toolSearch];
+            }
+
+            search = { ...search, and: [...toolSearch] };
         }
 
         const nextToken: string = isNextPage ? this.state.nextToken : null;

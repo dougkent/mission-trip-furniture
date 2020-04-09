@@ -14,6 +14,7 @@ import {
     createStyles,
     makeStyles,
     Theme,
+    Tooltip,
     Typography,
 } from '@material-ui/core';
 
@@ -80,6 +81,18 @@ const useStyles = makeStyles((theme: Theme) =>
         row: {
             marginBottom: theme.spacing(1),
         },
+        requiredItem: {
+            marginRight: theme.spacing(0.5),
+            '& .MuiChip-label': {
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                maxWidth: '125px',
+                [theme.breakpoints.up('md')]: {
+                    maxWidth: '90px',
+                },
+            },
+        },
     })
 );
 
@@ -123,17 +136,40 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                 <label>{label}:</label>
                 <div>
                     {requiredItems
-                        ?.filter((requiredItem, index) => index < 3)
-                        .map(requiredItem => {
-                            return (
+                        ?.filter((requiredItem, index) => index < 2)
+                        .map(requiredItem => (
+                            <Tooltip
+                                key={requiredItem.id}
+                                title={requiredItem.name}
+                                placement='bottom'
+                                arrow
+                                enterDelay={500}>
                                 <Chip
-                                    key={requiredItem.id}
+                                    className={classes.requiredItem}
                                     size='small'
                                     color='secondary'
                                     label={requiredItem.name}
                                 />
-                            );
-                        })}
+                            </Tooltip>
+                        ))}
+                    {requiredItems.length > 2 && (
+                        <Tooltip
+                            title={
+                                (requiredItems.length - 2).toString() + ' More'
+                            }
+                            placement='bottom'
+                            arrow
+                            enterDelay={500}>
+                            <Chip
+                                size='small'
+                                color='secondary'
+                                variant='outlined'
+                                label={
+                                    '+' + (requiredItems.length - 2).toString()
+                                }
+                            />
+                        </Tooltip>
+                    )}
                 </div>
             </div>
         );
@@ -155,13 +191,19 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
             <div className={classes.cardContentContainer}>
                 <CardActions className={classes.cardActions}>
                     <div className={classes.cardTitle}>
-                        <Typography variant='h5' noWrap title={planState.name}>
-                            <ReactRouter.Link
-                                to={`/plans/${planState.id}`}
-                                className={classes.cardTitleLink}>
-                                {planState.name}
-                            </ReactRouter.Link>
-                        </Typography>
+                        <Tooltip
+                            title={planState.name}
+                            placement='right'
+                            arrow
+                            enterDelay={500}>
+                            <Typography variant='h5' noWrap>
+                                <ReactRouter.Link
+                                    to={`/plans/${planState.id}`}
+                                    className={classes.cardTitleLink}>
+                                    {planState.name}
+                                </ReactRouter.Link>
+                            </Typography>
+                        </Tooltip>
                     </div>
                     <PlanFavorite
                         planId={planState.id}
