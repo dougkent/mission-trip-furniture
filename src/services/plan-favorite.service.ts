@@ -12,7 +12,6 @@ import {
     DeleteFavoriteInput,
     ModelIdKeyConditionInput,
     GetFavoriteByPlanIdQuery,
-    Plan,
 } from '../models/api-models';
 import * as graphQLQueries from '../graphql/queries';
 
@@ -49,15 +48,9 @@ export class PlanFavoriteService {
     };
 
     deleteFavorite = async (planId: string, userId: string) => {
-        const getFavoriteInput: ModelIdKeyConditionInput = {
-            eq: userId,
-        };
-
-        var favoriteResult: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getFavoriteByPlanAndUserQuery, {
-                planId: planId,
-                userId: getFavoriteInput,
-            })
+        const favoriteResult = await this.getFavoriteByPlandIdAndUserId(
+            planId,
+            userId
         );
 
         const { getFavoriteByPlanId } = favoriteResult.data;
@@ -69,9 +62,21 @@ export class PlanFavoriteService {
         }
     };
 
-    isFavoritedByUser = (userId: string, plan: Plan): boolean => {
-        return plan.favoritedBy.items.some(
-            favoritedBy => favoritedBy.userId === userId
+    private getFavoriteByPlandIdAndUserId = async (
+        planId: string,
+        userId: string
+    ): Promise<GqlQuery<GetFavoriteByPlanIdQuery>> => {
+        const getFavoriteInput: ModelIdKeyConditionInput = {
+            eq: userId,
+        };
+
+        var favoriteResult: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
+            graphqlOperation(graphQLQueries.getFavoriteByPlanAndUserQuery, {
+                planId: planId,
+                userId: getFavoriteInput,
+            })
         );
+
+        return favoriteResult;
     };
 }

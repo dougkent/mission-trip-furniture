@@ -36,18 +36,18 @@ class Contact extends React.Component<ContactProps, BaseState> {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         ReactGA.ga('send', 'pageview', window.location.pathname);
-    }
+    };
 
-    componentDidUpdate(prevProps: ContactProps) {
+    componentDidUpdate = (prevProps: ContactProps) => {
         if (this.props.userId !== prevProps.userId) {
             this.setState({
                 userId: this.props.userId,
             });
         }
-    }
-    render() {
+    };
+    render = () => {
         const { classes } = this.props;
         return (
             <div className={classes.contactContainer}>
@@ -64,7 +64,7 @@ class Contact extends React.Component<ContactProps, BaseState> {
                     }}></iframe>
             </div>
         );
-    }
+    };
 }
 
 export default withStyles(styles(mtfTheme))(Contact);

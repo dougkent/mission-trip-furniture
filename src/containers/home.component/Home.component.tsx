@@ -87,18 +87,18 @@ class Home extends React.Component<HomeProps, BaseState> {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         ReactGA.ga('send', 'pageview', window.location.pathname);
-    }
+    };
 
-    componentDidUpdate(prevProps: HomeProps) {
+    componentDidUpdate = (prevProps: HomeProps) => {
         if (this.props.userId !== prevProps.userId) {
             this.setState({
                 userId: this.props.userId,
             });
         }
-    }
-    render() {
+    };
+    render = () => {
         const { classes } = this.props;
 
         return (
@@ -126,7 +126,7 @@ class Home extends React.Component<HomeProps, BaseState> {
                 </div>
             </>
         );
-    }
+    };
 }
 
 export default withStyles(styles(mtfTheme))(Home);

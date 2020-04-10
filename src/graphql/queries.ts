@@ -12,11 +12,6 @@ const planFields = `
             username
         }
         favoritedCount
-        favoritedBy  {
-            items {
-                userId
-            }
-        }
         downloadedCount
         requiredMaterialIds
         requiredToolIds`;
@@ -30,11 +25,9 @@ export const getFavoriteByPlanAndUserQuery = `query GetFavoriteByPlanAndUser($pl
     }
 }`;
 
-export const getFavoritesByUserQuery = `query GetFavoritesByUser($userId: ID!, $limit: Int!, $nextToken: String) {
-    getFavoriteByUserId(userId: $userId, limit: $limit, nextToken: $nextToken) {
-        nextToken
+export const getFavoritesByUserQuery = `query GetFavoritesByUser($userId: ID!) {
+    getFavoriteByUserId(userId: $userId, limit: 999) {
         items {
-            id
             planId
         }
     }

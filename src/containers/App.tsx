@@ -13,11 +13,12 @@ import { Container } from '@material-ui/core';
 import ReactGA from 'react-ga';
 
 // MTF
-import { AppProps } from '../models/props';
+import { AppState } from '../models/states';
 import {
     GqlQuery,
     CreateUserInput,
     CreateUserMutation,
+    GetFavoriteByUserIdQuery,
     GetUserQuery,
     ListMaterialsQuery,
     ListToolsQuery,
@@ -34,12 +35,15 @@ import {
     PlansList,
 } from '.';
 import { Nav } from '../components';
+import { PlanFavoriteService } from '../services';
 
 // Configure
 Amplify.configure(aws_exports);
 ReactGA.initialize('UA-162153255-1');
 
-class App extends React.Component<{}, AppProps> {
+class App extends React.Component<{}, AppState> {
+    private planFavoriteService = new PlanFavoriteService();
+
     constructor(props: any) {
         super(props);
 
@@ -47,11 +51,8 @@ class App extends React.Component<{}, AppProps> {
             userId: '',
             materials: [],
             tools: [],
+            userFavoritedPlanIds: [],
         };
-
-        this.setUserId();
-        this.loadMaterials();
-        this.loadTools();
     }
 
     async setUserId() {
@@ -67,6 +68,10 @@ class App extends React.Component<{}, AppProps> {
             const { payload } = data;
             this.listenToAuthEvents(payload);
         });
+
+        await this.setUserId();
+        this.loadMaterialsAndTools();
+        this.loadUserFavoritedPlans();
     }
 
     private async listenToAuthEvents(payload: any) {
@@ -127,21 +132,50 @@ class App extends React.Component<{}, AppProps> {
         this.setState({ userId: createUser.id });
     }
 
-    private loadMaterials = async () => {
-        const result: GqlQuery<ListMaterialsQuery> = await API.graphql({
-            query: graphQLQueries.listMaterialsQuery,
-            // @ts-ignore
-            authMode: 'AWS_IAM',
-        });
+    private handleTogglePlanFavorite = async (
+        planId: string,
+        toggleFavOn: boolean
+    ) => {
+        if (toggleFavOn) {
+            await this.planFavoriteService.createFavorite(
+                planId,
+                this.state.userId
+            );
 
-        this.setState(prevState => ({
-            ...prevState,
-            materials: result?.data?.listMaterials?.items,
-        }));
+            this.setState(prevState => ({
+                ...prevState,
+                userFavoritedPlanIds: [
+                    ...prevState.userFavoritedPlanIds,
+                    planId,
+                ],
+            }));
+        } else {
+            await this.planFavoriteService.deleteFavorite(
+                planId,
+                this.state.userId
+            );
+
+            this.setState(prevState => ({
+                ...prevState,
+                userFavoritedPlanIds: prevState.userFavoritedPlanIds.filter(
+                    favPlanId => favPlanId !== planId
+                ),
+            }));
+        }
+
+        setTimeout(() => this.loadUserFavoritedPlans(), 1000);
     };
 
-    private loadTools = async () => {
-        const result: GqlQuery<ListToolsQuery> = await API.graphql({
+    private loadMaterialsAndTools = async () => {
+        const materialsResult: GqlQuery<ListMaterialsQuery> = await API.graphql(
+            {
+                query: graphQLQueries.listMaterialsQuery,
+                // @ts-ignore
+                authMode: 'AWS_IAM',
+            }
+        );
+
+        const toolsResult: GqlQuery<ListToolsQuery> = await API.graphql({
             query: graphQLQueries.listToolsQuery,
             // @ts-ignore
             authMode: 'AWS_IAM',
@@ -149,7 +183,24 @@ class App extends React.Component<{}, AppProps> {
 
         this.setState(prevState => ({
             ...prevState,
-            tools: result?.data?.listTools?.items,
+            materials: materialsResult?.data?.listMaterials?.items,
+            tools: toolsResult?.data?.listTools?.items,
+        }));
+    };
+    private loadUserFavoritedPlans = async () => {
+        const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
+            graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
+                userId: this.state.userId,
+            })
+        );
+
+        const favoritedPlanIds = result.data.getFavoriteByUserId.items.map(
+            favorite => favorite.planId
+        );
+
+        this.setState(prevState => ({
+            ...prevState,
+            userFavoritedPlanIds: favoritedPlanIds,
         }));
     };
 
@@ -184,6 +235,12 @@ class App extends React.Component<{}, AppProps> {
                                     userId={this.state.userId}
                                     materials={this.state.materials}
                                     tools={this.state.tools}
+                                    userFavoritedPlanIds={
+                                        this.state.userFavoritedPlanIds
+                                    }
+                                    onPlanFavorite={
+                                        this.handleTogglePlanFavorite
+                                    }
                                 />
                             )}
                         />
@@ -195,6 +252,12 @@ class App extends React.Component<{}, AppProps> {
                                     planId={props.match.params.planId}
                                     materials={this.state.materials}
                                     tools={this.state.tools}
+                                    userFavoritedPlanIds={
+                                        this.state.userFavoritedPlanIds
+                                    }
+                                    onPlanFavorite={
+                                        this.handleTogglePlanFavorite
+                                    }
                                 />
                             )}
                         />
@@ -206,6 +269,12 @@ class App extends React.Component<{}, AppProps> {
                                     userId={this.state.userId}
                                     materials={this.state.materials}
                                     tools={this.state.tools}
+                                    userFavoritedPlanIds={
+                                        this.state.userFavoritedPlanIds
+                                    }
+                                    onPlanFavorite={
+                                        this.handleTogglePlanFavorite
+                                    }
                                 />
                             )}
                         />
@@ -217,6 +286,12 @@ class App extends React.Component<{}, AppProps> {
                                     userId={this.state.userId}
                                     materials={this.state.materials}
                                     tools={this.state.tools}
+                                    userFavoritedPlanIds={
+                                        this.state.userFavoritedPlanIds
+                                    }
+                                    onPlanFavorite={
+                                        this.handleTogglePlanFavorite
+                                    }
                                 />
                             )}
                         />

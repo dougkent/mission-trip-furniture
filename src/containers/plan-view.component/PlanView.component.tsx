@@ -140,6 +140,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             userId: props.userId,
             materials: props.materials,
             tools: props.tools,
+            userFavoritedPlanIds: props.userFavoritedPlanIds,
             planId: props.planId,
             plan: null,
             downloadUrl: null,
@@ -153,7 +154,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         };
     }
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         const planResult: GqlQuery<GetPlanQuery> = await API.graphql({
             query: graphQLQueries.getPlanQuery,
             variables: { id: this.props.planId },
@@ -164,70 +165,77 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         if (planResult?.data?.getPlan) {
             const { getPlan } = planResult.data;
 
-            getPlan.requiredMaterials = this.state.materials.filter(
-                material => {
-                    return !!getPlan.requiredMaterialIds.find(
-                        id => id === material.id
-                    );
-                }
-            );
+            const decoratedPlan = this.decoratePlan(getPlan);
 
-            getPlan.requiredTools = this.state.tools.filter(tool => {
-                return !!getPlan.requiredToolIds.find(id => id === tool.id);
+            const downloadUrl = await Storage.get(getPlan.pdfS3Key, {
+                level: 'protected',
+                identityId: getPlan.createdBy.id,
             });
 
-            const downloadUrl = await Storage.get(
-                planResult.data.getPlan.pdfS3Key,
-                {
-                    level: 'protected',
-                    identityId: planResult.data.getPlan.createdBy.id,
-                }
-            );
-
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 planId: this.props.planId,
-                plan: getPlan,
+                plan: decoratedPlan,
                 downloadUrl: downloadUrl as string,
                 loading: false,
-            }));
+            });
         } else {
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 loading: false,
-            }));
+            });
         }
 
         ReactGA.ga('send', 'pageview', window.location.pathname);
-    }
+    };
 
-    componentDidUpdate(prevProps: ViewPlanProps) {
+    componentDidUpdate = async (prevProps: ViewPlanProps) => {
         if (
             this.props.userId !== prevProps.userId ||
             this.props.materials !== prevProps.materials ||
-            this.props.tools !== prevProps.tools
+            this.props.tools !== prevProps.tools ||
+            this.props.userFavoritedPlanIds !== prevProps.userFavoritedPlanIds
         ) {
-            this.setState(prevState => ({
-                ...prevState,
+            await this.setState({
                 userId: this.props.userId,
                 materials: this.props.materials,
                 tools: this.props.tools,
-            }));
+                userFavoritedPlanIds: this.props.userFavoritedPlanIds,
+            });
+
+            const decoratedPlan = this.decoratePlan(this.state.plan);
+
+            this.setState({
+                plan: decoratedPlan,
+            });
         }
-    }
+    };
+
+    private decoratePlan = (plan: Plan): Plan => {
+        return {
+            ...plan,
+            requiredMaterials: this.state.materials.filter(material => {
+                return !!plan.requiredMaterialIds.find(
+                    id => id === material.id
+                );
+            }),
+            requiredTools: this.state.tools.filter(tool => {
+                return !!plan.requiredToolIds.find(id => id === tool.id);
+            }),
+            isFavoritedByUser: this.state.userFavoritedPlanIds.some(
+                planId => planId === plan.id
+            ),
+        };
+    };
 
     private handleClearErrors = () => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             errors: [],
-        }));
+        });
     };
 
     private handleCreateDownload = () => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             saving: true,
-        }));
+        });
 
         if (this.state.userId) {
             const input: CreateDownloadInput = {
@@ -259,10 +267,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleDelete = async () => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             saving: true,
-        }));
+        });
 
         const input: DeletePlanInput = {
             id: this.state.planId,
@@ -287,34 +294,30 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 action: 'User deleted a plan',
             });
 
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 deleteComplete: true,
-            }));
+            });
         } else {
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 saving: false,
                 errors: [
                     'An unexpected error occurred when deleteing this plan. Please try again.',
                 ],
-            }));
+            });
         }
     };
 
     private handleDeleteDialogOpen = () => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             deleteDialogOpen: true,
-        }));
+        });
     };
 
     private handleDeleteDialogClose = () => {
         if (!this.state.saving) {
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 deleteDialogOpen: false,
-            }));
+            });
         }
     };
 
@@ -327,41 +330,36 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleEditingOn = () => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             editing: true,
             planMenuAnchor: null,
-        }));
+        });
     };
 
     private handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         const el = event.currentTarget;
 
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             planMenuAnchor: el,
-        }));
+        });
     };
 
     private handleMenuClose = () => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             planMenuAnchor: null,
-        }));
+        });
     };
 
     private handleSave = async (newDescription: string) => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             saving: true,
-        }));
+        });
 
         if (!newDescription || !newDescription.length) {
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 saving: false,
                 errors: ['Please enter a description.'],
-            }));
+            });
             throw Error('Please enter a description');
         }
 
@@ -377,25 +375,24 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         );
 
         if (planResult?.data?.updatePlan) {
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 plan: planResult.data.updatePlan,
                 editing: false,
                 saving: false,
-            }));
+            });
 
             ReactGA.event({
                 category: 'edit',
                 action: 'User edited a plan description',
             });
         } else {
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 saving: false,
                 errors: [
                     "An unexpected error occurred when updating this plan's description. Please try again.",
                 ],
-            }));
+            });
+
             throw Error(
                 "An unexpected error occurred when updating this plan's description. Please try again."
             );
@@ -403,36 +400,35 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleTogglePlanFavorite = (toggleFavOn: boolean) => {
+        ReactGA.event({
+            category: 'favorite',
+            action: toggleFavOn
+                ? 'User Favorited Plan'
+                : 'User Unfavorited Plan',
+            label: 'favorite on plan view page',
+        });
+
         if (toggleFavOn) {
-            this.planFavoriteService.createFavorite(
-                this.state.planId,
-                this.state.userId
-            );
-
-            ReactGA.event({
-                category: 'favorite',
-                action: 'User Favorited Plan',
-                label: 'favorite on plan view page',
-            });
+            this.setState(prevState => ({
+                ...prevState,
+                plan: {
+                    ...prevState.plan,
+                    isFavoritedByUser: true,
+                    favoritedCount: prevState.plan.favoritedCount++,
+                },
+            }));
         } else {
-            this.planFavoriteService.deleteFavorite(
-                this.state.planId,
-                this.state.userId
-            );
-
-            ReactGA.event({
-                category: 'favorite',
-                action: 'User Unfavorited Plan',
-                label: 'favorite on plan view page',
-            });
+            this.setState(prevState => ({
+                ...prevState,
+                plan: {
+                    ...prevState.plan,
+                    isFavoritedByUser: false,
+                    favoritedCount: prevState.plan.favoritedCount--,
+                },
+            }));
         }
-    };
 
-    private isFavoritedByUser = (plan: Plan): boolean => {
-        return this.planFavoriteService.isFavoritedByUser(
-            this.state.userId,
-            plan
-        );
+        this.props.onPlanFavorite(this.state.planId, toggleFavOn);
     };
 
     private renderDescription = () => {
@@ -464,7 +460,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         }
     };
 
-    render() {
+    render = () => {
         const { classes } = this.props;
 
         if (this.state.loading) {
@@ -580,9 +576,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                     !this.props.userId ||
                                     this.props.userId.length === 0
                                 }
-                                isFavoritedByUser={this.isFavoritedByUser(
-                                    this.state.plan
-                                )}
+                                isFavoritedByUser={
+                                    this.state.plan.isFavoritedByUser
+                                }
                                 favoritedCount={this.state.plan.favoritedCount}
                                 onToggleFavorite={this.handleTogglePlanFavorite}
                             />
@@ -604,7 +600,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         } else {
             return <NotFound userId={this.state.userId} />;
         }
-    }
+    };
 }
 
 export default withStyles(styles(mtfTheme))(PlanView);
