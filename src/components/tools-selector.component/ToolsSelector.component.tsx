@@ -25,6 +25,11 @@ const useStyles = makeStyles((theme: Theme) =>
         chip: {
             margin: 3,
         },
+        textBox: {
+            '& .MuiAutocomplete-inputRoot': {
+                paddingRight: `${theme.spacing(3)}px !important`,
+            },
+        },
     })
 );
 
@@ -65,7 +70,12 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
                     </>
                 )}
                 renderInput={params => (
-                    <TextField {...params} label={props.label} fullWidth />
+                    <TextField
+                        className={classes.textBox}
+                        {...params}
+                        label={props.label}
+                        fullWidth
+                    />
                 )}
                 renderTags={(value, getTagProps) => (
                     <>

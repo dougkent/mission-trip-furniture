@@ -6,4 +6,5 @@ export interface FilterProps {
     tools: Tool[];
     filterState: FilterState;
     onApply(filterState: FilterState): void;
+    onClear(filterState: FilterState): void;
 }

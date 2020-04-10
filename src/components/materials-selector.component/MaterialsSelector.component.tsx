@@ -25,6 +25,11 @@ const useStyles = makeStyles((theme: Theme) =>
         chip: {
             margin: 3,
         },
+        textBox: {
+            '& .MuiAutocomplete-inputRoot': {
+                paddingRight: `${theme.spacing(3)}px !important`,
+            },
+        },
     })
 );
 
@@ -53,7 +58,12 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                 onChange={handleChange}
                 options={props.materials}
                 renderInput={params => (
-                    <TextField {...params} label={props.label} fullWidth />
+                    <TextField
+                        className={classes.textBox}
+                        {...params}
+                        label={props.label}
+                        fullWidth
+                    />
                 )}
                 renderOption={(material, { selected }) => (
                     <>

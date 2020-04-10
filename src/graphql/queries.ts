@@ -87,8 +87,8 @@ export const listToolsQuery: string = `query ListTools {
     }
 }`;
 
-export const searchPlansQuery = `query SearchPlans($limit: Int!, $filter: SearchablePlanFilterInput, $nextToken: String) {
-    searchPlans(filter: $filter, limit: $limit, nextToken: $nextToken) {
+export const searchPlansQuery = `query SearchPlans($limit: Int!, $filter: SearchablePlanFilterInput, $sort: SearchablePlanSortInput, $nextToken: String) {
+    searchPlans(filter: $filter, sort: $sort, limit: $limit, nextToken: $nextToken) {
         nextToken
         total
         items {
