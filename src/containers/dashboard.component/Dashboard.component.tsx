@@ -278,7 +278,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         });
 
         const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
+            graphqlOperation(graphQLQueries.listFavoritesByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
                 nextToken: this.state.favoritedPlansNextToken,
