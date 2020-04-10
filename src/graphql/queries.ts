@@ -62,6 +62,15 @@ export const getUserQuery = `query GetUser($id: ID! $limit: Int!, $nextToken: St
     }
 }`;
 
+export const listFavoritesByUserQuery = `query GetFavoritesByUser($userId: ID!, $limit: Int!, $nextToken: String) {
+    getFavoriteByUserId(userId: $userId, limit: $limit, nextToken: $nextToken) {
+        nextToken
+        items {
+            planId
+        }
+    }
+}`;
+
 export const listMaterialsQuery: string = `query ListMaterials {
     listMaterials(limit: 999) {
         items {
