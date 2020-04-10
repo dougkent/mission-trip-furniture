@@ -23,11 +23,11 @@ import { mtfTheme } from '../../themes';
 import { Filter, PlanGrid, Search } from '../../components';
 import {
     GqlQuery,
-    ListPlansQuery,
-    Material,
-    Tool,
     Plan,
+    SearchPlansQuery,
+    SearchablePlanFilterInput,
 } from '../../models/api-models';
+import * as graphQLQueries from '../../graphql/queries';
 import { PlanFavoriteService } from '../../services';
 
 const styles = (theme: Theme) =>
@@ -65,66 +65,19 @@ const styles = (theme: Theme) =>
 export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
 
 class PlansList extends React.Component<PlanListProps, PlanListState> {
-    private listPlansQuery = `query ListPlans($limit: Int!, $nextToken: String) {
-        listPlans(limit: $limit, nextToken: $nextToken) {
-            nextToken
-            items {
-                id
-                name
-                description
-                imageS3Info {
-                    key
-                    width
-                    height
-                }
-                materialsRequired {
-                    items {
-                        id
-                        material {
-                            id
-                            name
-                        }
-                    }
-                }
-                toolsRequired {
-                    items {
-                        id
-                        tool {
-                            id
-                            name
-                        }
-                    }
-                }
-                created
-                createdBy {
-                    id
-                    username
-                }
-                favoritedCount
-                favoritedBy  {
-                    items {
-                        userId
-                    }
-                }
-                downloadedCount
-            }
-        }
-    }`;
-
     private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: PlanListProps) {
         super(props);
 
         this.state = {
+            userId: props.userId,
+            materials: props.materials,
+            tools: props.tools,
             filterState: {
                 filterMaterials: [],
                 filterTools: [],
-                filterFavoritedByUser: false,
-                filterDownloadedByUser: false,
-                filterCreatedByUser: false,
-                filterCreatedRangeStart: null,
-                filterCreatedRangeEnd: null,
+                filterCreatedAfter: null,
             },
             searchState: {
                 searchTerm: null,
@@ -132,49 +85,111 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             loading: false,
             plans: [],
             nextToken: null,
-            userId: props.userId,
+            totalCount: 0,
         };
     }
-
-    async componentDidMount() {
-        this.loadPlans();
-
+    componentDidMount() {
         ReactGA.ga('send', 'pageview', window.location.pathname);
+
+        this.loadPlans();
     }
 
     componentDidUpdate(prevProps: PlanListProps) {
-        if (this.props.userId !== prevProps.userId) {
-            this.setState({ userId: this.props.userId });
+        if (
+            this.props.userId !== prevProps.userId ||
+            this.props.materials !== prevProps.materials ||
+            this.props.tools !== prevProps.tools
+        ) {
+            this.setState({
+                userId: this.props.userId,
+                materials: this.props.materials,
+                tools: this.props.tools,
+            });
         }
     }
 
-    private getFilterMaterials = (): Material[] => {
-        if (!this.state.plans.length) return [];
+    private buildSearch = (): SearchablePlanFilterInput => {
+        let search: SearchablePlanFilterInput = null;
 
-        return this.state.plans
-            .map(plan => {
-                return plan.materialsRequired.items.map(
-                    planMaterial => planMaterial.material
-                );
-            })
-            .reduce((materials1, materials2) => materials1.concat(materials2));
+        if (this.state.searchState.searchTerm?.length) {
+            const descriptionSearch: SearchablePlanFilterInput = {
+                description: {
+                    matchPhrase: this.state.searchState.searchTerm,
+                },
+            };
+            const nameSearch: SearchablePlanFilterInput = {
+                name: {
+                    matchPhrase: this.state.searchState.searchTerm,
+                },
+            };
+
+            search = {
+                or: [nameSearch, descriptionSearch],
+            };
+        }
+
+        if (this.state.filterState.filterMaterials.length) {
+            let materialSearch = this.state.filterState.filterMaterials.map(
+                (material): SearchablePlanFilterInput => {
+                    return {
+                        requiredMaterialIds: {
+                            eq: material.id,
+                        },
+                    };
+                }
+            );
+
+            if (search?.and) {
+                materialSearch = [...search.and, ...materialSearch];
+            }
+
+            search = { ...search, and: [...materialSearch] };
+        }
+
+        if (this.state.filterState.filterTools.length) {
+            let toolSearch = this.state.filterState.filterTools.map(
+                (tool): SearchablePlanFilterInput => {
+                    return {
+                        requiredToolIds: {
+                            eq: tool.id,
+                        },
+                    };
+                }
+            );
+
+            if (search?.and) {
+                toolSearch = [...search.and, ...toolSearch];
+            }
+
+            search = { ...search, and: [...toolSearch] };
+        }
+
+        if (this.state.filterState.filterCreatedAfter) {
+            let createdSearch: SearchablePlanFilterInput[] = [
+                {
+                    created: {
+                        gte: this.state.filterState.filterCreatedAfter.toISOString(),
+                    },
+                },
+            ];
+
+            if (search?.and) {
+                createdSearch = [...search.and, ...createdSearch];
+            }
+
+            search = { ...search, and: [...createdSearch] };
+        }
+
+        return search;
     };
 
-    private getFilterTools = (): Tool[] => {
-        if (!this.state.plans.length) return [];
-
-        return this.state.plans
-            .map(plan => {
-                return plan.toolsRequired.items.map(planTool => planTool.tool);
-            })
-            .reduce((tools1, tools2) => tools1.concat(tools2));
-    };
-
-    private handleApplyFilter = (filterState: FilterState) => {
-        this.setState(prevState => ({
+    private handleApplyFilter = async (filterState: FilterState) => {
+        await this.setState(prevState => ({
             ...prevState,
             filterState: filterState,
         }));
+
+        this.loadPlans();
 
         ReactGA.event({
             category: 'search',
@@ -182,11 +197,13 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         });
     };
 
-    private handleSearch = (searchState: SearchState) => {
-        this.setState(prevState => ({
+    private handleSearch = async (searchState: SearchState) => {
+        await this.setState(prevState => ({
             ...prevState,
             searchState: searchState,
         }));
+
+        this.loadPlans();
 
         ReactGA.event({
             category: 'search',
@@ -195,7 +212,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
     };
 
     private handleNextPage = () => {
-        this.loadPlans();
+        this.loadPlans(true);
     };
 
     private handleTogglePlanFavorite = async (
@@ -234,32 +251,53 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         );
     };
 
-    private loadPlans = async () => {
+    private loadPlans = async (isNextPage: boolean = false) => {
         this.setState(prevState => ({
             ...prevState,
             loading: true,
         }));
 
-        const result: GqlQuery<ListPlansQuery> = await API.graphql({
-            query: this.listPlansQuery,
+        const search = this.buildSearch();
+
+        const nextToken: string = isNextPage ? this.state.nextToken : null;
+
+        const result: GqlQuery<SearchPlansQuery> = await API.graphql({
+            query: graphQLQueries.searchPlansQuery,
             variables: {
                 limit: 10,
-                nextToken: this.state.nextToken,
+                filter: search,
+                nextToken: nextToken,
             },
             // @ts-ignore
             authMode: 'AWS_IAM',
         });
 
-        const { listPlans } = result.data;
+        const { searchPlans } = result.data;
+
+        const mappedPlans = searchPlans.items.map(plan => {
+            return {
+                ...plan,
+                requiredMaterials: this.state.materials.filter(material => {
+                    return !!plan.requiredMaterialIds.find(
+                        id => id === material.id
+                    );
+                }),
+                requiredTools: this.state.tools.filter(tool => {
+                    return !!plan.requiredToolIds.find(id => id === tool.id);
+                }),
+            };
+        });
 
         this.setState(prevState => ({
             ...prevState,
             loading: false,
-            plans: prevState.plans.concat(listPlans.items),
-            nextToken: listPlans.nextToken,
+            plans: isNextPage
+                ? prevState.plans.concat(mappedPlans)
+                : mappedPlans,
+            nextToken: searchPlans.nextToken,
+            totalCount: searchPlans.total,
         }));
     };
-
     render() {
         const { classes } = this.props;
 
@@ -273,8 +311,8 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                     />
                     <Filter
                         filterState={this.state.filterState}
-                        materials={this.getFilterMaterials()}
-                        tools={this.getFilterTools()}
+                        materials={this.state.materials}
+                        tools={this.state.tools}
                         onApply={this.handleApplyFilter}
                     />
                 </div>
@@ -282,6 +320,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                     plans={this.state.plans}
                     userId={this.state.userId}
                     nextToken={this.state.nextToken}
+                    totalCount={this.state.totalCount}
                     loading={this.state.loading}
                     emptyText='No Plans Found'
                     gridItemClassName={classes.gridItem}

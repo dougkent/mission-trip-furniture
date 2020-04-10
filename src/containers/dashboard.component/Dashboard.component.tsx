@@ -38,6 +38,7 @@ import {
     GetPlanQuery,
     Plan,
 } from '../../models/api-models';
+import * as graphQLQueries from '../../graphql/queries';
 import { PlanFavoriteService } from '../../services';
 
 const styles = (theme: Theme) =>
@@ -102,113 +103,15 @@ const styles = (theme: Theme) =>
 export interface DashboardProps extends AppProps, WithStyles<typeof styles> {}
 
 class Dashboard extends React.Component<DashboardProps, DashboardState> {
-    private getUserQuery = `query GetUser($id: ID! $limit: Int!, $nextToken: String) {
-        getUser(id: $id) {
-            createdPlans(limit: $limit, nextToken: $nextToken) {
-                nextToken
-                items {
-                    id
-                    name
-                    description
-                    pdfS3Key
-                    imageS3Info {
-                        key
-                        width
-                        height
-                    }
-                    created
-                    createdBy {
-                        id
-                        username
-                    }
-                    favoritedCount
-                    favoritedBy  {
-                        items {
-                            userId
-                        }
-                    }
-                    downloadedCount
-                    materialsRequired {
-                        items {
-                            id
-                            material {
-                                id
-                                name
-                            }
-                        }
-                    }
-                    toolsRequired {
-                        items {
-                            id
-                            tool {
-                                id
-                                name
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }`;
-
-    private getFavoritesByUserQuery = `query GetFavoritesByUser($userId: ID!, $limit: Int!, $nextToken: String) {
-        getFavoriteByUserId(userId: $userId, limit: $limit, nextToken: $nextToken) {
-            nextToken
-            items {
-                id
-                planId
-            }
-        }
-    }`;
-
-    private getPlanQuery = `query GetPlan($id: ID!) {
-        getPlan(id: $id) {
-            id
-            name
-            description
-            pdfS3Key
-            imageS3Info {
-                key   
-            }
-            created
-            createdBy {
-                id
-                username
-            }
-            favoritedCount
-            favoritedBy  {
-                items {
-                    userId
-                }
-            }
-            downloadedCount
-            materialsRequired {
-                items {
-                    id
-                    material {
-                        id
-                        name
-                    }
-                }
-            }
-            toolsRequired {
-                items {
-                    id
-                    tool {
-                        id
-                        name
-                    }
-                }
-            }
-        }
-    }`;
-
     private planFavoriteService = new PlanFavoriteService();
 
     constructor(props: DashboardProps) {
         super(props);
 
         this.state = {
+            userId: props.userId,
+            materials: props.materials,
+            tools: props.tools,
             currentTab: DashboardTabsEnum.CREATED_PLANS,
             createdPlans: [],
             createdPlansNextToken: null,
@@ -216,23 +119,35 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             favoritedPlans: [],
             favoritedPlansNextToken: null,
             favoritedPlansLoading: false,
-            userId: props.userId,
         };
     }
 
     componentDidMount() {
         ReactGA.ga('send', 'pageview', window.location.pathname);
+
+        if (this.state.userId) {
+            this.loadCreatedPlans();
+            this.loadFavoritedPlans();
+        }
     }
 
     async componentDidUpdate(prevProps: DashboardProps) {
-        if (this.props.userId !== prevProps.userId) {
+        if (
+            this.props.userId !== prevProps.userId ||
+            this.props.materials !== prevProps.materials ||
+            this.props.tools !== prevProps.tools
+        ) {
             await this.setState(prevState => ({
                 ...prevState,
                 userId: this.props.userId,
+                materials: this.props.materials,
+                tools: this.props.tools,
             }));
 
-            this.loadCreatedPlans();
-            this.loadFavoritedPlans();
+            if (this.props.userId !== prevProps.userId) {
+                this.loadCreatedPlans();
+                this.loadFavoritedPlans();
+            }
         }
     }
 
@@ -296,6 +211,24 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         }
     };
 
+    private includeMaterialsAndToolsOnPlan(plans: Plan[]): Plan[] {
+        const mappedPlans: Plan[] = plans.map(plan => {
+            return {
+                ...plan,
+                requiredMaterials: this.state.materials.filter(material => {
+                    return !!plan.requiredMaterialIds.find(
+                        id => id === material.id
+                    );
+                }),
+                requiredTools: this.state.tools.filter(tool => {
+                    return !!plan.requiredToolIds.find(id => id === tool.id);
+                }),
+            };
+        });
+
+        return mappedPlans;
+    }
+
     private isFavoritedByUser = (plan: Plan): boolean => {
         return this.planFavoriteService.isFavoritedByUser(
             this.state.userId,
@@ -310,7 +243,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         }));
 
         const result: GqlQuery<GetUserQuery> = await API.graphql(
-            graphqlOperation(this.getUserQuery, {
+            graphqlOperation(graphQLQueries.getUserQuery, {
                 id: this.state.userId,
                 limit: 5,
                 nextToken: this.state.createdPlansNextToken,
@@ -319,10 +252,14 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         const { createdPlans } = result.data.getUser;
 
+        const mappedPlans = this.includeMaterialsAndToolsOnPlan(
+            createdPlans.items
+        );
+
         this.setState(prevState => ({
             ...prevState,
             createdPlansLoading: false,
-            createdPlans: prevState.createdPlans.concat(createdPlans.items),
+            createdPlans: prevState.createdPlans.concat(mappedPlans),
             createdPlansNextToken: createdPlans.nextToken,
         }));
     };
@@ -334,7 +271,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         }));
 
         const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
-            graphqlOperation(this.getFavoritesByUserQuery, {
+            graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
                 nextToken: this.state.favoritedPlansNextToken,
@@ -343,24 +280,26 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         const { getFavoriteByUserId } = result.data;
 
-        const plans: Plan[] = [];
+        const favoritedPlans: Plan[] = [];
 
         for (const i in getFavoriteByUserId.items) {
             const planId = getFavoriteByUserId.items[i].planId;
 
             const result: GqlQuery<GetPlanQuery> = await API.graphql(
-                graphqlOperation(this.getPlanQuery, {
+                graphqlOperation(graphQLQueries.getPlanQuery, {
                     id: planId,
                 })
             );
 
-            plans.push(result.data.getPlan);
+            favoritedPlans.push(result.data.getPlan);
         }
+
+        const mappedPlans = this.includeMaterialsAndToolsOnPlan(favoritedPlans);
 
         this.setState(prevState => ({
             ...prevState,
             favoritedPlansLoading: false,
-            favoritedPlans: prevState.favoritedPlans.concat(plans),
+            favoritedPlans: prevState.favoritedPlans.concat(mappedPlans),
             favoritedPlansNextToken: getFavoriteByUserId.nextToken,
         }));
     };

@@ -22,7 +22,7 @@ import HotelSharpIcon from '@material-ui/icons/HotelSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // MTF
-import { AppProps } from '../../models/props';
+import { BaseProps } from '../../models/props';
 import { mtfTheme, mtfAmplifyTheme, mtfAmplifyMobileTheme } from '../../themes';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Nav: React.FC<AppProps> = (props: AppProps) => {
+const Nav: React.FC<BaseProps> = (props: BaseProps) => {
     const classes = useStyles(mtfTheme);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState<boolean>(
         false

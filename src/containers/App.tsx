@@ -17,9 +17,12 @@ import { AppProps } from '../models/props';
 import {
     GqlQuery,
     CreateUserInput,
-    GetUserQuery,
     CreateUserMutation,
+    GetUserQuery,
+    ListMaterialsQuery,
+    ListToolsQuery,
 } from '../models/api-models';
+import * as graphQLQueries from '../graphql/queries';
 import {
     About,
     Contact,
@@ -37,26 +40,18 @@ Amplify.configure(aws_exports);
 ReactGA.initialize('UA-162153255-1');
 
 class App extends React.Component<{}, AppProps> {
-    private getUserQuery = `query GetUser($id: ID!) {
-        getUser(id: $id) {
-            id
-        }
-    }`;
-
-    private createUserMutation = `mutation CreateUser($input: CreateUserInput!) {
-        createUser(input: $input) {
-            id
-        }
-    }`;
-
     constructor(props: any) {
         super(props);
 
         this.state = {
             userId: '',
+            materials: [],
+            tools: [],
         };
 
         this.setUserId();
+        this.loadMaterials();
+        this.loadTools();
     }
 
     async setUserId() {
@@ -97,7 +92,7 @@ class App extends React.Component<{}, AppProps> {
 
     private async userExists(userId: string): Promise<boolean> {
         const userResult: GqlQuery<GetUserQuery> = await API.graphql(
-            graphqlOperation(this.getUserQuery, { id: userId })
+            graphqlOperation(graphQLQueries.getUserIdQuery, { id: userId })
         );
 
         const { getUser } = userResult.data;
@@ -122,7 +117,7 @@ class App extends React.Component<{}, AppProps> {
         };
 
         var createUserResult: GqlQuery<CreateUserMutation> = await API.graphql(
-            graphqlOperation(this.createUserMutation, {
+            graphqlOperation(graphQLQueries.createUserMutation, {
                 input: createUserInput,
             })
         );
@@ -131,6 +126,32 @@ class App extends React.Component<{}, AppProps> {
 
         this.setState({ userId: createUser.id });
     }
+
+    private loadMaterials = async () => {
+        const result: GqlQuery<ListMaterialsQuery> = await API.graphql({
+            query: graphQLQueries.listMaterialsQuery,
+            // @ts-ignore
+            authMode: 'AWS_IAM',
+        });
+
+        this.setState(prevState => ({
+            ...prevState,
+            materials: result?.data?.listMaterials?.items,
+        }));
+    };
+
+    private loadTools = async () => {
+        const result: GqlQuery<ListToolsQuery> = await API.graphql({
+            query: graphQLQueries.listToolsQuery,
+            // @ts-ignore
+            authMode: 'AWS_IAM',
+        });
+
+        this.setState(prevState => ({
+            ...prevState,
+            tools: result?.data?.listTools?.items,
+        }));
+    };
 
     render() {
         return (
@@ -159,7 +180,11 @@ class App extends React.Component<{}, AppProps> {
                             exact
                             path='/plans'
                             render={() => (
-                                <PlansList userId={this.state.userId} />
+                                <PlansList
+                                    userId={this.state.userId}
+                                    materials={this.state.materials}
+                                    tools={this.state.tools}
+                                />
                             )}
                         />
                         <Route
@@ -168,6 +193,8 @@ class App extends React.Component<{}, AppProps> {
                                 <PlanView
                                     userId={this.state.userId}
                                     planId={props.match.params.planId}
+                                    materials={this.state.materials}
+                                    tools={this.state.tools}
                                 />
                             )}
                         />
@@ -175,14 +202,22 @@ class App extends React.Component<{}, AppProps> {
                             exact
                             path='/my-mtf'
                             render={() => (
-                                <Dashboard userId={this.state.userId} />
+                                <Dashboard
+                                    userId={this.state.userId}
+                                    materials={this.state.materials}
+                                    tools={this.state.tools}
+                                />
                             )}
                         />
                         <Route
                             exact
                             path='/my-mtf/create-plan'
                             render={() => (
-                                <CreatePlan userId={this.state.userId} />
+                                <CreatePlan
+                                    userId={this.state.userId}
+                                    materials={this.state.materials}
+                                    tools={this.state.tools}
+                                />
                             )}
                         />
                         <Route

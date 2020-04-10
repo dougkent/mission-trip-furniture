@@ -16,8 +16,8 @@ import {
 import ReactGA from 'react-ga';
 
 //MTF
-import { AppProps } from '../../models/props';
-import { AppState } from '../../models/states';
+import { BaseProps } from '../../models/props';
+import { BaseState } from '../../models/states';
 import { mtfTheme } from '../../themes';
 import * as workingTogether1Image from '../../assets/working-together-1.jpg';
 import * as workingTogether2Image from '../../assets/working-together-2.jpg';
@@ -159,9 +159,9 @@ const styles = (theme: Theme) =>
         },
     });
 
-export interface AboutProps extends AppProps, WithStyles<typeof styles> {}
+export interface AboutProps extends BaseProps, WithStyles<typeof styles> {}
 
-class About extends React.Component<AboutProps, AppState> {
+class About extends React.Component<AboutProps, BaseState> {
     constructor(props: AboutProps) {
         super(props);
 
@@ -176,7 +176,9 @@ class About extends React.Component<AboutProps, AppState> {
 
     componentDidUpdate(prevProps: AboutProps) {
         if (this.props.userId !== prevProps.userId) {
-            this.setState({ userId: this.props.userId });
+            this.setState({
+                userId: this.props.userId,
+            });
         }
     }
     render() {

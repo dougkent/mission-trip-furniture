@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 // AWS
 import { API, graphqlOperation, Storage } from 'aws-amplify';
-import { Connect, withAuthenticator } from 'aws-amplify-react';
+import { withAuthenticator } from 'aws-amplify-react';
 
 // Material UI
 import {
@@ -39,15 +39,12 @@ import {
 import { signUpConfig } from '../../models/sign-up-config.model';
 import {
     GqlQuery,
-    ListToolsQuery,
-    ListMaterialsQuery,
-    CreatePlanToolInput,
-    CreatePlanMaterialInput,
     CreatePlanMutation,
     Material,
     Tool,
     GetPlanQuery,
 } from '../../models/api-models';
+import * as graphQLQueries from '../../graphql/queries';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -90,49 +87,10 @@ const styles = (theme: Theme) =>
 export interface CreatePlanProps extends AppProps, WithStyles<typeof styles> {}
 
 class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
-    private listMaterialsQuery = `query ListMaterials {
-            listMaterials {
-                items {
-                    id
-                    name
-                }
-            }
-        }`;
-
-    private listToolsQuery = `query ListTools {
-            listTools {
-                items {
-                    id
-                    name
-                }
-            }
-        }`;
-
-    private getPlanQuery = `query GetPlan($id: ID!) {
-            getPlan(id: $id){
-                id
-            }
-        }`;
-
-    private createPlanMutation = `mutation CreatePlan($input: CreatePlanInput!) {
-        createPlan(input: $input) {
-            id
-        }
-    }`;
-
-    private createPlanMaterialMutation = `mutation CreatePlanMaterial($input: CreatePlanMaterialInput!) {
-        createPlanMaterial(input: $input) {
-            id
-        }
-    }`;
-
-    private createPlanToolMutation = `mutation CreatePlanTool($input: CreatePlanToolInput!) {
-        createPlanTool(input: $input) {
-            id
-        }
-    }`;
-
     private initialState: CreatePlanState = {
+        userId: this.props.userId,
+        materials: this.props.materials,
+        tools: this.props.tools,
         imageFile: null,
         pdfFile: null,
         plan: {
@@ -144,13 +102,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             created: '',
             favoritedCount: 0,
             downloadedCount: 0,
+            requiredMaterialIds: [],
+            requiredToolIds: [],
             planCreatedById: this.props.userId,
         },
         selectedMaterials: [],
         selectedTools: [],
         loading: false,
         createComplete: false,
-        userId: this.props.userId,
         errors: [],
     };
 
@@ -164,10 +123,16 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         ReactGA.ga('send', 'pageview', window.location.pathname);
     }
     async componentDidUpdate(prevProps: CreatePlanProps) {
-        if (this.props.userId !== prevProps.userId) {
+        if (
+            this.props.userId !== prevProps.userId ||
+            this.props.materials !== prevProps.materials ||
+            this.props.tools !== prevProps.tools
+        ) {
             this.setState(prevState => ({
                 ...prevState,
                 userId: this.props.userId,
+                materials: this.props.materials,
+                tools: this.props.tools,
                 plan: {
                     ...prevState.plan,
                     planCreatedById: this.props.userId,
@@ -255,6 +220,10 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             plan: {
                 ...prevState.plan,
                 created: new Date().toISOString(),
+                requiredMaterialIds: prevState.selectedMaterials.map(
+                    material => material.id
+                ),
+                requiredToolIds: prevState.selectedTools.map(tool => tool.id),
             },
         }));
 
@@ -270,7 +239,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }
 
         const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
-            graphqlOperation(this.createPlanMutation, {
+            graphqlOperation(graphQLQueries.createPlanMutation, {
                 input: this.state.plan,
             })
         );
@@ -278,34 +247,6 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         if (planResult.data.createPlan.id) {
             await this.uploadPdf();
             await this.uploadImage();
-
-            this.state.selectedMaterials.forEach(async material => {
-                const planMaterialInput: CreatePlanMaterialInput = {
-                    id: uuid(),
-                    planMaterialMaterialId: material.id,
-                    planMaterialPlanId: this.state.plan.id,
-                };
-
-                await API.graphql(
-                    graphqlOperation(this.createPlanMaterialMutation, {
-                        input: planMaterialInput,
-                    })
-                );
-            });
-
-            this.state.selectedTools.forEach(async tool => {
-                const planToolInput: CreatePlanToolInput = {
-                    id: uuid(),
-                    planToolToolId: tool.id,
-                    planToolPlanId: this.state.plan.id,
-                };
-
-                await API.graphql(
-                    graphqlOperation(this.createPlanToolMutation, {
-                        input: planToolInput,
-                    })
-                );
-            });
 
             ReactGA.event({
                 category: 'create',
@@ -426,7 +367,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
     private planAlreadyExists = async (): Promise<boolean> => {
         const planResult: GqlQuery<GetPlanQuery> = await API.graphql(
-            graphqlOperation(this.getPlanQuery, {
+            graphqlOperation(graphQLQueries.getPlanIdQuery, {
                 id: this.state.plan.id,
             })
         );
@@ -492,58 +433,22 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                             />
                         </div>
                         <div className={classes.formRow}>
-                            <Connect
-                                query={graphqlOperation(this.listToolsQuery)}>
-                                {({
-                                    data: { listTools },
-                                    loading,
-                                }: GqlQuery<ListToolsQuery>) => {
-                                    return (
-                                        <ToolsSelector
-                                            label='Select Tools Required for this Plan'
-                                            tools={
-                                                !!listTools
-                                                    ? listTools.items
-                                                    : null
-                                            }
-                                            loading={loading}
-                                            onSelect={this.handleToolSelected}
-                                            selectedTools={
-                                                this.state.selectedTools
-                                            }
-                                        />
-                                    );
-                                }}
-                            </Connect>
+                            <ToolsSelector
+                                label='Select Tools Required for this Plan'
+                                tools={this.state.tools}
+                                loading={false}
+                                onSelect={this.handleToolSelected}
+                                selectedTools={this.state.selectedTools}
+                            />
                         </div>
                         <div className={classes.formRow}>
-                            <Connect
-                                query={graphqlOperation(
-                                    this.listMaterialsQuery
-                                )}>
-                                {({
-                                    data: { listMaterials },
-                                    loading,
-                                }: GqlQuery<ListMaterialsQuery>) => {
-                                    return (
-                                        <MaterialsSelector
-                                            label='Select Materials Required for this Plan'
-                                            materials={
-                                                !!listMaterials
-                                                    ? listMaterials.items
-                                                    : null
-                                            }
-                                            loading={loading}
-                                            onSelect={
-                                                this.handleMaterialSelected
-                                            }
-                                            selectedMaterials={
-                                                this.state.selectedMaterials
-                                            }
-                                        />
-                                    );
-                                }}
-                            </Connect>
+                            <MaterialsSelector
+                                label='Select Materials Required for this Plan'
+                                materials={this.state.materials}
+                                loading={false}
+                                onSelect={this.handleMaterialSelected}
+                                selectedMaterials={this.state.selectedMaterials}
+                            />
                         </div>
                         <div
                             className={`${classes.formRow} ${classes.multiCardRow}`}>

@@ -9,12 +9,11 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControlLabel,
     FormGroup,
+    Hidden,
     IconButton,
     makeStyles,
     Slide,
-    Switch,
     Theme,
     Typography,
 } from '@material-ui/core';
@@ -98,7 +97,6 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             flexWrap: 'wrap',
             paddingTop: theme.spacing(3),
-            paddingBottom: theme.spacing(3),
         },
         filterBarItem: {
             marginRight: theme.spacing(2),
@@ -107,6 +105,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         filterBarItemFixedWidth: {
             width: theme.spacing(30),
+            [theme.breakpoints.up('lg')]: {
+                width: 'auto',
+                minWidth: theme.spacing(30),
+                maxWidth: theme.spacing(60),
+            },
         },
         filterBarToggle: {
             display: 'flex',
@@ -141,12 +144,9 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
     const [filterBarOpen, setFilterBarOpen] = useState<boolean>(false);
 
     const handleApply = () => {
-        console.log(filterState);
-
         props.onApply(filterState);
 
         setFilterDialogOpen(false);
-        setFilterBarOpen(false);
     };
 
     const handleDateChange = (key: string) => (date: any) => {
@@ -172,15 +172,6 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
         setFilterState({
             ...filterState,
             filterTools: tools,
-        });
-    };
-
-    const handleSwitchChange = (key: string) => (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setFilterState({
-            ...filterState,
-            [key]: event.target.checked,
         });
     };
 
@@ -243,65 +234,13 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     }
                                 />
                             </div>
-                            <FormControlLabel
-                                label='You Favorited'
-                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}
-                                control={
-                                    <Switch
-                                        checked={
-                                            filterState.filterFavoritedByUser
-                                        }
-                                        onChange={handleSwitchChange(
-                                            'filterFavoritedByUser'
-                                        )}
-                                        value={
-                                            filterState.filterFavoritedByUser
-                                        }
-                                        color='secondary'
-                                    />
-                                }
-                            />
-                            <FormControlLabel
-                                label='You Created'
-                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}
-                                control={
-                                    <Switch
-                                        checked={
-                                            filterState.filterCreatedByUser
-                                        }
-                                        onChange={handleSwitchChange(
-                                            'filterCreatedByUser'
-                                        )}
-                                        value={filterState.filterCreatedByUser}
-                                        color='secondary'
-                                    />
-                                }
-                            />
-                            <FormControlLabel
-                                label='You Downloaded'
-                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}
-                                control={
-                                    <Switch
-                                        checked={
-                                            filterState.filterDownloadedByUser
-                                        }
-                                        onChange={handleSwitchChange(
-                                            'filterDownloadedByUser'
-                                        )}
-                                        value={
-                                            filterState.filterDownloadedByUser
-                                        }
-                                        color='secondary'
-                                    />
-                                }
-                            />
                             <div className={`${classes.dialogFilterDateRow}`}>
                                 <div
                                     className={`${classes.dialogDatePicker} ${classes.dialogDatePickerLabel}`}>
                                     <Typography>Plan Created After:</Typography>
                                     <Button
                                         onClick={handleDateChange(
-                                            'filterCreatedRangeStart'
+                                            'filterCreatedAfter'
                                         )}>
                                         Clear
                                     </Button>
@@ -313,9 +252,9 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     disableToolbar
                                     clearable
                                     openTo='date'
-                                    value={filterState.filterCreatedRangeStart}
+                                    value={filterState.filterCreatedAfter}
                                     onChange={handleDateChange(
-                                        'filterCreatedRangeStart'
+                                        'filterCreatedAfter'
                                     )}
                                     className={classes.dialogDatePicker}
                                 />
@@ -361,42 +300,6 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                         selectedMaterials={filterState.filterMaterials}
                     />
                 </div>
-                <div
-                    className={`${classes.filterBarItem} ${classes.filterBarToggle}`}>
-                    <Switch
-                        checked={filterState.filterFavoritedByUser}
-                        onChange={handleSwitchChange('filterFavoritedByUser')}
-                        value={filterState.filterFavoritedByUser}
-                        color='secondary'
-                    />
-                    <Typography noWrap className={classes.filterBarItemText}>
-                        You Favorited
-                    </Typography>
-                </div>
-                <div
-                    className={`${classes.filterBarItem} ${classes.filterBarToggle}`}>
-                    <Switch
-                        checked={filterState.filterCreatedByUser}
-                        onChange={handleSwitchChange('filterCreatedByUser')}
-                        value={filterState.filterCreatedByUser}
-                        color='secondary'
-                    />
-                    <Typography noWrap className={classes.filterBarItemText}>
-                        You Created
-                    </Typography>
-                </div>
-                <div
-                    className={`${classes.filterBarItem} ${classes.filterBarToggle}`}>
-                    <Switch
-                        checked={filterState.filterDownloadedByUser}
-                        onChange={handleSwitchChange('filterDownloadedByUser')}
-                        value={filterState.filterDownloadedByUser}
-                        color='secondary'
-                    />
-                    <Typography noWrap className={classes.filterBarItemText}>
-                        You Downloaded
-                    </Typography>
-                </div>
                 <div>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <DatePicker
@@ -406,10 +309,8 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                             clearable
                             openTo='date'
                             label='Plan Created After'
-                            value={filterState.filterCreatedRangeStart}
-                            onChange={handleDateChange(
-                                'filterCreatedRangeStart'
-                            )}
+                            value={filterState.filterCreatedAfter}
+                            onChange={handleDateChange('filterCreatedAfter')}
                         />
                     </MuiPickersUtilsProvider>
                 </div>
@@ -447,8 +348,8 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                 <FilterListSharpIcon />
                 <span className={classes.filterButtonText}>Filter</span>
             </Button>
-            {renderMobileFilterDialog()}
-            {filterBarOpen && renderFilterBar()}
+            <Hidden mdUp>{renderMobileFilterDialog()}</Hidden>
+            <Hidden smDown>{filterBarOpen && renderFilterBar()}</Hidden>
         </>
     );
 };
