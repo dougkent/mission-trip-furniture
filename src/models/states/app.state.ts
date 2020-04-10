@@ -5,4 +5,5 @@ export interface AppState extends BaseState {
     userId: string;
     materials: Material[];
     tools: Tool[];
+    userFavoritedPlanIds: string[];
 }

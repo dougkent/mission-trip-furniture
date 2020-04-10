@@ -91,6 +91,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         userId: this.props.userId,
         materials: this.props.materials,
         tools: this.props.tools,
+        userFavoritedPlanIds: this.props.userFavoritedPlanIds,
         imageFile: null,
         pdfFile: null,
         plan: {
@@ -119,10 +120,10 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         this.state = this.initialState;
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         ReactGA.ga('send', 'pageview', window.location.pathname);
-    }
-    async componentDidUpdate(prevProps: CreatePlanProps) {
+    };
+    componentDidUpdate = async (prevProps: CreatePlanProps) => {
         if (
             this.props.userId !== prevProps.userId ||
             this.props.materials !== prevProps.materials ||
@@ -139,13 +140,12 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                 },
             }));
         }
-    }
+    };
 
     private handleClearErrors = () => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             errors: [],
-        }));
+        });
     };
 
     private getPlanId = (planName: string) => {
@@ -181,10 +181,9 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     };
 
     private handleMaterialSelected = (materials: Material[]) => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             selectedMaterials: materials,
-        }));
+        });
     };
 
     private handlePdfDeselect = async () => {
@@ -230,11 +229,10 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         const errors = await this.validateForm();
 
         if (errors.length > 0) {
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 loading: false,
                 errors: errors,
-            }));
+            });
             return;
         }
 
@@ -255,20 +253,18 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
             setTimeout(
                 () =>
-                    this.setState(prevState => ({
-                        ...prevState,
+                    this.setState({
                         createComplete: true,
-                    })),
+                    }),
                 1000
             );
         } else {
-            this.setState(prevState => ({
-                ...prevState,
+            this.setState({
                 loading: false,
                 errors: [
                     'An unexpected error occurred when creating this plan. Please try again.',
                 ],
-            }));
+            });
         }
     };
 
@@ -294,10 +290,9 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     };
 
     private handleToolSelected = (tools: Tool[]) => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             selectedTools: tools,
-        }));
+        });
     };
 
     private isPlanIdAlphaNumeric = (): boolean => {
@@ -392,7 +387,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         });
     };
 
-    render() {
+    render = () => {
         const { classes } = this.props;
 
         if (this.state.createComplete) {
@@ -482,7 +477,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                 </Paper>
             );
         }
-    }
+    };
 }
 
 export default withStyles(styles(mtfTheme))(

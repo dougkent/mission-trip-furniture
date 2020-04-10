@@ -31,7 +31,6 @@ import {
     SearchableSortDirectionEnum,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
-import { PlanFavoriteService } from '../../services';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -68,8 +67,6 @@ const styles = (theme: Theme) =>
 export interface PlanListProps extends AppProps, WithStyles<typeof styles> {}
 
 class PlansList extends React.Component<PlanListProps, PlanListState> {
-    private planFavoriteService = new PlanFavoriteService();
-
     constructor(props: PlanListProps) {
         super(props);
 
@@ -77,6 +74,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             userId: props.userId,
             materials: props.materials,
             tools: props.tools,
+            userFavoritedPlanIds: props.userFavoritedPlanIds,
             filterState: {
                 filterMaterials: [],
                 filterTools: [],
@@ -93,25 +91,49 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             totalCount: 0,
         };
     }
-    componentDidMount() {
+    componentDidMount = () => {
         ReactGA.ga('send', 'pageview', window.location.pathname);
 
         this.loadPlans();
-    }
+    };
 
-    componentDidUpdate(prevProps: PlanListProps) {
+    componentDidUpdate = async (prevProps: PlanListProps) => {
+        if (this.props.userId !== prevProps.userId) {
+            await this.setState({
+                userId: this.props.userId,
+            });
+        }
+
         if (
-            this.props.userId !== prevProps.userId ||
             this.props.materials !== prevProps.materials ||
             this.props.tools !== prevProps.tools
         ) {
-            this.setState({
-                userId: this.props.userId,
+            await this.setState({
                 materials: this.props.materials,
                 tools: this.props.tools,
             });
+
+            const decoratedPlans = this.decoratePlans(this.state.plans);
+
+            this.setState({
+                plans: decoratedPlans,
+            });
         }
-    }
+
+        if (
+            this.props.userFavoritedPlanIds !== prevProps.userFavoritedPlanIds
+        ) {
+            await this.setState({
+                userFavoritedPlanIds: this.props.userFavoritedPlanIds,
+            });
+
+            const decoratedPlans = this.decoratePlans(this.state.plans);
+
+            this.setState({
+                plans: decoratedPlans,
+            });
+        }
+    };
     private buildSearch = (): SearchablePlanFilterInput => {
         let search: SearchablePlanFilterInput = null;
 
@@ -187,11 +209,31 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         return search;
     };
 
+    private decoratePlans = (plans: Plan[]): Plan[] => {
+        const mappedPlans: Plan[] = plans.map(plan => {
+            return {
+                ...plan,
+                requiredMaterials: this.state.materials.filter(material => {
+                    return !!plan.requiredMaterialIds.find(
+                        id => id === material.id
+                    );
+                }),
+                requiredTools: this.state.tools.filter(tool => {
+                    return !!plan.requiredToolIds.find(id => id === tool.id);
+                }),
+                isFavoritedByUser: this.state.userFavoritedPlanIds.some(
+                    planId => planId === plan.id
+                ),
+            };
+        });
+
+        return mappedPlans;
+    };
+
     private handleApplyFilter = async (filterState: FilterState) => {
-        await this.setState(prevState => ({
-            ...prevState,
+        await this.setState({
             filterState: filterState,
-        }));
+        });
 
         this.loadPlans();
 
@@ -202,10 +244,9 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
     };
 
     private handleSearch = async (searchState: SearchState) => {
-        await this.setState(prevState => ({
-            ...prevState,
+        await this.setState({
             searchState: searchState,
-        }));
+        });
 
         this.loadPlans();
 
@@ -223,43 +264,21 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         planId: string,
         toggleFavOn: boolean
     ) => {
-        if (toggleFavOn) {
-            await this.planFavoriteService.createFavorite(
-                planId,
-                this.state.userId
-            );
+        ReactGA.event({
+            category: 'favorite',
+            action: toggleFavOn
+                ? 'User Favorited Plan'
+                : 'User Unfavorited Plan',
+            label: 'favorite on plan list page',
+        });
 
-            ReactGA.event({
-                category: 'favorite',
-                action: 'User Favorited Plan',
-                label: 'favorite on plan list page',
-            });
-        } else {
-            await this.planFavoriteService.deleteFavorite(
-                planId,
-                this.state.userId
-            );
-
-            ReactGA.event({
-                category: 'favorite',
-                action: 'User Unfavorited Plan',
-                label: 'favorite on plan list page',
-            });
-        }
-    };
-
-    private isFavoritedByUser = (plan: Plan): boolean => {
-        return this.planFavoriteService.isFavoritedByUser(
-            this.state.userId,
-            plan
-        );
+        this.props.onPlanFavorite(planId, toggleFavOn);
     };
 
     private loadPlans = async (isNextPage: boolean = false) => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             loading: true,
-        }));
+        });
 
         const search = this.buildSearch();
 
@@ -284,19 +303,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
 
         const { searchPlans } = result.data;
 
-        const mappedPlans = searchPlans.items.map(plan => {
-            return {
-                ...plan,
-                requiredMaterials: this.state.materials.filter(material => {
-                    return !!plan.requiredMaterialIds.find(
-                        id => id === material.id
-                    );
-                }),
-                requiredTools: this.state.tools.filter(tool => {
-                    return !!plan.requiredToolIds.find(id => id === tool.id);
-                }),
-            };
-        });
+        const mappedPlans = this.decoratePlans(searchPlans.items);
 
         this.setState(prevState => ({
             ...prevState,
@@ -308,7 +315,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             totalCount: searchPlans.total,
         }));
     };
-    render() {
+    render = () => {
         const { classes } = this.props;
 
         return (
@@ -336,12 +343,11 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                     emptyText='No Plans Found'
                     gridItemClassName={classes.gridItem}
                     onNextPage={this.handleNextPage}
-                    isFavoritedByUser={this.isFavoritedByUser}
                     onTogglePlanFavorite={this.handleTogglePlanFavorite}
                 />
             </div>
         );
-    }
+    };
 }
 
 export default withStyles(styles(mtfTheme))(PlansList);

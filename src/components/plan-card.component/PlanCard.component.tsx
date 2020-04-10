@@ -105,6 +105,10 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
     );
 
     useEffect(() => {
+        setPlanState(props.plan);
+    }, [props.plan]);
+
+    useEffect(() => {
         setIsFavoritedByUser(props.isFavoritedByUser);
     }, [props.isFavoritedByUser]);
 

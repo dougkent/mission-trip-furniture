@@ -21,7 +21,10 @@ export interface Plan {
     downloadedCount: number;
     downloadedBy: ModelDownloadConnection | null;
     requiredMaterialIds: string[] | null;
-    requiredMaterials: Material[] | null;
     requiredToolIds: string[] | null;
+
+    // Not Mapped to GQL Properties
+    requiredMaterials: Material[] | null;
     requiredTools: Tool[] | null;
+    isFavoritedByUser: boolean;
 }

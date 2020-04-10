@@ -39,7 +39,6 @@ import {
     Plan,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
-import { PlanFavoriteService } from '../../services';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -103,8 +102,6 @@ const styles = (theme: Theme) =>
 export interface DashboardProps extends AppProps, WithStyles<typeof styles> {}
 
 class Dashboard extends React.Component<DashboardProps, DashboardState> {
-    private planFavoriteService = new PlanFavoriteService();
-
     constructor(props: DashboardProps) {
         super(props);
 
@@ -112,6 +109,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             userId: props.userId,
             materials: props.materials,
             tools: props.tools,
+            userFavoritedPlanIds: props.userFavoritedPlanIds,
             currentTab: DashboardTabsEnum.CREATED_PLANS,
             createdPlans: [],
             createdPlansNextToken: null,
@@ -122,51 +120,91 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         ReactGA.ga('send', 'pageview', window.location.pathname);
 
         if (this.state.userId) {
             this.loadCreatedPlans();
             this.loadFavoritedPlans();
         }
-    }
+    };
 
-    async componentDidUpdate(prevProps: DashboardProps) {
+    componentDidUpdate = async (prevProps: DashboardProps) => {
         if (
             this.props.userId !== prevProps.userId ||
             this.props.materials !== prevProps.materials ||
-            this.props.tools !== prevProps.tools
+            this.props.tools !== prevProps.tools ||
+            this.props.userFavoritedPlanIds !== prevProps.userFavoritedPlanIds
         ) {
-            await this.setState(prevState => ({
-                ...prevState,
+            await this.setState({
                 userId: this.props.userId,
                 materials: this.props.materials,
                 tools: this.props.tools,
-            }));
+                userFavoritedPlanIds: this.props.userFavoritedPlanIds,
+            });
 
             if (this.props.userId !== prevProps.userId) {
                 this.loadCreatedPlans();
                 this.loadFavoritedPlans();
             }
+
+            if (
+                this.props.materials !== prevProps.materials ||
+                this.props.tools !== prevProps.tools ||
+                this.props.userFavoritedPlanIds !==
+                    prevProps.userFavoritedPlanIds
+            ) {
+                const decoratedCreatedPlans = this.decoratePlans(
+                    this.state.createdPlans
+                );
+                const decoratedFavoritedPlans = this.decoratePlans(
+                    this.state.favoritedPlans
+                );
+
+                this.setState({
+                    createdPlans: decoratedCreatedPlans,
+                    favoritedPlans: decoratedFavoritedPlans,
+                });
+            }
         }
-    }
+    };
+
+    private decoratePlans = (plans: Plan[]): Plan[] => {
+        const mappedPlans: Plan[] = plans.map(plan => {
+            return {
+                ...plan,
+                requiredMaterials: this.state.materials.filter(material => {
+                    return !!plan.requiredMaterialIds.find(
+                        id => id === material.id
+                    );
+                }),
+                requiredTools: this.state.tools.filter(tool => {
+                    return !!plan.requiredToolIds.find(id => id === tool.id);
+                }),
+                isFavoritedByUser: this.state.userFavoritedPlanIds.some(
+                    planId => planId === plan.id
+                ),
+            };
+        });
+
+        return mappedPlans;
+    };
 
     private handleNextCreatedPlanPage = async () => {
-        this.loadCreatedPlans();
+        this.loadCreatedPlans(true);
     };
 
     private handleNextFavoritedPlanPage = async () => {
-        this.loadFavoritedPlans();
+        this.loadFavoritedPlans(true);
     };
 
     private handleTabChange = (
         event: React.ChangeEvent<{}>,
         newValue: DashboardTabsEnum
     ) => {
-        this.setState(prevState => ({
-            ...prevState,
+        this.setState({
             currentTab: newValue,
-        }));
+        });
 
         switch (newValue) {
             case DashboardTabsEnum.CREATED_PLANS:
@@ -186,61 +224,31 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         planId: string,
         toggleFavOn: boolean
     ) => {
-        if (toggleFavOn) {
-            await this.planFavoriteService.createFavorite(
-                planId,
-                this.state.userId
-            );
-
-            ReactGA.event({
-                category: 'favorite',
-                action: 'User Favorited Plan',
-                label: 'favorite on plan list page',
-            });
-        } else {
-            await this.planFavoriteService.deleteFavorite(
-                planId,
-                this.state.userId
-            );
-
-            ReactGA.event({
-                category: 'favorite',
-                action: 'User Unfavorited Plan',
-                label: 'favorite on plan list page',
-            });
-        }
-    };
-
-    private includeMaterialsAndToolsOnPlan(plans: Plan[]): Plan[] {
-        const mappedPlans: Plan[] = plans.map(plan => {
-            return {
-                ...plan,
-                requiredMaterials: this.state.materials.filter(material => {
-                    return !!plan.requiredMaterialIds.find(
-                        id => id === material.id
-                    );
-                }),
-                requiredTools: this.state.tools.filter(tool => {
-                    return !!plan.requiredToolIds.find(id => id === tool.id);
-                }),
-            };
+        ReactGA.event({
+            category: 'favorite',
+            action: toggleFavOn
+                ? 'User Favorited Plan'
+                : 'User Unfavorited Plan',
+            label: 'favorite on plan list page',
         });
 
-        return mappedPlans;
-    }
+        this.props.onPlanFavorite(planId, toggleFavOn);
 
-    private isFavoritedByUser = (plan: Plan): boolean => {
-        return this.planFavoriteService.isFavoritedByUser(
-            this.state.userId,
-            plan
-        );
+        this.setState({
+            favoritedPlansLoading: true,
+            favoritedPlans: [],
+        });
+
+        setTimeout(() => {
+            this.loadFavoritedPlans();
+            this.loadCreatedPlans();
+        }, 1000);
     };
 
-    private loadCreatedPlans = async () => {
-        this.setState(prevState => ({
-            ...prevState,
+    private loadCreatedPlans = async (isNextPage: boolean = false) => {
+        this.setState({
             createdPlansLoading: true,
-        }));
+        });
 
         const result: GqlQuery<GetUserQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.getUserQuery, {
@@ -252,23 +260,22 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         const { createdPlans } = result.data.getUser;
 
-        const mappedPlans = this.includeMaterialsAndToolsOnPlan(
-            createdPlans.items
-        );
+        const mappedPlans = this.decoratePlans(createdPlans.items);
 
         this.setState(prevState => ({
             ...prevState,
             createdPlansLoading: false,
-            createdPlans: prevState.createdPlans.concat(mappedPlans),
+            createdPlans: isNextPage
+                ? prevState.createdPlans.concat(mappedPlans)
+                : mappedPlans,
             createdPlansNextToken: createdPlans.nextToken,
         }));
     };
 
-    private loadFavoritedPlans = async () => {
-        this.setState(prevState => ({
-            ...prevState,
+    private loadFavoritedPlans = async (isNextPage: boolean = false) => {
+        this.setState({
             favoritedPlansLoading: true,
-        }));
+        });
 
         const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
@@ -294,12 +301,14 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             favoritedPlans.push(result.data.getPlan);
         }
 
-        const mappedPlans = this.includeMaterialsAndToolsOnPlan(favoritedPlans);
+        const mappedPlans = this.decoratePlans(favoritedPlans);
 
         this.setState(prevState => ({
             ...prevState,
             favoritedPlansLoading: false,
-            favoritedPlans: prevState.favoritedPlans.concat(mappedPlans),
+            favoritedPlans: isNextPage
+                ? prevState.favoritedPlans.concat(mappedPlans)
+                : mappedPlans,
             favoritedPlansNextToken: getFavoriteByUserId.nextToken,
         }));
     };
@@ -336,7 +345,6 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     emptyText='No Plans Created Yet'
                     gridItemClassName={classes.gridItem}
                     onNextPage={this.handleNextCreatedPlanPage}
-                    isFavoritedByUser={this.isFavoritedByUser}
                     onTogglePlanFavorite={this.handleTogglePlanFavorite}
                 />
             </div>
@@ -359,14 +367,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     emptyText='No Plans Favorited Yet'
                     gridItemClassName={classes.gridItem}
                     onNextPage={this.handleNextFavoritedPlanPage}
-                    isFavoritedByUser={this.isFavoritedByUser}
                     onTogglePlanFavorite={this.handleTogglePlanFavorite}
                 />
             </div>
         );
     };
 
-    render() {
+    render = () => {
         const { classes } = this.props;
 
         if (!this.state.userId) {
@@ -411,7 +418,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 </>
             );
         }
-    }
+    };
 }
 
 export default withStyles(styles(mtfTheme))(

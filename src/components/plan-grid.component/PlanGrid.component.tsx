@@ -30,10 +30,15 @@ const PlanGrid: React.FC<PlanGridProps> = (props: PlanGridProps) => {
     const classes = useStyles(mtfTheme);
 
     const [loading, setLoading] = useState<boolean>(props.loading);
+    const [plans, setPlans] = useState<Plan[]>(props.plans);
 
     useEffect(() => {
         setLoading(props.loading);
     }, [props.loading]);
+
+    useEffect(() => {
+        setPlans(props.plans);
+    }, [props.plans]);
 
     const handleNextPage = () => {
         setLoading(true);
@@ -45,16 +50,12 @@ const PlanGrid: React.FC<PlanGridProps> = (props: PlanGridProps) => {
         props.onTogglePlanFavorite(planId, toggleFavOn);
     };
 
-    const isFavoritedByUser = (plan: Plan): boolean => {
-        return props.isFavoritedByUser(plan);
-    };
-
     return (
         <>
             {!loading && !props.plans.length && (
                 <Typography variant='h4'>{props.emptyText}</Typography>
             )}
-            {props.plans.length > 0 && (
+            {plans.length > 0 && (
                 <>
                     <Grid container spacing={2}>
                         {props.plans.map(plan => (
@@ -65,7 +66,7 @@ const PlanGrid: React.FC<PlanGridProps> = (props: PlanGridProps) => {
                                 <PlanCard
                                     plan={plan}
                                     userId={props.userId}
-                                    isFavoritedByUser={isFavoritedByUser(plan)}
+                                    isFavoritedByUser={plan.isFavoritedByUser}
                                     onToggleFavorite={handleTogglePlanFavorite}
                                 />
                             </Grid>

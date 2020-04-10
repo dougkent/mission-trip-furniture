@@ -170,18 +170,18 @@ class About extends React.Component<AboutProps, BaseState> {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         ReactGA.ga('send', 'pageview', window.location.pathname);
-    }
+    };
 
-    componentDidUpdate(prevProps: AboutProps) {
+    componentDidUpdate = (prevProps: AboutProps) => {
         if (this.props.userId !== prevProps.userId) {
             this.setState({
                 userId: this.props.userId,
             });
         }
-    }
-    render() {
+    };
+    render = () => {
         const { classes } = this.props;
 
         return (
@@ -368,7 +368,7 @@ class About extends React.Component<AboutProps, BaseState> {
                 </Typography>
             </div>
         );
-    }
+    };
 }
 
 export default withStyles(styles(mtfTheme))(About);

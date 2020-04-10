@@ -62,19 +62,19 @@ class NotFound extends React.Component<NotFoundProps, BaseState> {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         ReactGA.ga('send', 'pageview', window.location.pathname);
-    }
+    };
 
-    componentDidUpdate(prevProps: NotFoundProps) {
+    componentDidUpdate = (prevProps: NotFoundProps) => {
         if (this.props.userId !== prevProps.userId) {
             this.setState({
                 userId: this.props.userId,
             });
         }
-    }
+    };
 
-    render() {
+    render = () => {
         const { classes } = this.props;
 
         return (
@@ -110,7 +110,7 @@ class NotFound extends React.Component<NotFoundProps, BaseState> {
                 </div>
             </div>
         );
-    }
+    };
 }
 
 export default withStyles(styles(mtfTheme))(NotFound);
