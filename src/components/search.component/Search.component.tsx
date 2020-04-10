@@ -65,7 +65,7 @@ const Search: React.FC<SearchProps> = (props: SearchProps) => {
         props.onSearch(searchState);
     };
 
-    const handleTextChange = (event: React.ChangeEvent) => {
+    const handleTextChange = async (event: React.ChangeEvent) => {
         const element = event.target as HTMLInputElement;
 
         setSearchState({

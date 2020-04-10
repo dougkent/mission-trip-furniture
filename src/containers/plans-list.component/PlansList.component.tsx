@@ -108,6 +108,81 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         }
     }
 
+    private buildSearch = (): SearchablePlanFilterInput => {
+        let search: SearchablePlanFilterInput = null;
+
+        if (this.state.searchState.searchTerm?.length) {
+            const descriptionSearch: SearchablePlanFilterInput = {
+                description: {
+                    matchPhrase: this.state.searchState.searchTerm,
+                },
+            };
+            const nameSearch: SearchablePlanFilterInput = {
+                name: {
+                    matchPhrase: this.state.searchState.searchTerm,
+                },
+            };
+
+            search = {
+                or: [nameSearch, descriptionSearch],
+            };
+        }
+
+        if (this.state.filterState.filterMaterials.length) {
+            let materialSearch = this.state.filterState.filterMaterials.map(
+                (material): SearchablePlanFilterInput => {
+                    return {
+                        requiredMaterialIds: {
+                            eq: material.id,
+                        },
+                    };
+                }
+            );
+
+            if (search?.and) {
+                materialSearch = [...search.and, ...materialSearch];
+            }
+
+            search = { ...search, and: [...materialSearch] };
+        }
+
+        if (this.state.filterState.filterTools.length) {
+            let toolSearch = this.state.filterState.filterTools.map(
+                (tool): SearchablePlanFilterInput => {
+                    return {
+                        requiredToolIds: {
+                            eq: tool.id,
+                        },
+                    };
+                }
+            );
+
+            if (search?.and) {
+                toolSearch = [...search.and, ...toolSearch];
+            }
+
+            search = { ...search, and: [...toolSearch] };
+        }
+
+        if (this.state.filterState.filterCreatedAfter) {
+            let createdSearch: SearchablePlanFilterInput[] = [
+                {
+                    created: {
+                        gte: this.state.filterState.filterCreatedAfter.toISOString(),
+                    },
+                },
+            ];
+
+            if (search?.and) {
+                createdSearch = [...search.and, ...createdSearch];
+            }
+
+            search = { ...search, and: [...createdSearch] };
+        }
+
+        return search;
+    };
+
     private handleApplyFilter = async (filterState: FilterState) => {
         await this.setState(prevState => ({
             ...prevState,
@@ -182,60 +257,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             loading: true,
         }));
 
-        let search: SearchablePlanFilterInput = null;
-
-        if (this.state.searchState.searchTerm?.length) {
-            const descriptionSearch: SearchablePlanFilterInput = {
-                description: {
-                    matchPhrase: this.state.searchState.searchTerm,
-                },
-            };
-            const nameSearch: SearchablePlanFilterInput = {
-                name: {
-                    matchPhrase: this.state.searchState.searchTerm,
-                },
-            };
-
-            search = {
-                or: [nameSearch, descriptionSearch],
-            };
-        }
-
-        if (this.state.filterState.filterMaterials.length) {
-            let materialSearch = this.state.filterState.filterMaterials.map(
-                (material): SearchablePlanFilterInput => {
-                    return {
-                        requiredMaterialIds: {
-                            eq: material.id,
-                        },
-                    };
-                }
-            );
-
-            if (search?.and) {
-                materialSearch = [...search.and, ...materialSearch];
-            }
-
-            search = { ...search, and: [...materialSearch] };
-        }
-
-        if (this.state.filterState.filterTools.length) {
-            let toolSearch = this.state.filterState.filterTools.map(
-                (tool): SearchablePlanFilterInput => {
-                    return {
-                        requiredToolIds: {
-                            eq: tool.id,
-                        },
-                    };
-                }
-            );
-
-            if (search?.and) {
-                toolSearch = [...search.and, ...toolSearch];
-            }
-
-            search = { ...search, and: [...toolSearch] };
-        }
+        const search = this.buildSearch();
 
         const nextToken: string = isNextPage ? this.state.nextToken : null;
 
