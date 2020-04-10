@@ -27,6 +27,7 @@ export * from './mutation-delete-plan.model';
 export * from './mutation-update-plan.model';
 export * from './plan-connection.model';
 export * from './plan.model';
+export * from './query-get-download-by-user-id.model';
 export * from './query-get-favorite-by-plan-id.model';
 export * from './query-get-favorite-by-user-id.model';
 export * from './query-get-plan.model';

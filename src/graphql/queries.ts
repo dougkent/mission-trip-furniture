@@ -62,6 +62,15 @@ export const getUserQuery = `query GetUser($id: ID! $limit: Int!, $nextToken: St
     }
 }`;
 
+export const listDownloadsByUserQuery = `query GetDownloadsByUser($userId: ID!, $limit: Int!, $nextToken: String) {
+    getDownloadedByUserId(userId: $userId, limit: $limit, nextToken: $nextToken) {
+        nextToken
+        items {
+            planId
+        }
+    }
+}`;
+
 export const listFavoritesByUserQuery = `query GetFavoritesByUser($userId: ID!, $limit: Int!, $nextToken: String) {
     getFavoriteByUserId(userId: $userId, limit: $limit, nextToken: $nextToken) {
         nextToken

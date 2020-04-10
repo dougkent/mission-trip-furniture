@@ -86,7 +86,7 @@ type Download
     @auth(
         rules: [
             { allow: public, operations: [read], provider: iam }
-            { allow: owner, operations: [create, update, delete] }
+            { allow: owner, operations: [create, read, update, delete] }
         ]
     ) {
     id: ID!

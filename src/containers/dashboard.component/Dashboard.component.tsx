@@ -21,6 +21,9 @@ import {
 } from '@material-ui/core';
 import AddBoxSharpIcon from '@material-ui/icons/AddBoxSharp';
 import AddSharpIcon from '@material-ui/icons/AddSharp';
+import CloudDownloadSharpIcon from '@material-ui/icons/CloudDownloadSharp';
+import CreateNewFolderSharpIcon from '@material-ui/icons/CreateNewFolderSharp';
+import FavoriteSharpIcon from '@material-ui/icons/FavoriteSharp';
 
 // Google Analytics
 import ReactGA from 'react-ga';
@@ -32,10 +35,11 @@ import { mtfAmplifyTheme, mtfTheme } from '../../themes';
 import { PlanGrid } from '../../components';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import {
-    GqlQuery,
-    GetUserQuery,
+    GetDownloadedByUserIdQuery,
     GetFavoriteByUserIdQuery,
     GetPlanQuery,
+    GetUserQuery,
+    GqlQuery,
     Plan,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
@@ -57,14 +61,10 @@ const styles = (theme: Theme) =>
             padding: theme.spacing(2),
             width: '100%',
             marginBottom: theme.spacing(5),
-            [theme.breakpoints.up('md')]: {
-                width: '50%',
-            },
 
-            [theme.breakpoints.up('lg')]: {
-                padding: theme.spacing(5),
+            [theme.breakpoints.up('xl')]: {
                 minWidth: 523,
-                width: '50%',
+                width: '33.3333333333333%',
             },
         },
         listTitle: {
@@ -95,6 +95,11 @@ const styles = (theme: Theme) =>
             width: '100%',
             [theme.breakpoints.up('md')]: {
                 height: theme.spacing(29),
+                width: '50%',
+            },
+            [theme.breakpoints.up('xl')]: {
+                height: theme.spacing(29),
+                width: '100%',
             },
         },
     });
@@ -117,6 +122,9 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             favoritedPlans: [],
             favoritedPlansNextToken: null,
             favoritedPlansLoading: false,
+            downloadedPlans: [],
+            downloadedPlansNextToken: null,
+            downloadedPlansLoading: false,
         };
     }
 
@@ -126,6 +134,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         if (this.state.userId) {
             this.loadCreatedPlans();
             this.loadFavoritedPlans();
+            this.loadDownloadedPlans();
         }
     };
 
@@ -146,6 +155,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             if (this.props.userId !== prevProps.userId) {
                 this.loadCreatedPlans();
                 this.loadFavoritedPlans();
+                this.loadDownloadedPlans();
             }
 
             if (
@@ -160,10 +170,14 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 const decoratedFavoritedPlans = this.decoratePlans(
                     this.state.favoritedPlans
                 );
+                const decoratedDownloadedPlans = this.decoratePlans(
+                    this.state.downloadedPlans
+                );
 
                 this.setState({
                     createdPlans: decoratedCreatedPlans,
                     favoritedPlans: decoratedFavoritedPlans,
+                    downloadedPlans: decoratedDownloadedPlans,
                 });
             }
         }
@@ -193,6 +207,9 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     private handleNextCreatedPlanPage = async () => {
         this.loadCreatedPlans(true);
     };
+    private handleNextDownloadedPlanPage = async () => {
+        this.loadDownloadedPlans(true);
+    };
 
     private handleNextFavoritedPlanPage = async () => {
         this.loadFavoritedPlans(true);
@@ -215,6 +232,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             case DashboardTabsEnum.FAVORITED_PLANS:
                 if (!this.state.favoritedPlans.length) {
                     this.loadFavoritedPlans();
+                }
+                break;
+            case DashboardTabsEnum.DOWNLOADED_PLANS:
+                if (!this.state.downloadedPlans.length) {
+                    this.loadDownloadedPlans();
                 }
                 break;
         }
@@ -242,6 +264,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         setTimeout(() => {
             this.loadFavoritedPlans();
             this.loadCreatedPlans();
+            this.loadDownloadedPlans();
         }, 1000);
     };
 
@@ -313,6 +336,47 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         }));
     };
 
+    private loadDownloadedPlans = async (isNextPage: boolean = false) => {
+        this.setState({
+            downloadedPlansLoading: true,
+        });
+
+        const result: GqlQuery<GetDownloadedByUserIdQuery> = await API.graphql(
+            graphqlOperation(graphQLQueries.listDownloadsByUserQuery, {
+                userId: this.state.userId,
+                limit: 5,
+                nextToken: this.state.downloadedPlansNextToken,
+            })
+        );
+
+        const { getDownloadedByUserId } = result.data;
+
+        const downloadedPlans: Plan[] = [];
+
+        for (const i in getDownloadedByUserId.items) {
+            const planId = getDownloadedByUserId.items[i].planId;
+
+            const result: GqlQuery<GetPlanQuery> = await API.graphql(
+                graphqlOperation(graphQLQueries.getPlanQuery, {
+                    id: planId,
+                })
+            );
+
+            downloadedPlans.push(result.data.getPlan);
+        }
+
+        const mappedPlans = this.decoratePlans(downloadedPlans);
+
+        this.setState(prevState => ({
+            ...prevState,
+            downloadedPlansLoading: false,
+            downloadedPlans: isNextPage
+                ? prevState.downloadedPlans.concat(mappedPlans)
+                : mappedPlans,
+            downloadedPlansNextToken: getDownloadedByUserId.nextToken,
+        }));
+    };
+
     private renderCreatedPlansList = () => {
         const { classes } = this.props;
 
@@ -373,6 +437,28 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         );
     };
 
+    private renderDownloadedPlansList = () => {
+        const { classes } = this.props;
+
+        return (
+            <div className={classes.listContainer}>
+                <div className={classes.listTitle}>
+                    <Typography variant='h3'>Downloaded Plans</Typography>
+                </div>
+                <PlanGrid
+                    plans={this.state.downloadedPlans}
+                    userId={this.state.userId}
+                    nextToken={this.state.downloadedPlansNextToken}
+                    loading={this.state.downloadedPlansLoading}
+                    emptyText='No Plans Downloaded Yet'
+                    gridItemClassName={classes.gridItem}
+                    onNextPage={this.handleNextDownloadedPlanPage}
+                    onTogglePlanFavorite={this.handleTogglePlanFavorite}
+                />
+            </div>
+        );
+    };
+
     render = () => {
         const { classes } = this.props;
 
@@ -385,21 +471,53 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         } else {
             return (
                 <>
-                    <Hidden mdUp>
-                        <Tabs
-                            value={this.state.currentTab}
-                            onChange={this.handleTabChange}
-                            centered
-                            variant='fullWidth'>
-                            <Tab
-                                label='My Created Plans'
-                                value={DashboardTabsEnum.CREATED_PLANS}
-                            />
-                            <Tab
-                                label='My Favorited Plans'
-                                value={DashboardTabsEnum.FAVORITED_PLANS}
-                            />
-                        </Tabs>
+                    <Hidden xlUp>
+                        <Hidden smUp>
+                            <Tabs
+                                value={this.state.currentTab}
+                                onChange={this.handleTabChange}
+                                variant='scrollable'
+                                scrollButtons='auto'>
+                                <Tab
+                                    label='My Created Plans'
+                                    icon={<CreateNewFolderSharpIcon />}
+                                    value={DashboardTabsEnum.CREATED_PLANS}
+                                />
+                                <Tab
+                                    label='My Favorited Plans'
+                                    icon={<FavoriteSharpIcon />}
+                                    value={DashboardTabsEnum.FAVORITED_PLANS}
+                                />
+                                <Tab
+                                    label='My Downloaded Plans'
+                                    icon={<CloudDownloadSharpIcon />}
+                                    value={DashboardTabsEnum.DOWNLOADED_PLANS}
+                                />
+                            </Tabs>
+                        </Hidden>
+                        <Hidden xsDown>
+                            <Tabs
+                                value={this.state.currentTab}
+                                onChange={this.handleTabChange}
+                                centered
+                                variant='fullWidth'>
+                                <Tab
+                                    label='My Created Plans'
+                                    icon={<CreateNewFolderSharpIcon />}
+                                    value={DashboardTabsEnum.CREATED_PLANS}
+                                />
+                                <Tab
+                                    label='My Favorited Plans'
+                                    icon={<FavoriteSharpIcon />}
+                                    value={DashboardTabsEnum.FAVORITED_PLANS}
+                                />
+                                <Tab
+                                    label='My Downloaded Plans'
+                                    icon={<CloudDownloadSharpIcon />}
+                                    value={DashboardTabsEnum.DOWNLOADED_PLANS}
+                                />
+                            </Tabs>
+                        </Hidden>
                         <div className={classes.dashboardContainer}>
                             {this.state.currentTab ===
                                 DashboardTabsEnum.CREATED_PLANS &&
@@ -407,12 +525,16 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                             {this.state.currentTab ===
                                 DashboardTabsEnum.FAVORITED_PLANS &&
                                 this.renderFavoritedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.DOWNLOADED_PLANS &&
+                                this.renderDownloadedPlansList()}
                         </div>
                     </Hidden>
-                    <Hidden smDown>
+                    <Hidden lgDown>
                         <div className={classes.dashboardContainer}>
                             {this.renderCreatedPlansList()}
                             {this.renderFavoritedPlansList()}
+                            {this.renderDownloadedPlansList()}
                         </div>
                     </Hidden>
                 </>
