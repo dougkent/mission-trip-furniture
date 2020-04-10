@@ -13,12 +13,15 @@ import {
     Hidden,
     IconButton,
     makeStyles,
+    Menu,
+    MenuItem,
     Slide,
     Theme,
     Typography,
 } from '@material-ui/core';
 import FilterListSharpIcon from '@material-ui/icons/FilterListSharp';
 import CloseSharpIcon from '@material-ui/icons/CloseSharp';
+import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
@@ -28,7 +31,12 @@ import { FilterProps } from '../../models/props';
 import { FilterState } from '../../models/states';
 import { mtfTheme } from '../../themes';
 import { MaterialsSelector, ToolsSelector } from '../.';
-import { Material, Tool } from '../../models/api-models';
+import {
+    Material,
+    Tool,
+    SearchablePlanSortableFieldsEnum,
+    SearchableSortDirectionEnum,
+} from '../../models/api-models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -68,6 +76,12 @@ const useStyles = makeStyles((theme: Theme) =>
         dialogFilterItemRow: {
             marginBottom: theme.spacing(3),
         },
+        dialogSortButton: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            padding: theme.spacing(1),
+            textTransform: 'none',
+        },
         dialogFilterDateRow: {
             display: 'flex',
             justifyContent: 'center',
@@ -88,14 +102,15 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'space-between',
             alignItems: 'center',
         },
-        dialogfilterActions: {
-            display: 'flex',
-            alignItems: 'bottom',
+        dialogClearButton: {
+            marginTop: theme.spacing(1),
+            marginLeft: '0px !important',
         },
         filterBar: {
             width: '100%',
             display: 'flex',
             flexWrap: 'wrap',
+            alignContent: 'center',
             paddingTop: theme.spacing(3),
         },
         filterBarItem: {
@@ -111,6 +126,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 maxWidth: theme.spacing(60),
             },
         },
+        filterBarDatePicker: {
+            width: theme.spacing(20),
+        },
         filterBarToggle: {
             display: 'flex',
             alignItems: 'center',
@@ -119,10 +137,25 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'inline-block',
             width: theme.spacing(12),
         },
+        filterBarSortButton: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            padding: theme.spacing(1),
+            textTransform: 'none',
+            width: theme.spacing(20),
+            [theme.breakpoints.up('lg')]: {
+                width: 'auto',
+            },
+        },
         applyButton: {
             marginLeft: theme.spacing(3),
             paddingLeft: theme.spacing(3),
             paddingRight: theme.spacing(3),
+        },
+        sortMenu: {
+            '& .MuiMenu-paper': {
+                width: theme.spacing(50),
+            },
         },
     })
 );
@@ -142,6 +175,41 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
 
     const [filterDialogOpen, setFilterDialogOpen] = useState<boolean>(false);
     const [filterBarOpen, setFilterBarOpen] = useState<boolean>(false);
+    const [sortMenuAnchor, setSortMenuAnchor] = useState<HTMLElement>(null);
+
+    const getSortDisplayText = (
+        sortProperty: SearchablePlanSortableFieldsEnum,
+        sortDirection: SearchableSortDirectionEnum
+    ): string => {
+        switch (sortProperty) {
+            case SearchablePlanSortableFieldsEnum.name:
+                if (sortDirection === SearchableSortDirectionEnum.asc) {
+                    return 'Name A to Z';
+                } else {
+                    return 'Name Z to A';
+                }
+            case SearchablePlanSortableFieldsEnum.created:
+                if (sortDirection === SearchableSortDirectionEnum.asc) {
+                    return 'Oldest To Newest';
+                } else {
+                    return 'Newest To Oldest';
+                }
+            case SearchablePlanSortableFieldsEnum.favoritedCount:
+                if (sortDirection === SearchableSortDirectionEnum.asc) {
+                    return 'Least Favorited';
+                } else {
+                    return 'Most Favorited';
+                }
+            case SearchablePlanSortableFieldsEnum.downloadedCount:
+                if (sortDirection === SearchableSortDirectionEnum.asc) {
+                    return 'Least Downloaded';
+                } else {
+                    return 'Most Downloaded';
+                }
+            default:
+                return '';
+        }
+    };
 
     const handleApply = () => {
         props.onApply(filterState);
@@ -156,6 +224,22 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
         });
     };
 
+    const handleClear = () => {
+        const emptyFilterState: FilterState = {
+            filterMaterials: [],
+            filterTools: [],
+            filterCreatedAfter: null,
+            sortProperty: SearchablePlanSortableFieldsEnum.created,
+            sortDirection: SearchableSortDirectionEnum.desc,
+        };
+
+        setFilterState(emptyFilterState);
+
+        props.onClear(emptyFilterState);
+
+        setFilterDialogOpen(false);
+    };
+
     const handleFilterDialogClose = () => {
         setFilterDialogOpen(false);
         setFilterState(props.filterState);
@@ -166,6 +250,29 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
             ...filterState,
             filterMaterials: materials,
         });
+    };
+
+    const handleSortSelect = (
+        property: SearchablePlanSortableFieldsEnum,
+        direction: SearchableSortDirectionEnum
+    ) => () => {
+        setFilterState({
+            ...filterState,
+            sortProperty: property,
+            sortDirection: direction,
+        });
+
+        handleSortMenuClose();
+    };
+
+    const handleSortMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        const el = event.currentTarget;
+
+        setSortMenuAnchor(el);
+    };
+
+    const handleSortMenuClose = () => {
+        setSortMenuAnchor(null);
     };
 
     const handleToolSelect = (tools: Tool[]) => {
@@ -212,6 +319,25 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                 <DialogContent dividers>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <FormGroup>
+                            <div
+                                className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}>
+                                <Button
+                                    className={classes.dialogSortButton}
+                                    onClick={handleSortMenuOpen}
+                                    fullWidth
+                                    size='large'
+                                    variant='outlined'
+                                    color='secondary'>
+                                    <span>
+                                        Sort by:&nbsp;
+                                        {getSortDisplayText(
+                                            filterState.sortProperty,
+                                            filterState.sortDirection
+                                        )}
+                                    </span>
+                                    <ArrowDropDownSharpIcon />
+                                </Button>
+                            </div>
                             <div
                                 className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}>
                                 <ToolsSelector
@@ -262,8 +388,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                         </FormGroup>
                     </MuiPickersUtilsProvider>
                 </DialogContent>
-                <DialogActions
-                    className={`${classes.dialogFilterDateRow} ${classes.dialogfilterActions}`}>
+                <DialogActions className={`${classes.dialogFilterDateRow}`}>
                     <Button
                         color='secondary'
                         variant='contained'
@@ -271,6 +396,13 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                         onClick={handleApply}
                         disabled={!isChanged()}>
                         Apply
+                    </Button>
+                    <Button
+                        className={classes.dialogClearButton}
+                        variant='outlined'
+                        fullWidth
+                        onClick={handleClear}>
+                        Clear
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -300,7 +432,8 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                         selectedMaterials={filterState.filterMaterials}
                     />
                 </div>
-                <div>
+                <div
+                    className={`${classes.filterBarItem} ${classes.filterBarDatePicker}`}>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <DatePicker
                             autoOk
@@ -316,6 +449,22 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                 </div>
                 <div>
                     <Button
+                        className={classes.filterBarSortButton}
+                        onClick={handleSortMenuOpen}
+                        variant='outlined'
+                        color='secondary'>
+                        <Typography noWrap>
+                            Sort by:&nbsp;
+                            {getSortDisplayText(
+                                filterState.sortProperty,
+                                filterState.sortDirection
+                            )}
+                        </Typography>
+                        <ArrowDropDownSharpIcon />
+                    </Button>
+                </div>
+                <div>
+                    <Button
                         color='secondary'
                         variant='contained'
                         className={`${classes.desktopDisplay} ${classes.applyButton}`}
@@ -325,6 +474,60 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                     </Button>
                 </div>
             </div>
+        );
+    };
+
+    const renderSortMenu = () => {
+        return (
+            <Menu
+                className={classes.sortMenu}
+                anchorEl={sortMenuAnchor}
+                open={!!sortMenuAnchor}
+                onClose={handleSortMenuClose}>
+                {renderMenuItem(
+                    SearchablePlanSortableFieldsEnum.name,
+                    SearchableSortDirectionEnum.asc
+                )}
+                {renderMenuItem(
+                    SearchablePlanSortableFieldsEnum.name,
+                    SearchableSortDirectionEnum.desc
+                )}
+                {renderMenuItem(
+                    SearchablePlanSortableFieldsEnum.created,
+                    SearchableSortDirectionEnum.asc
+                )}
+                {renderMenuItem(
+                    SearchablePlanSortableFieldsEnum.created,
+                    SearchableSortDirectionEnum.desc
+                )}
+                {renderMenuItem(
+                    SearchablePlanSortableFieldsEnum.favoritedCount,
+                    SearchableSortDirectionEnum.desc
+                )}
+                {renderMenuItem(
+                    SearchablePlanSortableFieldsEnum.favoritedCount,
+                    SearchableSortDirectionEnum.asc
+                )}
+                {renderMenuItem(
+                    SearchablePlanSortableFieldsEnum.downloadedCount,
+                    SearchableSortDirectionEnum.desc
+                )}
+                {renderMenuItem(
+                    SearchablePlanSortableFieldsEnum.downloadedCount,
+                    SearchableSortDirectionEnum.asc
+                )}
+            </Menu>
+        );
+    };
+
+    const renderMenuItem = (
+        property: SearchablePlanSortableFieldsEnum,
+        direction: SearchableSortDirectionEnum
+    ) => {
+        return (
+            <MenuItem onClick={handleSortSelect(property, direction)}>
+                {getSortDisplayText(property, direction)}
+            </MenuItem>
         );
     };
 
@@ -348,8 +551,14 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                 <FilterListSharpIcon />
                 <span className={classes.filterButtonText}>Filter</span>
             </Button>
+            <Button
+                className={`${classes.desktopDisplay} ${classes.filterButton}`}
+                onClick={handleClear}>
+                Clear
+            </Button>
             <Hidden mdUp>{renderMobileFilterDialog()}</Hidden>
             <Hidden smDown>{filterBarOpen && renderFilterBar()}</Hidden>
+            {renderSortMenu()}
         </>
     );
 };

@@ -26,6 +26,9 @@ import {
     Plan,
     SearchPlansQuery,
     SearchablePlanFilterInput,
+    SearchablePlanSortInput,
+    SearchablePlanSortableFieldsEnum,
+    SearchableSortDirectionEnum,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
 import { PlanFavoriteService } from '../../services';
@@ -78,6 +81,8 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 filterMaterials: [],
                 filterTools: [],
                 filterCreatedAfter: null,
+                sortProperty: SearchablePlanSortableFieldsEnum.created,
+                sortDirection: SearchableSortDirectionEnum.desc,
             },
             searchState: {
                 searchTerm: null,
@@ -107,7 +112,6 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             });
         }
     }
-
     private buildSearch = (): SearchablePlanFilterInput => {
         let search: SearchablePlanFilterInput = null;
 
@@ -259,6 +263,11 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
 
         const search = this.buildSearch();
 
+        const sort: SearchablePlanSortInput = {
+            field: this.state.filterState.sortProperty,
+            direction: this.state.filterState.sortDirection,
+        };
+
         const nextToken: string = isNextPage ? this.state.nextToken : null;
 
         const result: GqlQuery<SearchPlansQuery> = await API.graphql({
@@ -266,6 +275,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
             variables: {
                 limit: 10,
                 filter: search,
+                sort: sort,
                 nextToken: nextToken,
             },
             // @ts-ignore
@@ -314,6 +324,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                         materials={this.state.materials}
                         tools={this.state.tools}
                         onApply={this.handleApplyFilter}
+                        onClear={this.handleApplyFilter}
                     />
                 </div>
                 <PlanGrid
