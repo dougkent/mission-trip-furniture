@@ -47,7 +47,10 @@ import * as graphQLQueries from '../../graphql/queries';
 const styles = (theme: Theme) =>
     createStyles({
         dashboardContainer: {
-            [theme.breakpoints.up('sm')]: {
+            marginTop: theme.spacing(1),
+            [theme.breakpoints.up('lg')]: {
+                marginTop: theme.spacing(4),
+                width: '100%',
                 display: 'flex',
                 justifyContent: 'space-evenly',
             },
@@ -57,10 +60,14 @@ const styles = (theme: Theme) =>
             width: 100,
             margin: `${theme.spacing(4)}px auto`,
         },
+
         listContainer: {
-            padding: theme.spacing(2),
+            padding: `${theme.spacing(2)}px 0px`,
             width: '100%',
             marginBottom: theme.spacing(5),
+            [theme.breakpoints.up('lg')]: {
+                padding: theme.spacing(2),
+            },
 
             [theme.breakpoints.up('xl')]: {
                 minWidth: 523,
@@ -101,6 +108,12 @@ const styles = (theme: Theme) =>
                 height: theme.spacing(29),
                 width: '100%',
             },
+        },
+        verticalTabs: {
+            width: '15%',
+        },
+        fullWidth: {
+            width: '100%',
         },
     });
 
@@ -470,7 +483,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             );
         } else {
             return (
-                <>
+                <div className={classes.dashboardContainer}>
                     <Hidden xlUp>
                         <Hidden smUp>
                             <Tabs
@@ -495,7 +508,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                 />
                             </Tabs>
                         </Hidden>
-                        <Hidden xsDown>
+                        <Hidden xsDown lgUp>
                             <Tabs
                                 value={this.state.currentTab}
                                 onChange={this.handleTabChange}
@@ -518,7 +531,30 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                 />
                             </Tabs>
                         </Hidden>
-                        <div className={classes.dashboardContainer}>
+                        <Hidden mdDown>
+                            <Tabs
+                                className={classes.verticalTabs}
+                                value={this.state.currentTab}
+                                onChange={this.handleTabChange}
+                                orientation='vertical'>
+                                <Tab
+                                    label='My Created Plans'
+                                    icon={<CreateNewFolderSharpIcon />}
+                                    value={DashboardTabsEnum.CREATED_PLANS}
+                                />
+                                <Tab
+                                    label='My Favorited Plans'
+                                    icon={<FavoriteSharpIcon />}
+                                    value={DashboardTabsEnum.FAVORITED_PLANS}
+                                />
+                                <Tab
+                                    label='My Downloaded Plans'
+                                    icon={<CloudDownloadSharpIcon />}
+                                    value={DashboardTabsEnum.DOWNLOADED_PLANS}
+                                />
+                            </Tabs>
+                        </Hidden>
+                        <div className={classes.fullWidth}>
                             {this.state.currentTab ===
                                 DashboardTabsEnum.CREATED_PLANS &&
                                 this.renderCreatedPlansList()}
@@ -537,7 +573,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                             {this.renderDownloadedPlansList()}
                         </div>
                     </Hidden>
-                </>
+                </div>
             );
         }
     };
