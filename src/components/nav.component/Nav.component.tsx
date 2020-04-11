@@ -14,32 +14,37 @@ import {
     List,
     ListItemText,
     SwipeableDrawer,
-    Divider,
+    Divider
 } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
-import HotelSharpIcon from '@material-ui/icons/HotelSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // MTF
 import { BaseProps } from '../../models/props';
 import { mtfTheme, mtfAmplifyTheme, mtfAmplifyMobileTheme } from '../../themes';
+import { ReactComponent as MtfLogo } from '../../assets/mtf-logo.svg';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         grow: {
-            flexGrow: 1,
+            flexGrow: 1
         },
         flex: {
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'center'
         },
         flexLeft: {
-            flexGrow: 0.2,
+            flexGrow: 0.2
         },
         flexRight: {
-            flexGrow: 0.1,
+            flexGrow: 0.1
+        },
+
+        logo: {
+            height: theme.spacing(4),
+            width: theme.spacing(4)
         },
         navLink: {
             textDecoration: 'none',
@@ -49,44 +54,46 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'space-between',
             marginRight: theme.spacing(4),
             [theme.breakpoints.up('md')]: {
-                marginRight: theme.spacing(2),
+                marginRight: theme.spacing(2)
             },
             [theme.breakpoints.up('lg')]: {
-                marginRight: theme.spacing(4),
-            },
+                marginRight: theme.spacing(4)
+            }
         },
         mobileMenu: {
-            width: 300,
+            width: 300
         },
         mobileMenuItem: {
-            margin: theme.spacing(4),
+            margin: theme.spacing(4)
         },
         mobileNavLink: {
             textDecoration: 'none',
-            color: 'inherit',
+            color: 'inherit'
         },
         mobileSignOut: {
-            margin: theme.spacing(3),
+            margin: theme.spacing(3)
         },
         sectionDesktop: {
             display: 'none',
             [theme.breakpoints.up('md')]: {
-                display: 'flex',
-            },
+                display: 'flex'
+            }
         },
         sectionMobile: {
             width: '100%',
             justifyContent: 'flex-end',
             [theme.breakpoints.up('md')]: {
-                display: 'none',
-            },
+                display: 'none'
+            }
         },
         homeMenuLink: {
-            //marginRight: theme.spacing(4),
-            minWidth: 223,
-        },
-        myAccountLink: {
-            //marginRight: theme.spacing(4),
+            minWidth: theme.spacing(33),
+            [theme.breakpoints.up('md')]: {
+                minWidth: theme.spacing(31)
+            },
+            [theme.breakpoints.up('lg')]: {
+                minWidth: theme.spacing(33)
+            }
         },
 
         signInLink: {
@@ -102,12 +109,12 @@ const useStyles = makeStyles((theme: Theme) =>
             minWidth: 'auto',
             padding: '10px 20px',
             textAlign: 'center',
-            textDecoration: 'none',
+            textDecoration: 'none'
         },
         mobileSignInItem: {
             display: 'flex',
-            justifyContent: 'center',
-        },
+            justifyContent: 'center'
+        }
     })
 );
 
@@ -251,8 +258,8 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
                         noWrap
                         className={classes.homeMenuLink}>
                         <ReactRouter.Link to='/' className={classes.navLink}>
-                            <HotelSharpIcon />
-                            &nbsp; Mission Trip Furniture
+                            <MtfLogo className={classes.logo} />
+                            Mission Trip Furniture
                         </ReactRouter.Link>
                     </Typography>
                     <div
@@ -298,8 +305,7 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
                                         <Typography
                                             variant='h5'
                                             noWrap
-                                            color='primary'
-                                            className={classes.myAccountLink}>
+                                            color='primary'>
                                             <ReactRouter.Link
                                                 to='/my-mtf'
                                                 className={classes.navLink}>
