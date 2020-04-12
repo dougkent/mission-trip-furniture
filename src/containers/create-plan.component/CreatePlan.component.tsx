@@ -16,7 +16,7 @@ import {
     Theme,
     Typography,
     withStyles,
-    WithStyles,
+    WithStyles
 } from '@material-ui/core';
 
 // uuid
@@ -34,7 +34,7 @@ import {
     ImageUploader,
     MaterialsSelector,
     PdfUploader,
-    ToolsSelector,
+    ToolsSelector
 } from '../../components';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import {
@@ -42,7 +42,7 @@ import {
     CreatePlanMutation,
     Material,
     Tool,
-    GetPlanQuery,
+    GetPlanQuery
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
 
@@ -55,33 +55,33 @@ const styles = (theme: Theme) =>
                 padding: theme.spacing(5),
                 width: '70%',
                 marginLeft: 'auto',
-                marginRight: 'auto',
-            },
+                marginRight: 'auto'
+            }
         },
         form: {
             display: 'flex',
-            flexWrap: 'wrap',
+            flexWrap: 'wrap'
         },
         formRow: {
             width: '100%',
             flexGrow: 1,
             marginBottom: theme.spacing(1),
-            marginTop: theme.spacing(1),
+            marginTop: theme.spacing(1)
         },
         textField: {
-            width: '100%',
+            width: '100%'
         },
         multiCardRow: {
-            display: 'flex',
+            display: 'flex'
         },
         submitButtonRow: {
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-end',
+            justifyContent: 'flex-end'
         },
         loadingIcon: {
-            marginRight: theme.spacing(1),
-        },
+            marginRight: theme.spacing(1)
+        }
     });
 
 export interface CreatePlanProps extends AppProps, WithStyles<typeof styles> {}
@@ -105,13 +105,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             downloadedCount: 0,
             requiredMaterialIds: [],
             requiredToolIds: [],
-            planCreatedById: this.props.userId,
+            planCreatedById: this.props.userId
         },
         selectedMaterials: [],
         selectedTools: [],
         loading: false,
         createComplete: false,
-        errors: [],
+        errors: []
     };
 
     constructor(props: CreatePlanProps) {
@@ -136,15 +136,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                 tools: this.props.tools,
                 plan: {
                     ...prevState.plan,
-                    planCreatedById: this.props.userId,
-                },
+                    planCreatedById: this.props.userId
+                }
             }));
         }
     };
 
     private handleClearErrors = () => {
         this.setState({
-            errors: [],
+            errors: []
         });
     };
 
@@ -158,8 +158,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             imageFile: null,
             plan: {
                 ...prevState.plan,
-                imageS3Info: null,
-            },
+                imageS3Info: null
+            }
         }));
     };
 
@@ -174,15 +174,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                 imageS3Info: {
                     key: fileName,
                     width: 200,
-                    height: 200,
-                },
-            },
+                    height: 200
+                }
+            }
         }));
     };
 
     private handleMaterialSelected = (materials: Material[]) => {
         this.setState({
-            selectedMaterials: materials,
+            selectedMaterials: materials
         });
     };
 
@@ -192,8 +192,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             pdfFile: null,
             plan: {
                 ...prevState.plan,
-                pdfS3Key: '',
-            },
+                pdfS3Key: ''
+            }
         }));
     };
 
@@ -205,8 +205,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             pdfFile: file,
             plan: {
                 ...prevState.plan,
-                pdfS3Key: fileName,
-            },
+                pdfS3Key: fileName
+            }
         }));
     };
 
@@ -222,8 +222,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                 requiredMaterialIds: prevState.selectedMaterials.map(
                     material => material.id
                 ),
-                requiredToolIds: prevState.selectedTools.map(tool => tool.id),
-            },
+                requiredToolIds: prevState.selectedTools.map(tool => tool.id)
+            }
         }));
 
         const errors = await this.validateForm();
@@ -231,14 +231,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         if (errors.length > 0) {
             this.setState({
                 loading: false,
-                errors: errors,
+                errors: errors
             });
             return;
         }
 
         const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
             graphqlOperation(graphQLQueries.createPlanMutation, {
-                input: this.state.plan,
+                input: this.state.plan
             })
         );
 
@@ -248,13 +248,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
             ReactGA.event({
                 category: 'create',
-                action: 'User Created a Plan',
+                action: 'User Created a Plan'
             });
 
             setTimeout(
                 () =>
                     this.setState({
-                        createComplete: true,
+                        createComplete: true
                     }),
                 1000
             );
@@ -262,8 +262,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             this.setState({
                 loading: false,
                 errors: [
-                    'An unexpected error occurred when creating this plan. Please try again.',
-                ],
+                    'An unexpected error occurred when creating this plan. Please try again.'
+                ]
             });
         }
     };
@@ -284,14 +284,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             plan: {
                 ...prevState.plan,
                 id: planId,
-                [key]: value,
-            },
+                [key]: value
+            }
         }));
     };
 
     private handleToolSelected = (tools: Tool[]) => {
         this.setState({
-            selectedTools: tools,
+            selectedTools: tools
         });
     };
 
@@ -363,7 +363,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     private planAlreadyExists = async (): Promise<boolean> => {
         const planResult: GqlQuery<GetPlanQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.getPlanIdQuery, {
-                id: this.state.plan.id,
+                id: this.state.plan.id
             })
         );
 
@@ -375,7 +375,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     private uploadImage = async () => {
         Storage.put(this.state.plan.imageS3Info.key, this.state.imageFile, {
             level: 'protected',
-            metadata: { owner: this.state.plan.planCreatedById },
+            metadata: { owner: this.state.plan.planCreatedById }
         });
     };
 
@@ -383,7 +383,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
             level: 'protected',
             contentType: 'application/pdf',
-            metadata: { owner: this.state.plan.planCreatedById },
+            metadata: { owner: this.state.plan.planCreatedById }
         });
     };
 
@@ -396,7 +396,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             return (
                 <Paper className={classes.formContainer}>
                     <Typography variant='h2' noWrap>
-                        Create Plan
+                        Upload Plan
                     </Typography>
                     <form onSubmit={this.handleSubmit} className={classes.form}>
                         <div className={classes.formRow}>
@@ -466,7 +466,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 type='submit'
                                 variant='contained'
                                 disabled={this.state.loading}>
-                                Create Plan
+                                Upload Plan
                             </Button>
                         </div>
                     </form>
@@ -482,6 +482,6 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
 export default withStyles(styles(mtfTheme))(
     withAuthenticator(CreatePlan, {
-        signUpConfig: signUpConfig,
+        signUpConfig: signUpConfig
     })
 );
