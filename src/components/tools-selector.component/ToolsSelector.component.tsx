@@ -9,7 +9,7 @@ import {
     createStyles,
     makeStyles,
     Theme,
-    TextField,
+    TextField
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp';
@@ -23,13 +23,13 @@ import { Tool } from '../../models/api-models';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         chip: {
-            margin: 3,
+            margin: 3
         },
         textBox: {
             '& .MuiAutocomplete-inputRoot': {
-                paddingRight: `${theme.spacing(3)}px !important`,
-            },
-        },
+                paddingRight: `${theme.spacing(3)}px !important`
+            }
+        }
     })
 );
 
@@ -80,7 +80,10 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
                 renderTags={(value, getTagProps) => (
                     <>
                         {value
-                            .filter((tool, index) => index < 2)
+                            .filter(
+                                (tool, index) =>
+                                    index < props.numSelectedToolsToRender
+                            )
                             .map((tool, index) => (
                                 <Chip
                                     variant='outlined'
@@ -90,13 +93,19 @@ const ToolsSelector: React.FC<ToolsSelectorProps> = (
                                     {...getTagProps({ index })}
                                 />
                             ))}
-                        {value.length > 2 && (
+                        {value.length > props.numSelectedToolsToRender && (
                             <Chip
                                 size='small'
                                 color='secondary'
                                 variant='outlined'
                                 className={classes.chip}
-                                label={'+' + (value.length - 2).toString()}
+                                label={
+                                    '+' +
+                                    (
+                                        value.length -
+                                        props.numSelectedToolsToRender
+                                    ).toString()
+                                }
                             />
                         )}
                     </>

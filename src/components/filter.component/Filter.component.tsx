@@ -346,6 +346,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     tools={props.tools}
                                     onSelect={handleToolSelect}
                                     selectedTools={filterState.filterTools}
+                                    numSelectedToolsToRender={2}
                                 />
                             </div>
                             <div
@@ -358,6 +359,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     selectedMaterials={
                                         filterState.filterMaterials
                                     }
+                                    numSelectedMaterialsToRender={2}
                                 />
                             </div>
                             <div className={`${classes.dialogFilterDateRow}`}>
@@ -422,6 +424,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                         tools={props.tools}
                         onSelect={handleToolSelect}
                         selectedTools={filterState.filterTools}
+                        numSelectedToolsToRender={2}
                     />
                 </div>
                 <div
@@ -432,6 +435,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                         materials={props.materials}
                         onSelect={handleMaterialSelect}
                         selectedMaterials={filterState.filterMaterials}
+                        numSelectedMaterialsToRender={2}
                     />
                 </div>
                 <div

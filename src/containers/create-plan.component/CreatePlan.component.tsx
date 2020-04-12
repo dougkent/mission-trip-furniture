@@ -11,13 +11,16 @@ import {
     Button,
     CircularProgress,
     createStyles,
+    InputAdornment,
     Paper,
     TextField,
     Theme,
+    Tooltip,
     Typography,
     withStyles,
     WithStyles
 } from '@material-ui/core';
+import InfoSharpIcon from '@material-ui/icons/InfoSharp';
 
 // uuid
 import { v4 as uuid } from 'uuid';
@@ -64,11 +67,13 @@ const styles = (theme: Theme) =>
         },
         formRow: {
             width: '100%',
+            display: 'flex',
             flexGrow: 1,
+            alignItems: 'center',
             marginBottom: theme.spacing(1),
             marginTop: theme.spacing(1)
         },
-        textField: {
+        selector: {
             width: '100%'
         },
         multiCardRow: {
@@ -81,6 +86,9 @@ const styles = (theme: Theme) =>
         },
         loadingIcon: {
             marginRight: theme.spacing(1)
+        },
+        tooltip: {
+            marginLeft: theme.spacing(1)
         }
     });
 
@@ -123,6 +131,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     componentDidMount = () => {
         ReactGA.ga('send', 'pageview', window.location.pathname);
     };
+
     componentDidUpdate = async (prevProps: CreatePlanProps) => {
         if (
             this.props.userId !== prevProps.userId ||
@@ -396,7 +405,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             return (
                 <Paper className={classes.formContainer}>
                     <Typography variant='h2' noWrap>
-                        Upload Plan
+                        Upload a Plan
                     </Typography>
                     <form onSubmit={this.handleSubmit} className={classes.form}>
                         <div className={classes.formRow}>
@@ -405,7 +414,20 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 name='name'
                                 onChange={this.handleTextChange}
                                 label='Name *'
-                                className={classes.textField}
+                                fullWidth
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='start'>
+                                            <Tooltip
+                                                title='This field must be unique across all of the plans uploaded to Mission Trip Furniure. This field is also used heavily in searching so choose something that describes the plan well. It CANNOT be changed later.'
+                                                placement='bottom-end'
+                                                arrow
+                                                enterDelay={500}>
+                                                <InfoSharpIcon />
+                                            </Tooltip>
+                                        </InputAdornment>
+                                    )
+                                }}
                             />
                         </div>
                         <div className={classes.formRow}>
@@ -416,7 +438,20 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 onChange={this.handleTextChange}
                                 label='Description *'
                                 rows='16'
-                                className={classes.textField}
+                                fullWidth
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='start'>
+                                            <Tooltip
+                                                title='This field has a maximum of 2000 characters that can be entered. The longer the description is the more it will assist users in searching for plans.'
+                                                placement='bottom-end'
+                                                arrow
+                                                enterDelay={500}>
+                                                <InfoSharpIcon />
+                                            </Tooltip>
+                                        </InputAdornment>
+                                    )
+                                }}
                             />
                         </div>
                         <div
@@ -426,24 +461,56 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 onSelect={this.handlePdfSelect}
                                 pdfFile={this.state.pdfFile}
                             />
+                            <Tooltip
+                                className={classes.tooltip}
+                                title='The PDF you select here will be the PDF that users download from your plan. It CANNOT be changed later.'
+                                placement='right'
+                                arrow
+                                enterDelay={500}>
+                                <InfoSharpIcon />
+                            </Tooltip>
                         </div>
                         <div className={classes.formRow}>
-                            <ToolsSelector
-                                label='Select Tools Required for this Plan'
-                                tools={this.state.tools}
-                                loading={false}
-                                onSelect={this.handleToolSelected}
-                                selectedTools={this.state.selectedTools}
-                            />
+                            <div className={classes.selector}>
+                                <ToolsSelector
+                                    label='Select Tools Required for this Plan'
+                                    tools={this.state.tools}
+                                    loading={false}
+                                    onSelect={this.handleToolSelected}
+                                    selectedTools={this.state.selectedTools}
+                                    numSelectedToolsToRender={2}
+                                />
+                            </div>
+                            <Tooltip
+                                className={classes.tooltip}
+                                title='Select all the tools required to build the piece of furnture in your plan. These also help users filter their searches down to tools they have. They CANNOT be changed later.'
+                                placement='bottom-end'
+                                arrow
+                                enterDelay={500}>
+                                <InfoSharpIcon />
+                            </Tooltip>
                         </div>
                         <div className={classes.formRow}>
-                            <MaterialsSelector
-                                label='Select Materials Required for this Plan'
-                                materials={this.state.materials}
-                                loading={false}
-                                onSelect={this.handleMaterialSelected}
-                                selectedMaterials={this.state.selectedMaterials}
-                            />
+                            <div className={classes.selector}>
+                                <MaterialsSelector
+                                    label='Select Materials Required for this Plan'
+                                    materials={this.state.materials}
+                                    loading={false}
+                                    onSelect={this.handleMaterialSelected}
+                                    selectedMaterials={
+                                        this.state.selectedMaterials
+                                    }
+                                    numSelectedMaterialsToRender={2}
+                                />
+                            </div>
+                            <Tooltip
+                                className={classes.tooltip}
+                                title='Select all the types of materials required to build the piece of furniture. This list also helps users filter their searches down to the materials to which they have access. They CANNOT be changed later.'
+                                placement='bottom-end'
+                                arrow
+                                enterDelay={500}>
+                                <InfoSharpIcon />
+                            </Tooltip>
                         </div>
                         <div
                             className={`${classes.formRow} ${classes.multiCardRow}`}>
@@ -452,6 +519,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 onDeselect={this.handleImageDeselect}
                                 onSelect={this.handleImageSelect}
                             />
+                            <Tooltip
+                                className={classes.tooltip}
+                                title='The image you select here will be the image that is displayed to other users so pick one that represents your plan well. It CANNOT be changed later.'
+                                placement='right'
+                                arrow
+                                enterDelay={500}>
+                                <InfoSharpIcon />
+                            </Tooltip>
                         </div>
                         <div
                             className={`${classes.formRow} ${classes.submitButtonRow}`}>

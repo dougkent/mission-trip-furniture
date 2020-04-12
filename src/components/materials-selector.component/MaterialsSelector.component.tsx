@@ -9,7 +9,7 @@ import {
     createStyles,
     makeStyles,
     Theme,
-    TextField,
+    TextField
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp';
@@ -23,13 +23,13 @@ import { Material } from '../../models/api-models';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         chip: {
-            margin: 3,
+            margin: 3
         },
         textBox: {
             '& .MuiAutocomplete-inputRoot': {
-                paddingRight: `${theme.spacing(3)}px !important`,
-            },
-        },
+                paddingRight: `${theme.spacing(3)}px !important`
+            }
+        }
     })
 );
 
@@ -80,7 +80,10 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                 renderTags={(value, getTagProps) => (
                     <>
                         {value
-                            .filter((material, index) => index < 2)
+                            .filter(
+                                (material, index) =>
+                                    index < props.numSelectedMaterialsToRender
+                            )
                             .map((material, index) => (
                                 <Chip
                                     variant='outlined'
@@ -90,13 +93,19 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                                     {...getTagProps({ index })}
                                 />
                             ))}
-                        {value.length > 2 && (
+                        {value.length > props.numSelectedMaterialsToRender && (
                             <Chip
                                 size='small'
                                 color='secondary'
                                 variant='outlined'
                                 className={classes.chip}
-                                label={'+' + (value.length - 2).toString()}
+                                label={
+                                    '+' +
+                                    (
+                                        value.length -
+                                        props.numSelectedMaterialsToRender
+                                    ).toString()
+                                }
                             />
                         )}
                     </>

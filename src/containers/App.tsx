@@ -21,7 +21,7 @@ import {
     GetFavoriteByUserIdQuery,
     GetUserQuery,
     ListMaterialsQuery,
-    ListToolsQuery,
+    ListToolsQuery
 } from '../models/api-models';
 import * as graphQLQueries from '../graphql/queries';
 import {
@@ -32,7 +32,7 @@ import {
     Home,
     NotFound,
     PlanView,
-    PlansList,
+    PlansList
 } from '.';
 import { Nav } from '../components';
 import { PlanFavoriteService } from '../services';
@@ -51,7 +51,7 @@ class App extends React.Component<{}, AppState> {
             userId: '',
             materials: [],
             tools: [],
-            userFavoritedPlanIds: [],
+            userFavoritedPlanIds: []
         };
     }
 
@@ -81,7 +81,7 @@ class App extends React.Component<{}, AppState> {
 
                 const userInfo = await Auth.currentUserInfo();
                 ReactGA.set({
-                    userId: userInfo.id,
+                    userId: userInfo.id
                 });
                 ReactGA.event({ category: 'auth', action: 'User Signed In' });
                 break;
@@ -118,12 +118,12 @@ class App extends React.Component<{}, AppState> {
     private async createUserByUsername(id: string, username: string) {
         var createUserInput: CreateUserInput = {
             id: id,
-            username: username,
+            username: username
         };
 
         var createUserResult: GqlQuery<CreateUserMutation> = await API.graphql(
             graphqlOperation(graphQLQueries.createUserMutation, {
-                input: createUserInput,
+                input: createUserInput
             })
         );
 
@@ -146,8 +146,8 @@ class App extends React.Component<{}, AppState> {
                 ...prevState,
                 userFavoritedPlanIds: [
                     ...prevState.userFavoritedPlanIds,
-                    planId,
-                ],
+                    planId
+                ]
             }));
         } else {
             await this.planFavoriteService.deleteFavorite(
@@ -159,7 +159,7 @@ class App extends React.Component<{}, AppState> {
                 ...prevState,
                 userFavoritedPlanIds: prevState.userFavoritedPlanIds.filter(
                     favPlanId => favPlanId !== planId
-                ),
+                )
             }));
         }
 
@@ -171,26 +171,26 @@ class App extends React.Component<{}, AppState> {
             {
                 query: graphQLQueries.listMaterialsQuery,
                 // @ts-ignore
-                authMode: 'AWS_IAM',
+                authMode: 'AWS_IAM'
             }
         );
 
         const toolsResult: GqlQuery<ListToolsQuery> = await API.graphql({
             query: graphQLQueries.listToolsQuery,
             // @ts-ignore
-            authMode: 'AWS_IAM',
+            authMode: 'AWS_IAM'
         });
 
         this.setState(prevState => ({
             ...prevState,
             materials: materialsResult?.data?.listMaterials?.items,
-            tools: toolsResult?.data?.listTools?.items,
+            tools: toolsResult?.data?.listTools?.items
         }));
     };
     private loadUserFavoritedPlans = async () => {
         const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
-                userId: this.state.userId,
+                userId: this.state.userId
             })
         );
 
@@ -200,7 +200,7 @@ class App extends React.Component<{}, AppState> {
 
         this.setState(prevState => ({
             ...prevState,
-            userFavoritedPlanIds: favoritedPlanIds,
+            userFavoritedPlanIds: favoritedPlanIds
         }));
     };
 
@@ -280,7 +280,7 @@ class App extends React.Component<{}, AppState> {
                         />
                         <Route
                             exact
-                            path='/my-mtf/create-plan'
+                            path='/my-mtf/upload-plan'
                             render={() => (
                                 <CreatePlan
                                     userId={this.state.userId}

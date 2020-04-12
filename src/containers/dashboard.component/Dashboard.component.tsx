@@ -398,7 +398,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 <div className={classes.listTitle}>
                     <Typography variant='h3'>My Plans</Typography>
                     <Link
-                        to='/my-mtf/create-plan'
+                        to='/my-mtf/upload-plan'
                         className={classes.createNewPlanLink}>
                         <AddBoxSharpIcon
                             color='secondary'
