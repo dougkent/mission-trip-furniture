@@ -19,7 +19,7 @@ import ReactGA from 'react-ga';
 import { BaseProps } from '../../models/props';
 import { BaseState } from '../../models/states';
 import { mtfTheme } from '../../themes';
-import { ReactComponent as MtfLogo } from '../../assets/mtf-logo.svg';
+import { ReactComponent as MtfLogo } from '../../assets/mtf-logo-dark.svg';
 import * as homeBackgroundImage from '../../assets/home-background.jpg';
 
 const styles = (theme: Theme) =>
