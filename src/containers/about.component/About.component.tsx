@@ -9,7 +9,7 @@ import {
     Theme,
     Typography,
     withStyles,
-    WithStyles,
+    WithStyles
 } from '@material-ui/core';
 
 // Google Analytics
@@ -29,69 +29,69 @@ const styles = (theme: Theme) =>
             [theme.breakpoints.up('lg')]: {
                 width: '70%',
                 marginLeft: 'auto',
-                marginRight: 'auto',
-            },
+                marginRight: 'auto'
+            }
         },
         title: {
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacing(2)
         },
         actionsRow: {
             display: 'flex',
             justifyContent: 'center',
             flexWrap: 'wrap',
             textAlign: 'center',
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacing(2)
         },
         actionItem: {
             width: '100%',
-            marginBottom: theme.spacing(1),
+            marginBottom: theme.spacing(1)
         },
 
         actionItemLink: {
-            textDecoration: 'none',
+            textDecoration: 'none'
         },
         actionItemButton: {
             border: `2px solid ${theme.palette.secondary.main}`,
             padding: '10px 20px',
             '&:hover': {
-                border: `2px solid ${theme.palette.secondary.main}`,
-            },
+                border: `2px solid ${theme.palette.secondary.main}`
+            }
         },
         actionItemText: {
-            textTransform: 'none',
+            textTransform: 'none'
         },
         superScript: {
-            fontSize: '0.55rem',
+            fontSize: '0.55rem'
         },
         list: {
             paddingLeft: theme.spacing(2),
             paddingTop: theme.spacing(2),
             margin: 0,
             [theme.breakpoints.up('md')]: {
-                paddingLeft: theme.spacing(4),
+                paddingLeft: theme.spacing(4)
             },
             '& li': {
-                marginBottom: theme.spacing(1),
-            },
+                marginBottom: theme.spacing(1)
+            }
         },
         flex: {
             [theme.breakpoints.up('sm')]: {
                 display: 'flex',
-                alignItems: 'center',
-            },
+                alignItems: 'center'
+            }
         },
         workingTogetherImage1: {
             background: `url(${workingTogether1Image})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'center'
         },
 
         workingTogetherImage1Mobile: {
             height: '350px',
 
             [theme.breakpoints.up('sm')]: {
-                display: 'none',
-            },
+                display: 'none'
+            }
         },
         workingTogetherImage1Desktop: {
             display: 'none',
@@ -102,26 +102,26 @@ const styles = (theme: Theme) =>
                 height: '500px',
                 width: '50%',
                 marginTop: theme.spacing(2),
-                marginBottom: theme.spacing(2),
+                marginBottom: theme.spacing(2)
             },
             [theme.breakpoints.up('md')]: {
-                height: '450px',
-            },
+                height: '450px'
+            }
         },
         workingTogetherImage2: {
             background: `url(${workingTogether2Image})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'center'
         },
         workingTogetherImage2Mobile: {
             height: '200px',
 
             [theme.breakpoints.up('sm')]: {
-                height: '300px',
+                height: '300px'
             },
             [theme.breakpoints.up('md')]: {
-                display: 'none',
-            },
+                display: 'none'
+            }
         },
         workingTogetherImage2Desktop: {
             display: 'none',
@@ -131,32 +131,32 @@ const styles = (theme: Theme) =>
             [theme.breakpoints.up('md')]: {
                 display: 'block',
                 height: '300px',
-                width: '50%',
-            },
+                width: '50%'
+            }
         },
         workingTogetherImageMobile: {
             width: '100%',
-            marginBottom: theme.spacing(1),
+            marginBottom: theme.spacing(1)
         },
         wrappedRight: {
             [theme.breakpoints.up('md')]: {
-                width: '60%',
+                width: '60%'
             },
             [theme.breakpoints.up('xl')]: {
-                width: '70%',
-            },
+                width: '70%'
+            }
         },
         wrappedLeft: {
             [theme.breakpoints.up('sm')]: {
-                width: '50%',
+                width: '50%'
             },
             [theme.breakpoints.up('md')]: {
-                width: '60%',
+                width: '60%'
             },
             [theme.breakpoints.up('xl')]: {
-                width: '70%',
-            },
-        },
+                width: '70%'
+            }
+        }
     });
 
 export interface AboutProps extends BaseProps, WithStyles<typeof styles> {}
@@ -166,7 +166,7 @@ class About extends React.Component<AboutProps, BaseState> {
         super(props);
 
         this.state = {
-            userId: props.userId,
+            userId: props.userId
         };
     }
 
@@ -177,7 +177,7 @@ class About extends React.Component<AboutProps, BaseState> {
     componentDidUpdate = (prevProps: AboutProps) => {
         if (this.props.userId !== prevProps.userId) {
             this.setState({
-                userId: this.props.userId,
+                userId: this.props.userId
             });
         }
     };
