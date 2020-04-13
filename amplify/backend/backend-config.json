@@ -1,68 +1,74 @@
 {
-    "auth": {
-        "mtfAuth": {
-            "service": "Cognito",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": []
-        }
-    },
-    "api": {
-        "missiontripfurniture": {
-            "service": "AppSync",
-            "providerPlugin": "awscloudformation",
-            "output": {
-                "authConfig": {
-                    "additionalAuthenticationProviders": [
-                        {
-                            "authenticationType": "AWS_IAM"
-                        }
-                    ],
-                    "defaultAuthentication": {
-                        "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-                        "userPoolConfig": {
-                            "userPoolId": "authmtfAuth"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "storage": {
-        "missiontripfurnitureuploads": {
-            "service": "S3",
-            "providerPlugin": "awscloudformation"
-        }
-    },
-    "function": {
-        "mtfFavoriteCount": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "api",
-                    "resourceName": "missiontripfurniture",
-                    "attributes": [
-                        "GraphQLAPIIdOutput",
-                        "GraphQLAPIEndpointOutput"
-                    ]
-                }
-            ]
-        },
-        "mtfDownloadCount": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "api",
-                    "resourceName": "missiontripfurniture",
-                    "attributes": [
-                        "GraphQLAPIIdOutput",
-                        "GraphQLAPIEndpointOutput"
-                    ]
-                }
-            ]
-        }
-    }
+	"auth": {
+		"mtfAuth": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"api": {
+		"missiontripfurniture": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [
+						{
+							"authenticationType": "AWS_IAM"
+						}
+					],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authmtfAuth"
+						}
+					}
+				}
+			}
+		}
+	},
+	"storage": {
+		"missiontripfurnitureuploads": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"function": {
+		"mtfFavoriteCount": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "api",
+					"resourceName": "missiontripfurniture",
+					"attributes": [
+						"GraphQLAPIIdOutput",
+						"GraphQLAPIEndpointOutput"
+					]
+				}
+			]
+		},
+		"mtfDownloadCount": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "api",
+					"resourceName": "missiontripfurniture",
+					"attributes": [
+						"GraphQLAPIIdOutput",
+						"GraphQLAPIEndpointOutput"
+					]
+				}
+			]
+		}
+	},
+	"hosting": {
+		"S3AndCloudFront": {
+			"service": "S3AndCloudFront",
+			"providerPlugin": "awscloudformation"
+		}
+	}
 }
