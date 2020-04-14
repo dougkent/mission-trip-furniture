@@ -3,6 +3,7 @@ import React from 'react';
 import * as ReactRouter from 'react-router-dom';
 
 // AWS
+import { Hub } from 'aws-amplify';
 import { Authenticator, Greetings } from 'aws-amplify-react';
 
 // Material UI
@@ -124,6 +125,14 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
         false
     );
 
+    Hub.listen('auth', data => {
+        const { payload } = data;
+
+        if (payload.event === 'signOut') {
+            handleMobileMenuClose();
+        }
+    });
+
     const handleMobileMenuOpen = () => {
         setIsMobileMenuOpen(true);
     };
@@ -234,7 +243,8 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
                             className={`${classes.mobileMenuItem} ${classes.mobileSignInItem}`}>
                             <ReactRouter.Link
                                 to='/my-mtf'
-                                className={`${classes.signInLink}  ${classes.mobileNavLink}`}>
+                                className={`${classes.signInLink}  ${classes.mobileNavLink}`}
+                                onClick={handleMobileMenuClose}>
                                 Sign In
                                 <br />
                                 or
