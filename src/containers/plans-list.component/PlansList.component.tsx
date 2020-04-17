@@ -138,19 +138,43 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
         let search: SearchablePlanFilterInput = null;
 
         if (this.state.searchState.searchTerm?.length) {
-            const descriptionSearch: SearchablePlanFilterInput = {
-                description: {
-                    matchPhrase: this.state.searchState.searchTerm,
-                },
-            };
-            const nameSearch: SearchablePlanFilterInput = {
-                name: {
-                    matchPhrase: this.state.searchState.searchTerm,
-                },
-            };
-
             search = {
-                or: [nameSearch, descriptionSearch],
+                or: [
+                    {
+                        name: {
+                            matchPhrase: this.state.searchState.searchTerm,
+                        },
+                    },
+                    {
+                        name: {
+                            matchPhrasePrefix: this.state.searchState
+                                .searchTerm,
+                        },
+                    },
+                    {
+                        name: {
+                            wildcard:
+                                '*' + this.state.searchState.searchTerm + '*',
+                        },
+                    },
+                    {
+                        description: {
+                            matchPhrase: this.state.searchState.searchTerm,
+                        },
+                    },
+                    {
+                        description: {
+                            matchPhrasePrefix: this.state.searchState
+                                .searchTerm,
+                        },
+                    },
+                    {
+                        description: {
+                            wildcard:
+                                '*' + this.state.searchState.searchTerm + '*',
+                        },
+                    },
+                ],
             };
         }
 
@@ -162,7 +186,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                             eq: material.id,
                         },
                     };
-                }
+                },
             );
 
             if (search?.and) {
@@ -180,7 +204,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                             eq: tool.id,
                         },
                     };
-                }
+                },
             );
 
             if (search?.and) {
@@ -210,19 +234,19 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
     };
 
     private decoratePlans = (plans: Plan[]): Plan[] => {
-        const mappedPlans: Plan[] = plans.map(plan => {
+        const mappedPlans: Plan[] = plans.map((plan) => {
             return {
                 ...plan,
-                requiredMaterials: this.state.materials.filter(material => {
+                requiredMaterials: this.state.materials.filter((material) => {
                     return !!plan.requiredMaterialIds.find(
-                        id => id === material.id
+                        (id) => id === material.id,
                     );
                 }),
-                requiredTools: this.state.tools.filter(tool => {
-                    return !!plan.requiredToolIds.find(id => id === tool.id);
+                requiredTools: this.state.tools.filter((tool) => {
+                    return !!plan.requiredToolIds.find((id) => id === tool.id);
                 }),
                 isFavoritedByUser: this.state.userFavoritedPlanIds.some(
-                    planId => planId === plan.id
+                    (planId) => planId === plan.id,
                 ),
             };
         });
@@ -262,7 +286,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
 
     private handleTogglePlanFavorite = async (
         planId: string,
-        toggleFavOn: boolean
+        toggleFavOn: boolean,
     ) => {
         ReactGA.event({
             category: 'favorite',
@@ -305,7 +329,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
 
         const mappedPlans = this.decoratePlans(searchPlans.items);
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             loading: false,
             plans: isNextPage
