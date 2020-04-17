@@ -189,20 +189,22 @@ class App extends React.Component<{}, AppState> {
         }));
     };
     private loadUserFavoritedPlans = async () => {
-        const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
-                userId: this.state.userId,
-            }),
-        );
+        if (this.state.userId) {
+            const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
+                graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
+                    userId: this.state.userId,
+                }),
+            );
 
-        const favoritedPlanIds = result.data.getFavoriteByUserId.items.map(
-            (favorite) => favorite.planId,
-        );
+            const favoritedPlanIds = result.data.getFavoriteByUserId.items.map(
+                (favorite) => favorite.planId,
+            );
 
-        this.setState((prevState) => ({
-            ...prevState,
-            userFavoritedPlanIds: favoritedPlanIds,
-        }));
+            this.setState((prevState) => ({
+                ...prevState,
+                userFavoritedPlanIds: favoritedPlanIds,
+            }));
+        }
     };
 
     render() {

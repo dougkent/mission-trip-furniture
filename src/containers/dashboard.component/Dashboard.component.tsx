@@ -17,7 +17,7 @@ import {
     Theme,
     Typography,
     withStyles,
-    WithStyles
+    WithStyles,
 } from '@material-ui/core';
 import AddBoxSharpIcon from '@material-ui/icons/AddBoxSharp';
 import AddSharpIcon from '@material-ui/icons/AddSharp';
@@ -40,7 +40,7 @@ import {
     GetPlanQuery,
     GetUserQuery,
     GqlQuery,
-    Plan
+    Plan,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
 
@@ -52,13 +52,13 @@ const styles = (theme: Theme) =>
                 marginTop: theme.spacing(4),
                 width: '100%',
                 display: 'flex',
-                justifyContent: 'space-evenly'
-            }
+                justifyContent: 'space-evenly',
+            },
         },
 
         loading: {
             width: 100,
-            margin: `${theme.spacing(4)}px auto`
+            margin: `${theme.spacing(4)}px auto`,
         },
 
         listContainer: {
@@ -66,55 +66,55 @@ const styles = (theme: Theme) =>
             width: '100%',
             marginBottom: theme.spacing(5),
             [theme.breakpoints.up('lg')]: {
-                padding: theme.spacing(2)
+                padding: theme.spacing(2),
             },
 
             [theme.breakpoints.up('xl')]: {
                 minWidth: 523,
-                width: '33.3333333333333%'
-            }
+                width: '33.3333333333333%',
+            },
         },
         listTitle: {
             display: 'flex',
             justifyContent: 'space-between',
             alignContent: 'flex-end',
-            padding: '10px 0'
+            padding: '10px 0',
         },
         mobileDisplay: {
             [theme.breakpoints.up('sm')]: {
-                display: 'none'
-            }
+                display: 'none',
+            },
         },
         desktopDisplay: {
             display: 'none',
             [theme.breakpoints.up('sm')]: {
-                display: 'inline-flex'
-            }
+                display: 'inline-flex',
+            },
         },
         createNewPlanLink: {
             textDecoration: 'none',
             marginTop: theme.spacing(2),
             [theme.breakpoints.up('md')]: {
-                marginTop: theme.spacing(1)
-            }
+                marginTop: theme.spacing(1),
+            },
         },
         gridItem: {
             width: '100%',
             [theme.breakpoints.up('md')]: {
                 height: theme.spacing(29),
-                width: '50%'
+                width: '50%',
             },
             [theme.breakpoints.up('xl')]: {
                 height: theme.spacing(29),
-                width: '100%'
-            }
+                width: '100%',
+            },
         },
         verticalTabs: {
-            width: '15%'
+            width: '15%',
         },
         fullWidth: {
-            width: '100%'
-        }
+            width: '100%',
+        },
     });
 
 export interface DashboardProps extends AppProps, WithStyles<typeof styles> {}
@@ -137,7 +137,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             favoritedPlansLoading: false,
             downloadedPlans: [],
             downloadedPlansNextToken: null,
-            downloadedPlansLoading: false
+            downloadedPlansLoading: false,
         };
     }
 
@@ -162,10 +162,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 userId: this.props.userId,
                 materials: this.props.materials,
                 tools: this.props.tools,
-                userFavoritedPlanIds: this.props.userFavoritedPlanIds
+                userFavoritedPlanIds: this.props.userFavoritedPlanIds,
             });
 
-            if (this.props.userId !== prevProps.userId) {
+            if (
+                this.props.userId !== prevProps.userId &&
+                this.props.userId.length
+            ) {
                 this.loadCreatedPlans();
                 this.loadFavoritedPlans();
                 this.loadDownloadedPlans();
@@ -178,39 +181,39 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     prevProps.userFavoritedPlanIds
             ) {
                 const decoratedCreatedPlans = this.decoratePlans(
-                    this.state.createdPlans
+                    this.state.createdPlans,
                 );
                 const decoratedFavoritedPlans = this.decoratePlans(
-                    this.state.favoritedPlans
+                    this.state.favoritedPlans,
                 );
                 const decoratedDownloadedPlans = this.decoratePlans(
-                    this.state.downloadedPlans
+                    this.state.downloadedPlans,
                 );
 
                 this.setState({
                     createdPlans: decoratedCreatedPlans,
                     favoritedPlans: decoratedFavoritedPlans,
-                    downloadedPlans: decoratedDownloadedPlans
+                    downloadedPlans: decoratedDownloadedPlans,
                 });
             }
         }
     };
 
     private decoratePlans = (plans: Plan[]): Plan[] => {
-        const mappedPlans: Plan[] = plans.map(plan => {
+        const mappedPlans: Plan[] = plans.map((plan) => {
             return {
                 ...plan,
-                requiredMaterials: this.state.materials.filter(material => {
+                requiredMaterials: this.state.materials.filter((material) => {
                     return !!plan.requiredMaterialIds.find(
-                        id => id === material.id
+                        (id) => id === material.id,
                     );
                 }),
-                requiredTools: this.state.tools.filter(tool => {
-                    return !!plan.requiredToolIds.find(id => id === tool.id);
+                requiredTools: this.state.tools.filter((tool) => {
+                    return !!plan.requiredToolIds.find((id) => id === tool.id);
                 }),
                 isFavoritedByUser: this.state.userFavoritedPlanIds.some(
-                    planId => planId === plan.id
-                )
+                    (planId) => planId === plan.id,
+                ),
             };
         });
 
@@ -230,10 +233,10 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     private handleTabChange = (
         event: React.ChangeEvent<{}>,
-        newValue: DashboardTabsEnum
+        newValue: DashboardTabsEnum,
     ) => {
         this.setState({
-            currentTab: newValue
+            currentTab: newValue,
         });
 
         switch (newValue) {
@@ -257,21 +260,21 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     private handleTogglePlanFavorite = async (
         planId: string,
-        toggleFavOn: boolean
+        toggleFavOn: boolean,
     ) => {
         ReactGA.event({
             category: 'favorite',
             action: toggleFavOn
                 ? 'User Favorited Plan'
                 : 'User Unfavorited Plan',
-            label: 'favorite on plan list page'
+            label: 'favorite on plan list page',
         });
 
         this.props.onPlanFavorite(planId, toggleFavOn);
 
         this.setState({
             favoritedPlansLoading: true,
-            favoritedPlans: []
+            favoritedPlans: [],
         });
 
         setTimeout(() => {
@@ -283,42 +286,42 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     private loadCreatedPlans = async (isNextPage: boolean = false) => {
         this.setState({
-            createdPlansLoading: true
+            createdPlansLoading: true,
         });
 
         const result: GqlQuery<GetUserQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.getUserQuery, {
                 id: this.state.userId,
                 limit: 5,
-                nextToken: this.state.createdPlansNextToken
-            })
+                nextToken: this.state.createdPlansNextToken,
+            }),
         );
 
         const { createdPlans } = result.data.getUser;
 
         const mappedPlans = this.decoratePlans(createdPlans.items);
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             createdPlansLoading: false,
             createdPlans: isNextPage
                 ? prevState.createdPlans.concat(mappedPlans)
                 : mappedPlans,
-            createdPlansNextToken: createdPlans.nextToken
+            createdPlansNextToken: createdPlans.nextToken,
         }));
     };
 
     private loadFavoritedPlans = async (isNextPage: boolean = false) => {
         this.setState({
-            favoritedPlansLoading: true
+            favoritedPlansLoading: true,
         });
 
         const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.listFavoritesByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
-                nextToken: this.state.favoritedPlansNextToken
-            })
+                nextToken: this.state.favoritedPlansNextToken,
+            }),
         );
 
         const { getFavoriteByUserId } = result.data;
@@ -330,8 +333,8 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
             const result: GqlQuery<GetPlanQuery> = await API.graphql(
                 graphqlOperation(graphQLQueries.getPlanQuery, {
-                    id: planId
-                })
+                    id: planId,
+                }),
             );
 
             favoritedPlans.push(result.data.getPlan);
@@ -339,27 +342,27 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         const mappedPlans = this.decoratePlans(favoritedPlans);
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             favoritedPlansLoading: false,
             favoritedPlans: isNextPage
                 ? prevState.favoritedPlans.concat(mappedPlans)
                 : mappedPlans,
-            favoritedPlansNextToken: getFavoriteByUserId.nextToken
+            favoritedPlansNextToken: getFavoriteByUserId.nextToken,
         }));
     };
 
     private loadDownloadedPlans = async (isNextPage: boolean = false) => {
         this.setState({
-            downloadedPlansLoading: true
+            downloadedPlansLoading: true,
         });
 
         const result: GqlQuery<GetDownloadedByUserIdQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.listDownloadsByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
-                nextToken: this.state.downloadedPlansNextToken
-            })
+                nextToken: this.state.downloadedPlansNextToken,
+            }),
         );
 
         const { getDownloadedByUserId } = result.data;
@@ -371,8 +374,8 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
             const result: GqlQuery<GetPlanQuery> = await API.graphql(
                 graphqlOperation(graphQLQueries.getPlanQuery, {
-                    id: planId
-                })
+                    id: planId,
+                }),
             );
 
             downloadedPlans.push(result.data.getPlan);
@@ -380,13 +383,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         const mappedPlans = this.decoratePlans(downloadedPlans);
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             downloadedPlansLoading: false,
             downloadedPlans: isNextPage
                 ? prevState.downloadedPlans.concat(mappedPlans)
                 : mappedPlans,
-            downloadedPlansNextToken: getDownloadedByUserId.nextToken
+            downloadedPlansNextToken: getDownloadedByUserId.nextToken,
         }));
     };
 
@@ -582,6 +585,6 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 export default withStyles(styles(mtfTheme))(
     withAuthenticator(Dashboard, {
         signUpConfig: signUpConfig,
-        theme: mtfAmplifyTheme
-    })
+        theme: mtfAmplifyTheme,
+    }),
 );
