@@ -21,7 +21,7 @@ import {
     GetFavoriteByUserIdQuery,
     GetUserQuery,
     ListMaterialsQuery,
-    ListToolsQuery
+    ListToolsQuery,
 } from '../models/api-models';
 import * as graphQLQueries from '../graphql/queries';
 import {
@@ -32,7 +32,7 @@ import {
     Home,
     NotFound,
     PlanView,
-    PlansList
+    PlansList,
 } from '.';
 import { Nav } from '../components';
 import { PlanFavoriteService } from '../services';
@@ -51,7 +51,7 @@ class App extends React.Component<{}, AppState> {
             userId: '',
             materials: [],
             tools: [],
-            userFavoritedPlanIds: []
+            userFavoritedPlanIds: [],
         };
     }
 
@@ -64,7 +64,7 @@ class App extends React.Component<{}, AppState> {
     }
 
     async componentDidMount() {
-        Hub.listen('auth', data => {
+        Hub.listen('auth', (data) => {
             const { payload } = data;
             this.listenToAuthEvents(payload);
         });
@@ -78,15 +78,16 @@ class App extends React.Component<{}, AppState> {
         switch (payload.event) {
             case 'signIn':
                 await this.createUserIfNotExists();
+                this.loadUserFavoritedPlans();
 
                 const userInfo = await Auth.currentUserInfo();
                 ReactGA.set({
-                    userId: userInfo.id
+                    userId: userInfo.id,
                 });
                 ReactGA.event({ category: 'auth', action: 'User Signed In' });
                 break;
             case 'signOut':
-                this.setState({ userId: '' });
+                this.setState({ userId: '', userFavoritedPlanIds: [] });
                 ReactGA.event({ category: 'auth', action: 'User Signed Out' });
                 break;
             case 'signUp':
@@ -97,7 +98,7 @@ class App extends React.Component<{}, AppState> {
 
     private async userExists(userId: string): Promise<boolean> {
         const userResult: GqlQuery<GetUserQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getUserIdQuery, { id: userId })
+            graphqlOperation(graphQLQueries.getUserIdQuery, { id: userId }),
         );
 
         const { getUser } = userResult.data;
@@ -118,13 +119,13 @@ class App extends React.Component<{}, AppState> {
     private async createUserByUsername(id: string, username: string) {
         var createUserInput: CreateUserInput = {
             id: id,
-            username: username
+            username: username,
         };
 
         var createUserResult: GqlQuery<CreateUserMutation> = await API.graphql(
             graphqlOperation(graphQLQueries.createUserMutation, {
-                input: createUserInput
-            })
+                input: createUserInput,
+            }),
         );
 
         const { createUser } = createUserResult.data;
@@ -134,32 +135,32 @@ class App extends React.Component<{}, AppState> {
 
     private handleTogglePlanFavorite = async (
         planId: string,
-        toggleFavOn: boolean
+        toggleFavOn: boolean,
     ) => {
         if (toggleFavOn) {
             await this.planFavoriteService.createFavorite(
                 planId,
-                this.state.userId
+                this.state.userId,
             );
 
-            this.setState(prevState => ({
+            this.setState((prevState) => ({
                 ...prevState,
                 userFavoritedPlanIds: [
                     ...prevState.userFavoritedPlanIds,
-                    planId
-                ]
+                    planId,
+                ],
             }));
         } else {
             await this.planFavoriteService.deleteFavorite(
                 planId,
-                this.state.userId
+                this.state.userId,
             );
 
-            this.setState(prevState => ({
+            this.setState((prevState) => ({
                 ...prevState,
                 userFavoritedPlanIds: prevState.userFavoritedPlanIds.filter(
-                    favPlanId => favPlanId !== planId
-                )
+                    (favPlanId) => favPlanId !== planId,
+                ),
             }));
         }
 
@@ -171,36 +172,36 @@ class App extends React.Component<{}, AppState> {
             {
                 query: graphQLQueries.listMaterialsQuery,
                 // @ts-ignore
-                authMode: 'AWS_IAM'
-            }
+                authMode: 'AWS_IAM',
+            },
         );
 
         const toolsResult: GqlQuery<ListToolsQuery> = await API.graphql({
             query: graphQLQueries.listToolsQuery,
             // @ts-ignore
-            authMode: 'AWS_IAM'
+            authMode: 'AWS_IAM',
         });
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             materials: materialsResult?.data?.listMaterials?.items,
-            tools: toolsResult?.data?.listTools?.items
+            tools: toolsResult?.data?.listTools?.items,
         }));
     };
     private loadUserFavoritedPlans = async () => {
         const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
-                userId: this.state.userId
-            })
+                userId: this.state.userId,
+            }),
         );
 
         const favoritedPlanIds = result.data.getFavoriteByUserId.items.map(
-            favorite => favorite.planId
+            (favorite) => favorite.planId,
         );
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
-            userFavoritedPlanIds: favoritedPlanIds
+            userFavoritedPlanIds: favoritedPlanIds,
         }));
     };
 
@@ -246,7 +247,7 @@ class App extends React.Component<{}, AppState> {
                         />
                         <Route
                             path='/plans/:planId'
-                            render={props => (
+                            render={(props) => (
                                 <PlanView
                                     userId={this.state.userId}
                                     planId={props.match.params.planId}
