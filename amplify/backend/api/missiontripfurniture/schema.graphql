@@ -72,7 +72,10 @@ type Favorite
 }
 
 type Download
-    @model(mutations: { create: "createDownload" }, subscriptions: null)
+    @model(
+        mutations: { create: "createDownload", delete: "deleteDownload" }
+        subscriptions: null
+    )
     @key(
         name: "downloadedBy"
         fields: ["planId", "userId"]

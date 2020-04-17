@@ -24,6 +24,7 @@ import {
     ListToolsQuery,
 } from '../models/api-models';
 import * as graphQLQueries from '../graphql/queries';
+import * as graphQLMutations from '../graphql/mutations';
 import {
     About,
     Contact,
@@ -123,7 +124,7 @@ class App extends React.Component<{}, AppState> {
         };
 
         var createUserResult: GqlQuery<CreateUserMutation> = await API.graphql(
-            graphqlOperation(graphQLQueries.createUserMutation, {
+            graphqlOperation(graphQLMutations.createUserMutation, {
                 input: createUserInput,
             }),
         );

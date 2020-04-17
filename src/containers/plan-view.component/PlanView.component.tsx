@@ -47,13 +47,15 @@ import {
     DeletePlanInput,
     DeletePlanMutation,
     GqlQuery,
+    GetDownloadByPlanIdQuery,
+    GetFavoriteByPlanIdQuery,
     GetPlanQuery,
     Plan,
     UpdatePlanInput,
     UpdatePlanMutation,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
-import { PlanFavoriteService } from '../../services';
+import * as graphQLMutations from '../../graphql/mutations';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -131,8 +133,6 @@ export interface ViewPlanProps extends AppProps, WithStyles<typeof styles> {
     planId: string;
 }
 class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
-    private planFavoriteService = new PlanFavoriteService();
-
     constructor(props: ViewPlanProps) {
         super(props);
 
@@ -212,16 +212,16 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     private decoratePlan = (plan: Plan): Plan => {
         return {
             ...plan,
-            requiredMaterials: this.state.materials.filter(material => {
+            requiredMaterials: this.state.materials.filter((material) => {
                 return !!plan.requiredMaterialIds.find(
-                    id => id === material.id
+                    (id) => id === material.id,
                 );
             }),
-            requiredTools: this.state.tools.filter(tool => {
-                return !!plan.requiredToolIds.find(id => id === tool.id);
+            requiredTools: this.state.tools.filter((tool) => {
+                return !!plan.requiredToolIds.find((id) => id === tool.id);
             }),
             isFavoritedByUser: this.state.userFavoritedPlanIds.some(
-                planId => planId === plan.id
+                (planId) => planId === plan.id,
             ),
         };
     };
@@ -245,13 +245,13 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             };
 
             API.graphql(
-                graphqlOperation(graphQLQueries.createDownloadMutation, {
+                graphqlOperation(graphQLMutations.createDownloadMutation, {
                     input: input,
-                })
+                }),
             );
         }
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             saving: false,
             plan: {
@@ -276,9 +276,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         };
 
         const deleteResult: GqlQuery<DeletePlanMutation> = await API.graphql(
-            graphqlOperation(graphQLQueries.deletePlanMutation, {
+            graphqlOperation(graphQLMutations.deletePlanMutation, {
                 input: input,
-            })
+            }),
         );
 
         if (deleteResult?.data) {
@@ -288,6 +288,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             await Storage.remove(this.state.plan.pdfS3Key, {
                 level: 'protected',
             });
+
+            await this.handleDeleteDownloads();
+            await this.handleDeleteFavorites();
 
             ReactGA.event({
                 category: 'delete',
@@ -307,6 +310,74 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         }
     };
 
+    private handleDeleteDownloads = async (nextToken: string = null) => {
+        const planDownloads: GqlQuery<GetDownloadByPlanIdQuery> = await API.graphql(
+            graphqlOperation(graphQLQueries.getDownloadByPlanQuery, {
+                planId: this.state.planId,
+                nextToken: nextToken,
+            }),
+        );
+
+        if (planDownloads?.data) {
+            const { getDownloadByPlanId } = planDownloads.data;
+
+            if (getDownloadByPlanId?.items?.length) {
+                getDownloadByPlanId.items.forEach((download) => {
+                    API.graphql(
+                        graphqlOperation(
+                            graphQLMutations.deleteDownloadMutation,
+                            {
+                                input: {
+                                    id: download.id,
+                                },
+                            },
+                        ),
+                    );
+                });
+
+                if (getDownloadByPlanId.nextToken?.length) {
+                    await this.handleDeleteDownloads(
+                        getDownloadByPlanId.nextToken,
+                    );
+                }
+            }
+        }
+    };
+
+    private handleDeleteFavorites = async (nextToken: string = null) => {
+        const planFavorites: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
+            graphqlOperation(graphQLQueries.getFavoriteByPlanQuery, {
+                planId: this.state.planId,
+                nextToken: nextToken,
+            }),
+        );
+
+        if (planFavorites?.data) {
+            const { getFavoriteByPlanId } = planFavorites.data;
+
+            if (getFavoriteByPlanId?.items?.length) {
+                getFavoriteByPlanId.items.forEach((favorite) => {
+                    API.graphql(
+                        graphqlOperation(
+                            graphQLMutations.deleteFavoriteMutation,
+                            {
+                                input: {
+                                    id: favorite.id,
+                                },
+                            },
+                        ),
+                    );
+                });
+
+                if (getFavoriteByPlanId.nextToken?.length) {
+                    await this.handleDeleteFavorites(
+                        getFavoriteByPlanId.nextToken,
+                    );
+                }
+            }
+        }
+    };
+
     private handleDeleteDialogOpen = () => {
         this.setState({
             deleteDialogOpen: true,
@@ -322,7 +393,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleEditingOff = () => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             editing: false,
             editDescription: prevState.plan.description,
@@ -369,9 +440,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         };
 
         const planResult: GqlQuery<UpdatePlanMutation> = await API.graphql(
-            graphqlOperation(graphQLQueries.updatePlanMutation, {
+            graphqlOperation(graphQLMutations.updatePlanMutation, {
                 input: input,
-            })
+            }),
         );
 
         if (planResult?.data?.updatePlan) {
@@ -394,7 +465,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             });
 
             throw Error(
-                "An unexpected error occurred when updating this plan's description. Please try again."
+                "An unexpected error occurred when updating this plan's description. Please try again.",
             );
         }
     };
@@ -409,7 +480,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         });
 
         if (toggleFavOn) {
-            this.setState(prevState => ({
+            this.setState((prevState) => ({
                 ...prevState,
                 plan: {
                     ...prevState.plan,
@@ -418,7 +489,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 },
             }));
         } else {
-            this.setState(prevState => ({
+            this.setState((prevState) => ({
                 ...prevState,
                 plan: {
                     ...prevState.plan,
@@ -536,14 +607,14 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 Materials:
                             </Typography>
                             {this.state.plan.requiredMaterials?.map(
-                                material => (
+                                (material) => (
                                     <Chip
                                         key={material.id}
                                         size='small'
                                         color='secondary'
                                         label={material.name}
                                     />
-                                )
+                                ),
                             )}
                         </div>
                         <div className={classes.row}>
@@ -552,7 +623,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 className={classes.rowTitle}>
                                 Tools:
                             </Typography>
-                            {this.state.plan.requiredTools?.map(tool => (
+                            {this.state.plan.requiredTools?.map((tool) => (
                                 <Chip
                                     key={tool.id}
                                     size='small'
