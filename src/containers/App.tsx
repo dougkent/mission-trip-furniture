@@ -78,6 +78,7 @@ class App extends React.Component<{}, AppState> {
         switch (payload.event) {
             case 'signIn':
                 await this.createUserIfNotExists();
+                this.loadUserFavoritedPlans();
 
                 const userInfo = await Auth.currentUserInfo();
                 ReactGA.set({
@@ -86,7 +87,7 @@ class App extends React.Component<{}, AppState> {
                 ReactGA.event({ category: 'auth', action: 'User Signed In' });
                 break;
             case 'signOut':
-                this.setState({ userId: '' });
+                this.setState({ userId: '', userFavoritedPlanIds: [] });
                 ReactGA.event({ category: 'auth', action: 'User Signed Out' });
                 break;
             case 'signUp':
