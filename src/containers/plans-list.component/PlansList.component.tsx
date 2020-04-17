@@ -152,6 +152,12 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                         },
                     },
                     {
+                        name: {
+                            wildcard:
+                                '*' + this.state.searchState.searchTerm + '*',
+                        },
+                    },
+                    {
                         description: {
                             matchPhrase: this.state.searchState.searchTerm,
                         },
@@ -160,6 +166,12 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                         description: {
                             matchPhrasePrefix: this.state.searchState
                                 .searchTerm,
+                        },
+                    },
+                    {
+                        description: {
+                            wildcard:
+                                '*' + this.state.searchState.searchTerm + '*',
                         },
                     },
                 ],
