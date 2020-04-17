@@ -115,6 +115,7 @@ const styles = (theme: Theme) =>
         rowTitle: {
             marginRight: theme.spacing(1),
         },
+        requiredItem: { marginRight: theme.spacing(0.5) },
         descriptionTitle: {
             marginTop: theme.spacing(3),
         },
@@ -609,6 +610,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             {this.state.plan.requiredMaterials?.map(
                                 (material) => (
                                     <Chip
+                                        className={classes.requiredItem}
                                         key={material.id}
                                         size='small'
                                         color='secondary'
@@ -625,6 +627,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             </Typography>
                             {this.state.plan.requiredTools?.map((tool) => (
                                 <Chip
+                                    className={classes.requiredItem}
                                     key={tool.id}
                                     size='small'
                                     color='secondary'
