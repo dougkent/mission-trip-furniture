@@ -18,7 +18,7 @@ import {
     Tooltip,
     Typography,
     withStyles,
-    WithStyles
+    WithStyles,
 } from '@material-ui/core';
 import InfoSharpIcon from '@material-ui/icons/InfoSharp';
 
@@ -37,7 +37,7 @@ import {
     ImageUploader,
     MaterialsSelector,
     PdfUploader,
-    ToolsSelector
+    ToolsSelector,
 } from '../../components';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import {
@@ -45,9 +45,10 @@ import {
     CreatePlanMutation,
     Material,
     Tool,
-    GetPlanQuery
+    GetPlanQuery,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
+import * as graphQLMutations from '../../graphql/mutations';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -58,12 +59,12 @@ const styles = (theme: Theme) =>
                 padding: theme.spacing(5),
                 width: '70%',
                 marginLeft: 'auto',
-                marginRight: 'auto'
-            }
+                marginRight: 'auto',
+            },
         },
         form: {
             display: 'flex',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
         },
         formRow: {
             width: '100%',
@@ -71,25 +72,25 @@ const styles = (theme: Theme) =>
             flexGrow: 1,
             alignItems: 'center',
             marginBottom: theme.spacing(1),
-            marginTop: theme.spacing(1)
+            marginTop: theme.spacing(1),
         },
         selector: {
-            width: '100%'
+            width: '100%',
         },
         multiCardRow: {
-            display: 'flex'
+            display: 'flex',
         },
         submitButtonRow: {
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
         },
         loadingIcon: {
-            marginRight: theme.spacing(1)
+            marginRight: theme.spacing(1),
         },
         tooltip: {
-            marginLeft: theme.spacing(1)
-        }
+            marginLeft: theme.spacing(1),
+        },
     });
 
 export interface CreatePlanProps extends AppProps, WithStyles<typeof styles> {}
@@ -113,13 +114,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             downloadedCount: 0,
             requiredMaterialIds: [],
             requiredToolIds: [],
-            planCreatedById: this.props.userId
+            planCreatedById: this.props.userId,
         },
         selectedMaterials: [],
         selectedTools: [],
         loading: false,
         createComplete: false,
-        errors: []
+        errors: [],
     };
 
     constructor(props: CreatePlanProps) {
@@ -138,22 +139,22 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             this.props.materials !== prevProps.materials ||
             this.props.tools !== prevProps.tools
         ) {
-            this.setState(prevState => ({
+            this.setState((prevState) => ({
                 ...prevState,
                 userId: this.props.userId,
                 materials: this.props.materials,
                 tools: this.props.tools,
                 plan: {
                     ...prevState.plan,
-                    planCreatedById: this.props.userId
-                }
+                    planCreatedById: this.props.userId,
+                },
             }));
         }
     };
 
     private handleClearErrors = () => {
         this.setState({
-            errors: []
+            errors: [],
         });
     };
 
@@ -162,20 +163,20 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     };
 
     private handleImageDeselect = () => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             imageFile: null,
             plan: {
                 ...prevState.plan,
-                imageS3Info: null
-            }
+                imageS3Info: null,
+            },
         }));
     };
 
     private handleImageSelect = (file: File) => {
         const fileName = `images/${uuid()}`;
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             imageFile: file,
             plan: {
@@ -183,56 +184,56 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                 imageS3Info: {
                     key: fileName,
                     width: 200,
-                    height: 200
-                }
-            }
+                    height: 200,
+                },
+            },
         }));
     };
 
     private handleMaterialSelected = (materials: Material[]) => {
         this.setState({
-            selectedMaterials: materials
+            selectedMaterials: materials,
         });
     };
 
     private handlePdfDeselect = async () => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             pdfFile: null,
             plan: {
                 ...prevState.plan,
-                pdfS3Key: ''
-            }
+                pdfS3Key: '',
+            },
         }));
     };
 
     private handlePdfSelect = async (file: File) => {
         const fileName = `pdfs/${uuid()}`;
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             pdfFile: file,
             plan: {
                 ...prevState.plan,
-                pdfS3Key: fileName
-            }
+                pdfS3Key: fileName,
+            },
         }));
     };
 
     private handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        await this.setState(prevState => ({
+        await this.setState((prevState) => ({
             ...prevState,
             loading: true,
             plan: {
                 ...prevState.plan,
                 created: new Date().toISOString(),
                 requiredMaterialIds: prevState.selectedMaterials.map(
-                    material => material.id
+                    (material) => material.id,
                 ),
-                requiredToolIds: prevState.selectedTools.map(tool => tool.id)
-            }
+                requiredToolIds: prevState.selectedTools.map((tool) => tool.id),
+            },
         }));
 
         const errors = await this.validateForm();
@@ -240,15 +241,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         if (errors.length > 0) {
             this.setState({
                 loading: false,
-                errors: errors
+                errors: errors,
             });
             return;
         }
 
         const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
-            graphqlOperation(graphQLQueries.createPlanMutation, {
-                input: this.state.plan
-            })
+            graphqlOperation(graphQLMutations.createPlanMutation, {
+                input: this.state.plan,
+            }),
         );
 
         if (planResult.data.createPlan.id) {
@@ -257,22 +258,22 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
             ReactGA.event({
                 category: 'create',
-                action: 'User Created a Plan'
+                action: 'User Created a Plan',
             });
 
             setTimeout(
                 () =>
                     this.setState({
-                        createComplete: true
+                        createComplete: true,
                     }),
-                1000
+                1000,
             );
         } else {
             this.setState({
                 loading: false,
                 errors: [
-                    'An unexpected error occurred when creating this plan. Please try again.'
-                ]
+                    'An unexpected error occurred when creating this plan. Please try again.',
+                ],
             });
         }
     };
@@ -288,19 +289,19 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             planId = this.getPlanId(value);
         }
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             ...prevState,
             plan: {
                 ...prevState.plan,
                 id: planId,
-                [key]: value
-            }
+                [key]: value,
+            },
         }));
     };
 
     private handleToolSelected = (tools: Tool[]) => {
         this.setState({
-            selectedTools: tools
+            selectedTools: tools,
         });
     };
 
@@ -325,15 +326,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             errors.push('Please enter a plan name.');
         } else if (!this.isPlanIdAlphaNumeric()) {
             errors.push(
-                'Plan names can only be alpha-numeric. Please change your plan name to only contain the characters: A-Z, a-z, 0-9, spaces, or hyphens.'
+                'Plan names can only be alpha-numeric. Please change your plan name to only contain the characters: A-Z, a-z, 0-9, spaces, or hyphens.',
             );
         } else if (!this.isPlanIdAlpha()) {
             errors.push(
-                'Plan names need at least one alphabet letter in them (A-Z or a-z).'
+                'Plan names need at least one alphabet letter in them (A-Z or a-z).',
             );
         } else if (await this.planAlreadyExists()) {
             errors.push(
-                'A plan with that same name already exists. Please enter a different name.'
+                'A plan with that same name already exists. Please enter a different name.',
             );
         }
 
@@ -358,7 +359,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
         if (!this.state.selectedMaterials.length) {
             errors.push(
-                'Please select one or more materials your plan requires.'
+                'Please select one or more materials your plan requires.',
             );
         }
 
@@ -372,8 +373,8 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     private planAlreadyExists = async (): Promise<boolean> => {
         const planResult: GqlQuery<GetPlanQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.getPlanIdQuery, {
-                id: this.state.plan.id
-            })
+                id: this.state.plan.id,
+            }),
         );
 
         const { data } = planResult;
@@ -384,7 +385,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     private uploadImage = async () => {
         Storage.put(this.state.plan.imageS3Info.key, this.state.imageFile, {
             level: 'protected',
-            metadata: { owner: this.state.plan.planCreatedById }
+            metadata: { owner: this.state.plan.planCreatedById },
         });
     };
 
@@ -392,7 +393,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         Storage.put(this.state.plan.pdfS3Key, this.state.pdfFile, {
             level: 'protected',
             contentType: 'application/pdf',
-            metadata: { owner: this.state.plan.planCreatedById }
+            metadata: { owner: this.state.plan.planCreatedById },
         });
     };
 
@@ -426,7 +427,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                                 <InfoSharpIcon />
                                             </Tooltip>
                                         </InputAdornment>
-                                    )
+                                    ),
                                 }}
                             />
                         </div>
@@ -450,7 +451,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                                 <InfoSharpIcon />
                                             </Tooltip>
                                         </InputAdornment>
-                                    )
+                                    ),
                                 }}
                             />
                         </div>
@@ -557,6 +558,6 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
 export default withStyles(styles(mtfTheme))(
     withAuthenticator(CreatePlan, {
-        signUpConfig: signUpConfig
-    })
+        signUpConfig: signUpConfig,
+    }),
 );

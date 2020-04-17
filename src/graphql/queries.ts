@@ -1,4 +1,4 @@
-const planFields = `
+export const planFields = `
         id
         name
         description
@@ -17,8 +17,26 @@ const planFields = `
         requiredToolIds`;
 
 //queries
+export const getDownloadByPlanQuery = `query GetDownloadByPlanAndUser($planId: ID!, $nextToken: String) {
+    getDownloadByPlanId (planId: $planId, nextToken: $nextToken) {
+        nextToken
+        items {
+            id
+        }
+    }
+}`;
+
 export const getFavoriteByPlanAndUserQuery = `query GetFavoriteByPlanAndUser($planId: ID!, $userId: ModelIDKeyConditionInput!) {
     getFavoriteByPlanId (planId: $planId, userId: $userId) {
+        items {
+            id
+        }
+    }
+}`;
+
+export const getFavoriteByPlanQuery = `query GetFavoriteByPlanAndUser($planId: ID!, $nextToken: String) {
+    getFavoriteByPlanId (planId: $planId, nextToken: $nextToken) {
+        nextToken
         items {
             id
         }
@@ -105,48 +123,5 @@ export const searchPlansQuery = `query SearchPlans($limit: Int!, $filter: Search
         items {
             ${planFields}
         }
-    }
-}`;
-
-// mutations
-export const createDownloadMutation = `mutation CreateDownload($input: CreateDownloadInput!) {
-    createDownload(input: $input) {
-        id
-    }
-}`;
-
-export const createFavoriteMutation = `mutation CreateFavorite($input: CreateFavoriteInput!) {
-    createFavorite(input: $input) {
-        id
-    }
-}`;
-
-export const createPlanMutation = `mutation CreatePlan($input: CreatePlanInput!) {
-    createPlan(input: $input) {
-        id
-    }
-}`;
-
-export const createUserMutation = `mutation CreateUser($input: CreateUserInput!) {
-    createUser(input: $input) {
-        id
-    }
-}`;
-
-export const deleteFavoriteMutation = `mutation DeleteFavorite($input: DeleteFavoriteInput!) {
-    deleteFavorite(input: $input) {
-        id
-    }
-}`;
-
-export const deletePlanMutation = `mutation DeletePlan($input: DeletePlanInput!) {
-    deletePlan(input: $input) {
-        id
-    }
-}`;
-
-export const updatePlanMutation = `mutation UpdatePlan($input: UpdatePlanInput!) {
-    updatePlan(input: $input) {
-        ${planFields}
     }
 }`;

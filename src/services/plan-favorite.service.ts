@@ -14,11 +14,12 @@ import {
     GetFavoriteByPlanIdQuery,
 } from '../models/api-models';
 import * as graphQLQueries from '../graphql/queries';
+import * as graphQLMutations from '../graphql/mutations';
 
 export class PlanFavoriteService {
     createFavorite = async (
         planId: string,
-        userId: string
+        userId: string,
     ): Promise<string> => {
         const createFavoriteInput: CreateFavoriteInput = {
             id: uuid(),
@@ -27,9 +28,9 @@ export class PlanFavoriteService {
         };
 
         const result: GqlQuery<CreateFavoriteMutation> = await API.graphql(
-            graphqlOperation(graphQLQueries.createFavoriteMutation, {
+            graphqlOperation(graphQLMutations.createFavoriteMutation, {
                 input: createFavoriteInput,
-            })
+            }),
         );
 
         return result.data.createFavorite.id;
@@ -41,22 +42,22 @@ export class PlanFavoriteService {
         };
 
         await API.graphql(
-            graphqlOperation(graphQLQueries.deleteFavoriteMutation, {
+            graphqlOperation(graphQLMutations.deleteFavoriteMutation, {
                 input: deleteFavoriteInput,
-            })
+            }),
         );
     };
 
     deleteFavorite = async (planId: string, userId: string) => {
         const favoriteResult = await this.getFavoriteByPlandIdAndUserId(
             planId,
-            userId
+            userId,
         );
 
         const { getFavoriteByPlanId } = favoriteResult.data;
 
         if (getFavoriteByPlanId?.items?.length) {
-            getFavoriteByPlanId.items.forEach(async favorite => {
+            getFavoriteByPlanId.items.forEach(async (favorite) => {
                 await this.deleteFavoriteById(favorite.id);
             });
         }
@@ -64,7 +65,7 @@ export class PlanFavoriteService {
 
     private getFavoriteByPlandIdAndUserId = async (
         planId: string,
-        userId: string
+        userId: string,
     ): Promise<GqlQuery<GetFavoriteByPlanIdQuery>> => {
         const getFavoriteInput: ModelIdKeyConditionInput = {
             eq: userId,
@@ -74,7 +75,7 @@ export class PlanFavoriteService {
             graphqlOperation(graphQLQueries.getFavoriteByPlanAndUserQuery, {
                 planId: planId,
                 userId: getFavoriteInput,
-            })
+            }),
         );
 
         return favoriteResult;
