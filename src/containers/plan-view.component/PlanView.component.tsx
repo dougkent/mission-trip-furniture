@@ -115,9 +115,18 @@ const styles = (theme: Theme) =>
         rowTitle: {
             marginRight: theme.spacing(1),
         },
-        requiredItem: { marginRight: theme.spacing(0.5) },
+        requiredItemRow: {
+            flexWrap: 'wrap',
+        },
+        requiredItem: {
+            marginRight: theme.spacing(0.5),
+            marginBottom: theme.spacing(0.5),
+        },
         descriptionTitle: {
             marginTop: theme.spacing(3),
+        },
+        description: {
+            whiteSpace: 'pre-line',
         },
         buttonRow: {
             marginTop: theme.spacing(3),
@@ -215,14 +224,14 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             ...plan,
             requiredMaterials: this.state.materials.filter((material) => {
                 return !!plan.requiredMaterialIds.find(
-                    (id) => id === material.id,
+                    (id) => id === material.id
                 );
             }),
             requiredTools: this.state.tools.filter((tool) => {
                 return !!plan.requiredToolIds.find((id) => id === tool.id);
             }),
             isFavoritedByUser: this.state.userFavoritedPlanIds.some(
-                (planId) => planId === plan.id,
+                (planId) => planId === plan.id
             ),
         };
     };
@@ -248,7 +257,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             API.graphql(
                 graphqlOperation(graphQLMutations.createDownloadMutation, {
                     input: input,
-                }),
+                })
             );
         }
 
@@ -279,7 +288,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         const deleteResult: GqlQuery<DeletePlanMutation> = await API.graphql(
             graphqlOperation(graphQLMutations.deletePlanMutation, {
                 input: input,
-            }),
+            })
         );
 
         if (deleteResult?.data) {
@@ -316,7 +325,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             graphqlOperation(graphQLQueries.getDownloadByPlanQuery, {
                 planId: this.state.planId,
                 nextToken: nextToken,
-            }),
+            })
         );
 
         if (planDownloads?.data) {
@@ -331,14 +340,14 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 input: {
                                     id: download.id,
                                 },
-                            },
-                        ),
+                            }
+                        )
                     );
                 });
 
                 if (getDownloadByPlanId.nextToken?.length) {
                     await this.handleDeleteDownloads(
-                        getDownloadByPlanId.nextToken,
+                        getDownloadByPlanId.nextToken
                     );
                 }
             }
@@ -350,7 +359,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             graphqlOperation(graphQLQueries.getFavoriteByPlanQuery, {
                 planId: this.state.planId,
                 nextToken: nextToken,
-            }),
+            })
         );
 
         if (planFavorites?.data) {
@@ -365,14 +374,14 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 input: {
                                     id: favorite.id,
                                 },
-                            },
-                        ),
+                            }
+                        )
                     );
                 });
 
                 if (getFavoriteByPlanId.nextToken?.length) {
                     await this.handleDeleteFavorites(
-                        getFavoriteByPlanId.nextToken,
+                        getFavoriteByPlanId.nextToken
                     );
                 }
             }
@@ -443,7 +452,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         const planResult: GqlQuery<UpdatePlanMutation> = await API.graphql(
             graphqlOperation(graphQLMutations.updatePlanMutation, {
                 input: input,
-            }),
+            })
         );
 
         if (planResult?.data?.updatePlan) {
@@ -466,7 +475,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             });
 
             throw Error(
-                "An unexpected error occurred when updating this plan's description. Please try again.",
+                "An unexpected error occurred when updating this plan's description. Please try again."
             );
         }
     };
@@ -523,8 +532,9 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         className={classes.descriptionTitle}>
                         Description
                     </Typography>
-
-                    <Typography variant='body1' className={classes.row}>
+                    <Typography
+                        variant='body1'
+                        className={`${classes.row} ${classes.description}`}>
                         {this.state.plan.description}
                     </Typography>
                 </>
@@ -601,7 +611,8 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         />
                     </div>
                     <div className={classes.planContent}>
-                        <div className={classes.row}>
+                        <div
+                            className={`${classes.row} ${classes.requiredItemRow}`}>
                             <Typography
                                 variant='subtitle1'
                                 className={classes.rowTitle}>
@@ -616,10 +627,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                         color='secondary'
                                         label={material.name}
                                     />
-                                ),
+                                )
                             )}
                         </div>
-                        <div className={classes.row}>
+                        <div
+                            className={`${classes.row} ${classes.requiredItemRow}`}>
                             <Typography
                                 variant='subtitle1'
                                 className={classes.rowTitle}>
