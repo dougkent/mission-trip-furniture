@@ -1,0 +1,123 @@
+{
+	"Material-ff3t6qmqybfizha455m76ppaoa-develop": [
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "552268ea-d27e-4dd5-bf67-b64cb592b900" }, "name": { "S":  "2x4" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "bddc6254-ec27-4ff4-acff-f8c4aa72dda8" }, "name": { "S":  "2x6" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "1b12833c-1035-4c6c-87c5-dc2dd987b3ed" }, "name": { "S":  "2x8" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "29426271-f4ce-4604-b3f4-17a2d8cb9442" }, "name": { "S":  "2x10" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "04a8c8cd-ad21-43af-b778-c2e572850aa9" }, "name": { "S":  "2x12" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "58ca29a5-56cf-47fc-b694-55938bc05ccb" }, "name": { "S":  "1x4" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "556ff5b6-1d85-47e8-ab7b-4685bf5a8f88" }, "name": { "S":  "1x6" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "3032a2ac-08fc-43d8-aec7-8f052893aa53" }, "name": { "S":  "1x8" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "716fe78c-827d-45cb-8960-91a03e070138" }, "name": { "S":  "1x10" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "d9cfc6bf-b2ee-4231-89f4-f9d53c198ca5" }, "name": { "S":  "1x12" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "906a518e-0d0c-4f40-b4cb-9e3c167d5f77" }, "name": { "S":  "4x4" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "83891416-742a-4329-9f09-700a6704795e" }, "name": { "S":  "1.5\" Deck Screws" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "e374968e-e6b9-4b93-97bf-630e5ef83045" }, "name": { "S":  "2\" Deck Screws" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "55f495d3-17a2-4723-b383-dc0032e7505f" }, "name": { "S":  "2.5\" Deck Screws" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "6cf576ae-ab81-4eb4-8237-107f19747ba0" }, "name": { "S":  "3\" Deck Screws" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "1de7edb6-5cd6-4a2f-8642-3cfc19a80a22" }, "name": { "S":  "3.5\" Deck Screws" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "f640cb8c-254f-4ea4-9595-6abd7b2a26f5" }, "name": { "S":  "4\" Deck Screws" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "e23cd152-9356-4590-a0e7-b1320afe4ffc" }, "name": { "S":  "1/4\" x 2\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "9f9e1ddf-f230-49b7-ac10-7c37b2eb6080" }, "name": { "S":  "1/4\" x 3\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "a7b92806-2623-4b49-962d-0e4d89f95a13" }, "name": { "S":  "1/4\" x 4\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "ae65858b-ca7f-4262-b863-7c1707ac62ac" }, "name": { "S":  "1/4\" x 5\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "6ad8b302-148a-4e0e-b491-8a7888491e32" }, "name": { "S":  "1/4\" x 6\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "0900b20e-98cd-442c-b399-7d1edcbe27ff" }, "name": { "S":  "1/4\" x 7\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "ddc1ab29-c125-4dd4-8516-39e26f8da337" }, "name": { "S":  "1/4\" x 8\" Hex Bolts" } }
+		}
+	}]
+}

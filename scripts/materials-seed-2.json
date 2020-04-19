@@ -1,0 +1,74 @@
+{
+	"Material-ff3t6qmqybfizha455m76ppaoa-develop": [
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "51ec2da2-78fc-4865-9ddb-c37d69ec7986" }, "name": { "S":  "3/8\" x 2\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "c968b733-1504-430c-b2ec-312231990a5e" }, "name": { "S":  "3/8\" x 3\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "63a1ccbe-685d-428d-8f03-afa267bd0cf3" }, "name": { "S":  "3/8\" x 4\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "2f170e2c-7404-4b14-896e-2754c507f7ae" }, "name": { "S":  "3/8\" x 5\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "fcf1d448-7f1b-4237-8efd-cda4a92c6f66" }, "name": { "S":  "3/8\" x 6\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "f1730b22-bddc-4305-9d0c-22ded72bf62f" }, "name": { "S":  "3/8\" x 7\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "77de2551-c36b-4239-be3c-56e861e4795b" }, "name": { "S":  "3/8\" x 8\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "6464b499-6aaf-41a6-98a7-f982caddce80" }, "name": { "S":  "1/2\" x 2\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "349753f8-0419-4661-8c9c-b5199841add6" }, "name": { "S":  "1/2\" x 3\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "2e3b2287-df25-4c8e-9698-9969bf6c82f8" }, "name": { "S":  "1/2\" x 4\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "8230320c-c2c9-44b3-b0e9-c30dfa6f43cb" }, "name": { "S":  "1/2\" x 5\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "91c118c8-26c8-4dd2-91e4-66b96a5f548f" }, "name": { "S":  "1/2\" x 6\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "745ec1c1-78b7-4416-bb81-05bf4a23f06b" }, "name": { "S":  "1/2\" x 7\" Hex Bolts" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "01e3037c-efa2-4921-9c06-2d70350b525b" }, "name": { "S":  "1/2\" x 8\" Hex Bolts" } }
+		}
+	}
+	]
+}
