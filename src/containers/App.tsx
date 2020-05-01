@@ -185,8 +185,22 @@ class App extends React.Component<{}, AppState> {
 
         this.setState((prevState) => ({
             ...prevState,
-            materials: materialsResult?.data?.listMaterials?.items,
-            tools: toolsResult?.data?.listTools?.items,
+            materials: materialsResult?.data?.listMaterials?.items.sort(
+                (prevMaterial, nextMaterial) =>
+                    prevMaterial.name < nextMaterial.name
+                        ? -1
+                        : prevMaterial.name > nextMaterial.name
+                        ? 1
+                        : 0,
+            ),
+            tools: toolsResult?.data?.listTools?.items.sort(
+                (prevTool, nextTool) =>
+                    prevTool.name < nextTool.name
+                        ? -1
+                        : prevTool.name > nextTool.name
+                        ? 1
+                        : 0,
+            ),
         }));
     };
     private loadUserFavoritedPlans = async () => {
