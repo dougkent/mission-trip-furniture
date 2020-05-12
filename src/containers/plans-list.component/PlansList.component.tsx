@@ -55,9 +55,6 @@ const styles = (theme: Theme) =>
             [theme.breakpoints.up('sm')]: {
                 width: '50%',
             },
-            [theme.breakpoints.up('md')]: {
-                height: theme.spacing(29),
-            },
             [theme.breakpoints.up('lg')]: {
                 width: theme.spacing(63),
             },

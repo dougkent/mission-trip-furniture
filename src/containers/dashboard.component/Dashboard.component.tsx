@@ -77,8 +77,8 @@ const styles = (theme: Theme) =>
         listTitle: {
             display: 'flex',
             justifyContent: 'space-between',
-            alignContent: 'flex-end',
             padding: '10px 0',
+            alignItems: 'center',
         },
         mobileDisplay: {
             [theme.breakpoints.up('sm')]: {
@@ -93,19 +93,14 @@ const styles = (theme: Theme) =>
         },
         createNewPlanLink: {
             textDecoration: 'none',
-            marginTop: theme.spacing(2),
-            [theme.breakpoints.up('md')]: {
-                marginTop: theme.spacing(1),
-            },
+            [theme.breakpoints.up('md')]: {},
         },
         gridItem: {
             width: '100%',
-            [theme.breakpoints.up('md')]: {
-                height: theme.spacing(29),
+            [theme.breakpoints.up('sm')]: {
                 width: '50%',
             },
             [theme.breakpoints.up('xl')]: {
-                height: theme.spacing(29),
                 width: '100%',
             },
         },
