@@ -32,25 +32,14 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'center',
             flexWrap: 'wrap',
             width: '100%',
-            [theme.breakpoints.up('md')]: {
-                flexWrap: 'noWrap',
-            },
         },
         image: {
             width: '100%',
-            height: theme.spacing(20),
-            [theme.breakpoints.up('md')]: {
-                width: theme.spacing(27),
-                height: theme.spacing(27),
-            },
+            height: theme.spacing(25),
             '& img': {
                 width: '100%',
-                height: theme.spacing(20),
+                height: theme.spacing(25),
                 objectFit: 'cover',
-                [theme.breakpoints.up('md')]: {
-                    width: theme.spacing(27),
-                    height: theme.spacing(27),
-                },
             },
         },
         cardContentContainer: {
@@ -60,29 +49,29 @@ const useStyles = makeStyles((theme: Theme) =>
                 flexGrow: 1,
             },
         },
-        cardContent: {
-            paddingTop: 0,
+        cardContent: {},
+        cardActions: {
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
         },
         cardTitle: {
             display: 'flex',
-            maxWidth: theme.spacing(19),
+            maxWidth: theme.spacing(28),
             alignItems: 'center',
         },
         cardTitleLink: {
             color: 'inherit',
             textDecoration: 'none',
         },
-        cardActions: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-        },
         row: {
             marginBottom: theme.spacing(1),
         },
         requiredItem: {
             marginRight: theme.spacing(0.5),
+            marginBottom: theme.spacing(0.5),
             '& .MuiChip-label': {
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
@@ -93,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 },
             },
         },
-    })
+    }),
 );
 
 const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
@@ -101,7 +90,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
 
     const [planState, setPlanState] = useState<Plan>(props.plan);
     const [isFavoritedByUser, setIsFavoritedByUser] = useState<boolean>(
-        props.isFavoritedByUser
+        props.isFavoritedByUser,
     );
 
     useEffect(() => {
@@ -133,7 +122,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
 
     const renderRequiredItems = (
         label: string,
-        requiredItems: RequiredItem[]
+        requiredItems: RequiredItem[],
     ) => {
         return (
             <div className={classes.row}>
@@ -141,7 +130,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                 <div>
                     {requiredItems
                         ?.filter((requiredItem, index) => index < 2)
-                        .map(requiredItem => (
+                        .map((requiredItem) => (
                             <Tooltip
                                 key={requiredItem.id}
                                 title={requiredItem.name}
@@ -159,7 +148,9 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                     {requiredItems.length > 2 && (
                         <Tooltip
                             title={
-                                (requiredItems.length - 2).toString() + ' More'
+                                (requiredItems.length - 2).toString() +
+                                ' More ' +
+                                label
                             }
                             placement='bottom'
                             arrow
@@ -169,7 +160,9 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                                 color='secondary'
                                 variant='outlined'
                                 label={
-                                    '+' + (requiredItems.length - 2).toString()
+                                    '+' +
+                                    (requiredItems.length - 2).toString() +
+                                    ' More'
                                 }
                             />
                         </Tooltip>
@@ -181,6 +174,30 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
 
     return (
         <Card className={classes.card}>
+            <CardActions className={classes.cardActions}>
+                <div className={classes.cardTitle}>
+                    <Tooltip
+                        title={planState.name}
+                        placement='right'
+                        arrow
+                        enterDelay={500}>
+                        <Typography variant='h5' noWrap>
+                            <ReactRouter.Link
+                                to={`/plans/${planState.id}`}
+                                className={classes.cardTitleLink}>
+                                {planState.name}
+                            </ReactRouter.Link>
+                        </Typography>
+                    </Tooltip>
+                </div>
+                <PlanFavorite
+                    planId={planState.id}
+                    disabled={!props.userId || props.userId.length === 0}
+                    isFavoritedByUser={isFavoritedByUser}
+                    favoritedCount={planState.favoritedCount}
+                    onToggleFavorite={handleToggleFavorite}
+                />
+            </CardActions>
             <div className={classes.image}>
                 <ReactRouter.Link
                     to={`/plans/${planState.id}`}
@@ -193,36 +210,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                 </ReactRouter.Link>
             </div>
             <div className={classes.cardContentContainer}>
-                <CardActions className={classes.cardActions}>
-                    <div className={classes.cardTitle}>
-                        <Tooltip
-                            title={planState.name}
-                            placement='right'
-                            arrow
-                            enterDelay={500}>
-                            <Typography variant='h5' noWrap>
-                                <ReactRouter.Link
-                                    to={`/plans/${planState.id}`}
-                                    className={classes.cardTitleLink}>
-                                    {planState.name}
-                                </ReactRouter.Link>
-                            </Typography>
-                        </Tooltip>
-                    </div>
-                    <PlanFavorite
-                        planId={planState.id}
-                        disabled={!props.userId || props.userId.length === 0}
-                        isFavoritedByUser={isFavoritedByUser}
-                        favoritedCount={planState.favoritedCount}
-                        onToggleFavorite={handleToggleFavorite}
-                    />
-                </CardActions>
                 <CardContent className={classes.cardContent}>
-                    {renderRequiredItems(
-                        'Materials',
-                        planState.requiredMaterials
-                    )}
-                    {renderRequiredItems('Tools', planState.requiredTools)}
                     <div className={classes.row}>
                         <Typography>
                             Created:&nbsp;
@@ -230,6 +218,11 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                             &nbsp;by&nbsp;{planState.createdBy.username}
                         </Typography>
                     </div>
+                    {renderRequiredItems(
+                        'Materials',
+                        planState.requiredMaterials,
+                    )}
+                    {renderRequiredItems('Tools', planState.requiredTools)}
                 </CardContent>
             </div>
         </Card>
