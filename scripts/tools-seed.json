@@ -1,0 +1,63 @@
+{
+	"Tool-ff3t6qmqybfizha455m76ppaoa-develop": [
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "4d051ce2-8b2e-475c-bddf-9392335f95c8" }, "name": { "S":  "Circular Saw" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "5786d12b-6750-4157-9985-b6de3d6d52ad" }, "name": { "S":  "Jig Saw" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "7abb7415-1ce2-41e1-a88e-61f6d4562ad4" }, "name": { "S":  "Miter Saw" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "68a900e9-eca0-4674-a68d-6d38925e0879" }, "name": { "S":  "Cordless Drill" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "43ae5fdb-1e93-4007-8e7b-b6a770f0d4f8" }, "name": { "S":  "Cordless Impact Driver" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "f1d685f6-61a2-46ec-8bbd-12b9e9cdb3f5" }, "name": { "S":  "Corded Drill" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "079354a7-799a-4477-9a69-6a70110c775a" }, "name": { "S":  "Speed Square" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "b77513f0-219e-4ded-8a45-8d77ec54eda8" }, "name": { "S":  "Combination Square" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "a67076c1-e8e1-44a1-9fd9-8d421aa62d53" }, "name": { "S":  "1/8\" Drill Bits" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "dd6991db-964e-4540-acb1-9cf498fa129d" }, "name": { "S":  "1/4\" Drill Bits" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "e78c6353-700d-4e54-9be0-a408d619ca08" }, "name": { "S":  "3/8\" Drill Bits" } }
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": { "id": { "S":  "73012470-8268-4cdc-aad2-cac4db7ac6e0" }, "name": { "S":  "1/2\" Drill Bits" } }
+		}
+	}]
+}

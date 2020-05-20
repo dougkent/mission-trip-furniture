@@ -1,0 +1,62 @@
+{
+    "identityPoolName": "mtfAuth_identitypool",
+    "allowUnauthenticatedIdentities": true,
+    "resourceNameTruncated": "mtfAut44346b3c",
+    "userPoolName": "mtfAuth_userpool",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your Mission Trip Furniture sign in verification code is {####}",
+    "smsVerificationMessage": "Your Mission Trip Furniture new account verification code is {####}",
+    "emailVerificationSubject": "Mission Trip Furniture New Account Verification Code",
+    "emailVerificationMessage": "Your Mission Trip Furniture new account verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+        "email",
+        "name"
+    ],
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": "14",
+    "userpoolClientWriteAttributes": [
+        "email",
+        "name"
+    ],
+    "userpoolClientReadAttributes": [
+        "email",
+        "name"
+    ],
+    "userpoolClientLambdaRole": "mtfAut44346b3c_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "useDefault": "manual",
+    "authSelections": "identityPoolAndUserPool",
+    "resourceName": "mtfAuth",
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "triggers": "{}",
+    "hostedUI": false,
+    "userPoolGroupList": [],
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "unauthRoleArn": {
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
+    },
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "permissions": [],
+    "dependsOn": [],
+    "thirdPartyAuth": false
+}

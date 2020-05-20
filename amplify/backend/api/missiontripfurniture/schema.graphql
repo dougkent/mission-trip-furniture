@@ -1,0 +1,132 @@
+type User
+    @model(queries: { get: "getUser" }, subscriptions: null)
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: private, operations: [read], provider: userPools }
+            { allow: owner, operations: [create, read, update, delete] }
+        ]
+    ) {
+    id: ID!
+    username: String!
+    createdPlans: [Plan!] @connection(name: "CreatedBy")
+    favoritedPlans: [Favorite!]
+        @connection(keyName: "favoritedPlans", fields: ["id"])
+        @auth(rules: [{ allow: owner }])
+    downloadedPlans: [Download!]
+        @connection(keyName: "downloadedPlans", fields: ["id"])
+        @auth(rules: [{ allow: owner }])
+}
+
+type Plan
+    @model(subscriptions: null)
+    @searchable
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: private, operations: [read], provider: userPools }
+            { allow: owner, operations: [create, update, delete] }
+        ]
+    ) {
+    id: ID!
+    name: String!
+    description: String!
+    pdfS3Key: String!
+    imageS3Info: S3ImageInfo!
+    created: AWSDateTime!
+    createdBy: User! @connection(name: "CreatedBy")
+    favoritedCount: Int!
+    favoritedBy: [Favorite!] @connection(keyName: "favoritedBy", fields: ["id"])
+    downloadedCount: Int!
+    downloadedBy: [Download!]
+        @connection(keyName: "downloadedBy", fields: ["id"])
+    requiredMaterialIds: [ID!]!
+    requiredToolIds: [ID!]!
+    planCreatedById: ID!
+}
+
+type Favorite
+    @model(
+        mutations: { create: "createFavorite", delete: "deleteFavorite" }
+        subscriptions: null
+    )
+    @key(
+        name: "favoritedBy"
+        fields: ["planId", "userId"]
+        queryField: "getFavoriteByPlanId"
+    )
+    @key(
+        name: "favoritedPlans"
+        fields: ["userId", "planId"]
+        queryField: "getFavoriteByUserId"
+    )
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: owner, operations: [create, read, update, delete] }
+        ]
+    ) {
+    id: ID!
+    planId: ID!
+    userId: ID!
+}
+
+type Download
+    @model(
+        mutations: { create: "createDownload", delete: "deleteDownload" }
+        subscriptions: null
+    )
+    @key(
+        name: "downloadedBy"
+        fields: ["planId", "userId"]
+        queryField: "getDownloadByPlanId"
+    )
+    @key(
+        name: "downloadedPlans"
+        fields: ["userId", "planId"]
+        queryField: "getDownloadedByUserId"
+    )
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: owner, operations: [create, read, update, delete] }
+        ]
+    ) {
+    id: ID!
+    planId: ID!
+    userId: ID!
+}
+
+type Material
+    @model(
+        queries: { list: "listMaterials" }
+        mutations: null
+        subscriptions: null
+    )
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: private, operations: [read], provider: userPools }
+        ]
+    ) {
+    id: ID!
+    name: String!
+}
+
+type Tool
+    @model(queries: { list: "listTools" }, mutations: null, subscriptions: null)
+    @auth(
+        rules: [
+            { allow: public, operations: [read], provider: iam }
+            { allow: private, operations: [read], provider: userPools }
+        ]
+    ) {
+    id: ID!
+    name: String!
+}
+
+type S3ImageInfo {
+    key: String!
+    width: Int!
+    height: Int!
+}

@@ -1,0 +1,348 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Lambda resource stack creation using Amplify CLI",
+	"Parameters": {
+		"env": {
+			"Type": "String"
+		},
+		"apimissiontripfurnitureGraphQLAPIIdOutput": {
+			"Type": "String",
+			"Default": "apimissiontripfurnitureGraphQLAPIIdOutput"
+		},
+		"apimissiontripfurnitureGraphQLAPIEndpointOutput": {
+			"Type": "String",
+			"Default": "apimissiontripfurnitureGraphQLAPIEndpointOutput"
+		}
+	},
+	"Conditions": {
+		"ShouldNotCreateEnvResources": {
+			"Fn::Equals": [
+				{
+					"Ref": "env"
+				},
+				"NONE"
+			]
+		}
+	},
+	"Resources": {
+		"LambdaFunction": {
+			"Type": "AWS::Lambda::Function",
+			"Metadata": {
+				"aws:asset:path": "./src",
+				"aws:asset:property": "Code"
+			},
+			"Properties": {
+				"Handler": "index.handler",
+				"FunctionName": {
+					"Fn::If": [
+						"ShouldNotCreateEnvResources",
+						"mtfDownloadCount",
+						{
+							"Fn::Join": [
+								"",
+								[
+									"mtfDownloadCount",
+									"-",
+									{
+										"Ref": "env"
+									}
+								]
+							]
+						}
+					]
+				},
+				"Environment": {
+					"Variables": {
+						"ENV": {
+							"Ref": "env"
+						},
+						"REGION": {
+							"Ref": "AWS::Region"
+						},
+						"API_MISSIONTRIPFURNITURE_PLANTABLE_NAME": {
+							"Fn::Join": [
+								"-",
+								[
+									"Plan",
+									{
+										"Ref": "apimissiontripfurnitureGraphQLAPIIdOutput"
+									}
+								]
+							]
+						},
+						"API_MISSIONTRIPFURNITURE_PLANTABLE_ARN": {
+							"Fn::Join": [
+								"",
+								[
+									"arn:aws:dynamodb:",
+									{
+										"Ref": "AWS::Region"
+									},
+									":",
+									{
+										"Ref": "AWS::AccountId"
+									},
+									":table/",
+									{
+										"Fn::ImportValue": {
+											"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:PlanTable:Name"
+										}
+									}
+								]
+							]
+						},
+						"API_MISSIONTRIPFURNITURE_GRAPHQLAPIIDOUTPUT": {
+							"Ref": "apimissiontripfurnitureGraphQLAPIIdOutput"
+						}
+					}
+				},
+				"Role": {
+					"Fn::GetAtt": [
+						"LambdaExecutionRole",
+						"Arn"
+					]
+				},
+				"Runtime": "nodejs10.x",
+				"Timeout": "25",
+				"Code": {
+					"S3Bucket": "missiontripfurniture-develop-20191227214024-deployment",
+					"S3Key": "amplify-builds/mtfDownloadCount-766c4d5176426e626b4c-build.zip"
+				}
+			}
+		},
+		"LambdaExecutionRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": {
+					"Fn::If": [
+						"ShouldNotCreateEnvResources",
+						"missiontripfurnitureLambdaRolea1453e20",
+						{
+							"Fn::Join": [
+								"",
+								[
+									"missiontripfurnitureLambdaRolea1453e20",
+									"-",
+									{
+										"Ref": "env"
+									}
+								]
+							]
+						}
+					]
+				},
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Principal": {
+								"Service": [
+									"lambda.amazonaws.com"
+								]
+							},
+							"Action": [
+								"sts:AssumeRole"
+							]
+						}
+					]
+				}
+			}
+		},
+		"lambdaexecutionpolicy": {
+			"DependsOn": [
+				"LambdaExecutionRole"
+			],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "lambda-execution-policy",
+				"Roles": [
+					{
+						"Ref": "LambdaExecutionRole"
+					}
+				],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"logs:CreateLogGroup",
+								"logs:CreateLogStream",
+								"logs:PutLogEvents"
+							],
+							"Resource": {
+								"Fn::Sub": [
+									"arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
+									{
+										"region": {
+											"Ref": "AWS::Region"
+										},
+										"account": {
+											"Ref": "AWS::AccountId"
+										},
+										"lambda": {
+											"Ref": "LambdaFunction"
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		},
+		"AmplifyResourcesPolicy": {
+			"DependsOn": [
+				"LambdaExecutionRole"
+			],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "amplify-lambda-execution-policy",
+				"Roles": [
+					{
+						"Ref": "LambdaExecutionRole"
+					}
+				],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:Update*",
+								"dynamodb:RestoreTable*"
+							],
+							"Resource": [
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:dynamodb:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":table/",
+											{
+												"Fn::ImportValue": {
+													"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:PlanTable:Name"
+												}
+											}
+										]
+									]
+								},
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:dynamodb:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":table/",
+											{
+												"Fn::ImportValue": {
+													"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:PlanTable:Name"
+												}
+											},
+											"/index/*"
+										]
+									]
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		"LambdaTriggerPolicyDownload": {
+			"DependsOn": [
+				"LambdaExecutionRole"
+			],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "amplify-lambda-execution-policy-Download",
+				"Roles": [
+					{
+						"Ref": "LambdaExecutionRole"
+					}
+				],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:DescribeStream",
+								"dynamodb:GetRecords",
+								"dynamodb:GetShardIterator",
+								"dynamodb:ListStreams"
+							],
+							"Resource": {
+								"Fn::ImportValue": {
+									"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:DownloadTable:StreamArn"
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		"LambdaEventSourceMappingDownload": {
+			"Type": "AWS::Lambda::EventSourceMapping",
+			"DependsOn": [
+				"LambdaTriggerPolicyDownload",
+				"LambdaExecutionRole"
+			],
+			"Properties": {
+				"BatchSize": 100,
+				"Enabled": true,
+				"EventSourceArn": {
+					"Fn::ImportValue": {
+						"Fn::Sub": "${apimissiontripfurnitureGraphQLAPIIdOutput}:GetAtt:DownloadTable:StreamArn"
+					}
+				},
+				"FunctionName": {
+					"Fn::GetAtt": [
+						"LambdaFunction",
+						"Arn"
+					]
+				},
+				"StartingPosition": "LATEST"
+			}
+		}
+	},
+	"Outputs": {
+		"Name": {
+			"Value": {
+				"Ref": "LambdaFunction"
+			}
+		},
+		"Arn": {
+			"Value": {
+				"Fn::GetAtt": [
+					"LambdaFunction",
+					"Arn"
+				]
+			}
+		},
+		"Region": {
+			"Value": {
+				"Ref": "AWS::Region"
+			}
+		},
+		"LambdaExecutionRole": {
+			"Value": {
+				"Ref": "LambdaExecutionRole"
+			}
+		}
+	}
+}
