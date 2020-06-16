@@ -53,6 +53,13 @@ const mtfTheme = createMuiTheme({
             lineHeight: 1,
         },
     },
+    overrides: {
+        MuiFormLabel: {
+            root: {
+                color: 'inherit',
+            },
+        },
+    },
 });
 
 export default mtfTheme;
