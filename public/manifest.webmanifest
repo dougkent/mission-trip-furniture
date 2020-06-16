@@ -1,6 +1,7 @@
 {
     "short_name": "Mission Trip Furniture",
     "name": "Mission Trip Furniture",
+    "description": "Mission Trip Furniture is dedicated to the creation and distribution of free furniture plans to those seeking projects for mission trips.",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
