@@ -9,7 +9,7 @@ import {
     Theme,
     Typography,
     withStyles,
-    WithStyles
+    WithStyles,
 } from '@material-ui/core';
 
 // Google Analytics
@@ -32,7 +32,7 @@ const styles = (theme: Theme) =>
             position: 'fixed',
             top: 0,
             left: 0,
-            zIndex: -999
+            zIndex: -999,
         },
         backgroundOverlay: {
             background: 'rgba(244, 244, 246, 0.2)',
@@ -40,7 +40,7 @@ const styles = (theme: Theme) =>
             width: '100%',
             position: 'fixed',
             top: 0,
-            left: 0
+            left: 0,
         },
         homeContainer: {
             marginTop: theme.spacing(10),
@@ -49,27 +49,27 @@ const styles = (theme: Theme) =>
             textAlign: 'center',
             flexWrap: 'wrap',
             [theme.breakpoints.up('sm')]: {
-                marginTop: theme.spacing(15)
+                marginTop: theme.spacing(15),
             },
             [theme.breakpoints.up('lg')]: {
-                marginTop: theme.spacing(22)
-            }
+                marginTop: theme.spacing(22),
+            },
         },
         title: {
             width: '100%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
         },
         logo: {
             width: theme.spacing(9),
             height: theme.spacing(9),
-            marginRight: theme.spacing(2)
+            marginRight: theme.spacing(2),
         },
         learnMore: {
             marginTop: theme.spacing(15),
-            textDecoration: 'none'
+            textDecoration: 'none',
         },
         learnMoreButton: {
             border: `2px solid ${theme.palette.secondary.main}`,
@@ -77,13 +77,13 @@ const styles = (theme: Theme) =>
             padding: '10px 20px',
             '&:hover': {
                 border: `2px solid ${theme.palette.secondary.main}`,
-                background: 'rgba(244, 244, 246, 0.45)'
-            }
+                background: 'rgba(244, 244, 246, 0.45)',
+            },
         },
         learnMoreText: {
             fontWeight: 400,
-            textTransform: 'none'
-        }
+            textTransform: 'none',
+        },
     });
 
 export interface HomeProps extends BaseProps, WithStyles<typeof styles> {}
@@ -93,7 +93,7 @@ class Home extends React.Component<HomeProps, BaseState> {
         super(props);
 
         this.state = {
-            userId: props.userId
+            userId: props.userId,
         };
     }
 
@@ -104,7 +104,7 @@ class Home extends React.Component<HomeProps, BaseState> {
     componentDidUpdate = (prevProps: HomeProps) => {
         if (this.props.userId !== prevProps.userId) {
             this.setState({
-                userId: this.props.userId
+                userId: this.props.userId,
             });
         }
     };
@@ -130,7 +130,7 @@ class Home extends React.Component<HomeProps, BaseState> {
                             <Typography
                                 variant='h5'
                                 className={classes.learnMoreText}>
-                                Learn More
+                                Learn More About Our Mission
                             </Typography>
                         </Button>
                     </Link>
