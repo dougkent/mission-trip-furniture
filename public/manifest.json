@@ -1,0 +1,20 @@
+{
+    "short_name": "Mission Trip Furniture",
+    "name": "Mission Trip Furniture",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#095b06",
+    "background_color": "#f5f5f5"
+}
