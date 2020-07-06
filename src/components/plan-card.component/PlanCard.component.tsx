@@ -21,7 +21,7 @@ import {
 // MTF
 import { PlanCardProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
-import { PlanFavorite, PlanDate } from '../.';
+import { PlanFavorite, PlanDate, PlanDownloadedCount } from '../.';
 import { Plan } from '../../models/api-models';
 import { RequiredItem } from '../../models';
 
@@ -66,6 +66,12 @@ const useStyles = makeStyles((theme: Theme) =>
             color: 'inherit',
             textDecoration: 'none',
         },
+        cardIcons: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: theme.spacing(9),
+        },
         row: {
             marginBottom: theme.spacing(1),
         },
@@ -82,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 },
             },
         },
-    }),
+    })
 );
 
 const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
@@ -90,7 +96,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
 
     const [planState, setPlanState] = useState<Plan>(props.plan);
     const [isFavoritedByUser, setIsFavoritedByUser] = useState<boolean>(
-        props.isFavoritedByUser,
+        props.isFavoritedByUser
     );
 
     useEffect(() => {
@@ -122,7 +128,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
 
     const renderRequiredItems = (
         label: string,
-        requiredItems: RequiredItem[],
+        requiredItems: RequiredItem[]
     ) => {
         return (
             <div className={classes.row}>
@@ -190,13 +196,18 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                         </Typography>
                     </Tooltip>
                 </div>
-                <PlanFavorite
-                    planId={planState.id}
-                    disabled={!props.userId || props.userId.length === 0}
-                    isFavoritedByUser={isFavoritedByUser}
-                    favoritedCount={planState.favoritedCount}
-                    onToggleFavorite={handleToggleFavorite}
-                />
+                <div className={classes.cardIcons}>
+                    <PlanDownloadedCount
+                        downloadedCount={planState.downloadedCount}
+                    />
+                    <PlanFavorite
+                        planId={planState.id}
+                        disabled={!props.userId || props.userId.length === 0}
+                        isFavoritedByUser={isFavoritedByUser}
+                        favoritedCount={planState.favoritedCount}
+                        onToggleFavorite={handleToggleFavorite}
+                    />
+                </div>
             </CardActions>
             <div className={classes.image}>
                 <ReactRouter.Link
@@ -220,7 +231,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                     </div>
                     {renderRequiredItems(
                         'Materials',
-                        planState.requiredMaterials,
+                        planState.requiredMaterials
                     )}
                     {renderRequiredItems('Tools', planState.requiredTools)}
                 </CardContent>
