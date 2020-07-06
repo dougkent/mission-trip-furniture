@@ -13,3 +13,4 @@ export * from './plan-date.props';
 export * from './error-message.props';
 export * from './pager.props';
 export * from './plan-grid.props';
+export * from './plan-downloaded-count.props';

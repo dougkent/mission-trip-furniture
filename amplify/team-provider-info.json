@@ -1,25 +1,25 @@
 {
-	"develop": {
-		"awscloudformation": {
-			"AuthRoleName": "amplify-missiontripfurniture-develop-100059-authRole",
-			"UnauthRoleArn": "arn:aws:iam::866938331794:role/amplify-missiontripfurniture-develop-100059-unauthRole",
-			"AuthRoleArn": "arn:aws:iam::866938331794:role/amplify-missiontripfurniture-develop-100059-authRole",
-			"Region": "us-west-2",
-			"DeploymentBucketName": "amplify-missiontripfurniture-develop-100059-deployment",
-			"UnauthRoleName": "amplify-missiontripfurniture-develop-100059-unauthRole",
-			"StackName": "amplify-missiontripfurniture-develop-100059",
-			"StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/amplify-missiontripfurniture-develop-100059/30a30080-afe2-11ea-8f7f-02dae2ce3a64",
-			"AmplifyAppId": "d26riepzj941ad"
-		},
-		"categories": {
-			"auth": {
-				"mtfAuth": {}
-			},
-			"function": {
-				"mtfFavoriteCount": {},
-				"mtfDownloadCount": {},
-				"missiontripfurniture": {}
-			}
-		}
-	}
+    "develop": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-missiontripfurniture-develop-100059-authRole",
+            "UnauthRoleArn": "arn:aws:iam::866938331794:role/amplify-missiontripfurniture-develop-100059-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::866938331794:role/amplify-missiontripfurniture-develop-100059-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "amplify-missiontripfurniture-develop-100059-deployment",
+            "UnauthRoleName": "amplify-missiontripfurniture-develop-100059-unauthRole",
+            "StackName": "amplify-missiontripfurniture-develop-100059",
+            "StackId": "arn:aws:cloudformation:us-west-2:866938331794:stack/amplify-missiontripfurniture-develop-100059/30a30080-afe2-11ea-8f7f-02dae2ce3a64",
+            "AmplifyAppId": "d26riepzj941ad"
+        },
+        "categories": {
+            "auth": {
+                "mtfAuth": {}
+            },
+            "function": {
+                "mtfFavoriteCount": {},
+                "mtfDownloadCount": {},
+                "missiontripfurniture": {}
+            }
+        }
+    }
 }

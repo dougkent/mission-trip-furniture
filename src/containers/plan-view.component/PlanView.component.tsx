@@ -41,6 +41,7 @@ import {
     PlanDate,
     PlanDelete,
     PlanFavorite,
+    PlanDownloadedCount,
 } from '../../components';
 import {
     CreateDownloadInput,
@@ -136,6 +137,12 @@ const styles = (theme: Theme) =>
             [theme.breakpoints.up('md')]: {
                 justifyContent: 'flex-start',
             },
+        },
+        butonRowIcons: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: theme.spacing(10),
         },
     });
 
@@ -242,7 +249,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         });
     };
 
-    private handleCreateDownload = () => {
+    private handleCreateDownload = async () => {
         this.setState({
             saving: true,
         });
@@ -261,12 +268,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             );
         }
 
-        this.setState((prevState) => ({
+        await this.setState((prevState) => ({
             ...prevState,
             saving: false,
             plan: {
                 ...prevState.plan,
-                downloadsCount: prevState.plan.downloadedCount++,
+                downloadedCount: prevState.plan.downloadedCount + 1,
             },
         }));
 
@@ -495,7 +502,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 plan: {
                     ...prevState.plan,
                     isFavoritedByUser: true,
-                    favoritedCount: prevState.plan.favoritedCount++,
+                    favoritedCount: prevState.plan.favoritedCount + 1,
                 },
             }));
         } else {
@@ -504,7 +511,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 plan: {
                     ...prevState.plan,
                     isFavoritedByUser: false,
-                    favoritedCount: prevState.plan.favoritedCount--,
+                    favoritedCount: prevState.plan.favoritedCount - 1,
                 },
             }));
         }
@@ -656,18 +663,29 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 }
                                 onDownload={this.handleCreateDownload}
                             />
-                            <PlanFavorite
-                                planId={this.state.planId}
-                                disabled={
-                                    !this.props.userId ||
-                                    this.props.userId.length === 0
-                                }
-                                isFavoritedByUser={
-                                    this.state.plan.isFavoritedByUser
-                                }
-                                favoritedCount={this.state.plan.favoritedCount}
-                                onToggleFavorite={this.handleTogglePlanFavorite}
-                            />
+                            <div className={classes.butonRowIcons}>
+                                <PlanFavorite
+                                    planId={this.state.planId}
+                                    disabled={
+                                        !this.props.userId ||
+                                        this.props.userId.length === 0
+                                    }
+                                    isFavoritedByUser={
+                                        this.state.plan.isFavoritedByUser
+                                    }
+                                    favoritedCount={
+                                        this.state.plan.favoritedCount
+                                    }
+                                    onToggleFavorite={
+                                        this.handleTogglePlanFavorite
+                                    }
+                                />
+                                <PlanDownloadedCount
+                                    downloadedCount={
+                                        this.state.plan.downloadedCount
+                                    }
+                                />
+                            </div>
                         </div>
                     </div>
                     <PlanDelete

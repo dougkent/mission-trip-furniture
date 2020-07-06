@@ -105,7 +105,7 @@
 				"Runtime": "nodejs10.x",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "missiontripfurniture-develop-20191227214024-deployment",
+					"S3Bucket": "amplify-missiontripfurniture-develop-100059-deployment",
 					"S3Key": "amplify-builds/mtfDownloadCount-6d4f7233326c4357466e-build.zip"
 				}
 			}
