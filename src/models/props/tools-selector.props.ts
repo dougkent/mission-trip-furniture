@@ -6,5 +6,5 @@ export interface ToolsSelectorProps {
     tools: Tool[] | null;
     selectedTools: Tool[] | null;
     numSelectedToolsToRender: number;
-    onSelect(tools: Tool[]): void;
+    onSelect: (tools: Tool[]) => void;
 }

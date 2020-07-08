@@ -36,7 +36,7 @@ import { mtfTheme } from '../../themes';
 import NotFound from '../not-found.component/NotFound.component';
 import {
     DownloadButton,
-    EditDescription,
+    DescriptionViewer,
     ErrorMessage,
     PlanDate,
     PlanDelete,
@@ -519,36 +519,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         this.props.onPlanFavorite(this.state.planId, toggleFavOn);
     };
 
-    private renderDescription = () => {
-        const { classes } = this.props;
-
-        if (this.state.editing) {
-            return (
-                <EditDescription
-                    description={this.state.plan.description}
-                    saving={this.state.saving}
-                    onCancel={this.handleEditingOff}
-                    onSave={this.handleSave}
-                />
-            );
-        } else {
-            return (
-                <>
-                    <Typography
-                        variant='h5'
-                        className={classes.descriptionTitle}>
-                        Description
-                    </Typography>
-                    <Typography
-                        variant='body1'
-                        className={`${classes.row} ${classes.description}`}>
-                        {this.state.plan.description}
-                    </Typography>
-                </>
-            );
-        }
-    };
-
     render = () => {
         const { classes } = this.props;
 
@@ -654,7 +624,13 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 />
                             ))}
                         </div>
-                        {this.renderDescription()}
+                        <DescriptionViewer
+                            description={this.state.plan.description}
+                            saving={this.state.saving}
+                            editing={this.state.editing}
+                            onCancel={this.handleEditingOff}
+                            onSave={this.handleSave}
+                        />
                         <div className={classes.buttonRow}>
                             <DownloadButton
                                 downloadUrl={this.state.downloadUrl}

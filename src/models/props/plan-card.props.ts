@@ -5,5 +5,5 @@ export interface PlanCardProps {
     userId: string;
     plan: Plan;
     isFavoritedByUser: boolean;
-    onToggleFavorite(planId: string, toggleFavOn: boolean): void;
+    onToggleFavorite: (planId: string, toggleFavOn: boolean) => void;
 }

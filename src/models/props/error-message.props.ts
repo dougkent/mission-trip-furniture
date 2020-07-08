@@ -1,4 +1,4 @@
 export interface ErrorMessageProps {
     errors: string[];
-    onClearErrors(): void;
+    onClearErrors: () => void;
 }

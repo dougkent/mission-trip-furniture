@@ -1,9 +1,10 @@
+export { default as DescriptionViewer } from './edit-description.component/DescriptionViewer.component';
 export { default as DownloadButton } from './download-button.component/DownloadButton.component';
-export { default as EditDescription } from './edit-description.component/EditDescription.component';
 export { default as ErrorMessage } from './error-message.component/ErrorMessage.component';
 export { default as Filter } from './filter.component/Filter.component';
 export { default as ImageUploader } from './image-uploader.component/ImageUploader.component';
 export { default as MaterialsSelector } from './materials-selector.component/MaterialsSelector.component';
+export { default as MultiLineTextEditor } from './multi-line-text-editor.component/MultiLineTextEditor.component';
 export { default as Nav } from './nav.component/Nav.component';
 export { default as Pager } from './pager.component/Pager.component';
 export { default as PdfUploader } from './pdf-uploader.component/PdfUploader.component';

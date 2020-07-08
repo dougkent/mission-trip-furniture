@@ -11,7 +11,6 @@ import {
     Button,
     CircularProgress,
     createStyles,
-    InputAdornment,
     Paper,
     TextField,
     Theme,
@@ -38,6 +37,7 @@ import {
     MaterialsSelector,
     PdfUploader,
     ToolsSelector,
+    MultiLineTextEditor,
 } from '../../components';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import {
@@ -152,14 +152,24 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }
     };
 
+    private getPlanId = (planName: string) => {
+        return planName.toLowerCase().replace(/\s/g, '-');
+    };
+
     private handleClearErrors = () => {
         this.setState({
             errors: [],
         });
     };
 
-    private getPlanId = (planName: string) => {
-        return planName.toLowerCase().replace(/\s/g, '-');
+    private handleDescriptionChange = (text: string) => {
+        this.setState((prevState) => ({
+            ...prevState,
+            plan: {
+                ...prevState.plan,
+                description: text,
+            },
+        }));
     };
 
     private handleImageDeselect = () => {
@@ -230,7 +240,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                 ...prevState.plan,
                 created: new Date().toISOString(),
                 requiredMaterialIds: prevState.selectedMaterials.map(
-                    (material) => material.id,
+                    (material) => material.id
                 ),
                 requiredToolIds: prevState.selectedTools.map((tool) => tool.id),
             },
@@ -249,7 +259,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
             graphqlOperation(graphQLMutations.createPlanMutation, {
                 input: this.state.plan,
-            }),
+            })
         );
 
         if (planResult.data.createPlan.id) {
@@ -266,7 +276,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                     this.setState({
                         createComplete: true,
                     }),
-                1000,
+                1000
             );
         } else {
             this.setState({
@@ -326,15 +336,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             errors.push('Please enter a plan name.');
         } else if (!this.isPlanIdAlphaNumeric()) {
             errors.push(
-                'Plan names can only be alpha-numeric. Please change your plan name to only contain the characters: A-Z, a-z, 0-9, spaces, or hyphens.',
+                'Plan names can only be alpha-numeric. Please change your plan name to only contain the characters: A-Z, a-z, 0-9, spaces, or hyphens.'
             );
         } else if (!this.isPlanIdAlpha()) {
             errors.push(
-                'Plan names need at least one alphabet letter in them (A-Z or a-z).',
+                'Plan names need at least one alphabet letter in them (A-Z or a-z).'
             );
         } else if (await this.planAlreadyExists()) {
             errors.push(
-                'A plan with that same name already exists. Please enter a different name.',
+                'A plan with that same name already exists. Please enter a different name.'
             );
         }
 
@@ -359,7 +369,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
         if (!this.state.selectedMaterials.length) {
             errors.push(
-                'Please select one or more materials your plan requires.',
+                'Please select one or more materials your plan requires.'
             );
         }
 
@@ -374,7 +384,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         const planResult: GqlQuery<GetPlanQuery> = await API.graphql(
             graphqlOperation(graphQLQueries.getPlanIdQuery, {
                 id: this.state.plan.id,
-            }),
+            })
         );
 
         const { data } = planResult;
@@ -416,44 +426,31 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 onChange={this.handleTextChange}
                                 label='Name *'
                                 fullWidth
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='start'>
-                                            <Tooltip
-                                                title='This field must be unique across all of the plans uploaded to Mission Trip Furniure. This field is also used heavily in searching so choose something that describes the plan well. It CANNOT be changed later.'
-                                                placement='bottom-end'
-                                                arrow
-                                                enterDelay={500}>
-                                                <InfoSharpIcon />
-                                            </Tooltip>
-                                        </InputAdornment>
-                                    ),
-                                }}
                             />
+                            <Tooltip
+                                className={classes.tooltip}
+                                title='This field must be unique across all of the plans uploaded to Mission Trip Furniure. This field is also used heavily in searching so choose something that describes the plan well. It CANNOT be changed later.'
+                                placement='bottom-end'
+                                arrow
+                                enterDelay={500}>
+                                <InfoSharpIcon />
+                            </Tooltip>
                         </div>
                         <div className={classes.formRow}>
-                            <TextField
-                                inputProps={{ maxLength: 2000 }}
-                                multiline
-                                name='description'
-                                onChange={this.handleTextChange}
-                                label='Description *'
-                                rows='16'
-                                fullWidth
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='start'>
-                                            <Tooltip
-                                                title='This field has a maximum of 2000 characters that can be entered. The longer the description is the more it will assist users in searching for plans.'
-                                                placement='bottom-end'
-                                                arrow
-                                                enterDelay={500}>
-                                                <InfoSharpIcon />
-                                            </Tooltip>
-                                        </InputAdornment>
-                                    ),
-                                }}
+                            <MultiLineTextEditor
+                                text={this.state.plan.description}
+                                maxLength={2000}
+                                isReadOnly={false}
+                                onChange={this.handleDescriptionChange}
                             />
+                            <Tooltip
+                                className={classes.tooltip}
+                                title='This field has a maximum of 2000 characters that can be entered. The longer the description is the more it will assist users in searching for plans.'
+                                placement='bottom-end'
+                                arrow
+                                enterDelay={500}>
+                                <InfoSharpIcon />
+                            </Tooltip>
                         </div>
                         <div
                             className={`${classes.formRow} ${classes.multiCardRow}`}>
@@ -559,5 +556,5 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 export default withStyles(styles(mtfTheme))(
     withAuthenticator(CreatePlan, {
         signUpConfig: signUpConfig,
-    }),
+    })
 );

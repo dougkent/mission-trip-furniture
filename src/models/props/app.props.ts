@@ -4,5 +4,5 @@ export interface AppProps extends BaseProps {
     materials: Material[];
     tools: Tool[];
     userFavoritedPlanIds: string[];
-    onPlanFavorite(planId: string, toggleFavOn: boolean): void;
+    onPlanFavorite: (planId: string, toggleFavOn: boolean) => void;
 }
