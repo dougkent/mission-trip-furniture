@@ -6,5 +6,5 @@ export interface MaterialSelectorProps {
     selectedMaterials: Material[] | null;
     numSelectedMaterialsToRender: number;
     materials: Material[] | null;
-    onSelect(materials: Material[]): void;
+    onSelect: (materials: Material[]) => void;
 }
