@@ -34,10 +34,9 @@ import { mtfTheme } from '../../themes';
 import {
     ErrorMessage,
     ImageUploader,
-    MaterialsSelector,
-    PdfUploader,
-    ToolsSelector,
     MultiLineTextEditor,
+    PdfUploader,
+    RequiredItemsSelector,
 } from '../../components';
 import { signUpConfig } from '../../models/sign-up-config.model';
 import {
@@ -470,13 +469,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         </div>
                         <div className={classes.formRow}>
                             <div className={classes.selector}>
-                                <ToolsSelector
+                                <RequiredItemsSelector
                                     label='Select Tools Required for this Plan'
-                                    tools={this.state.tools}
+                                    requiredItems={this.state.tools}
                                     loading={false}
                                     onSelect={this.handleToolSelected}
-                                    selectedTools={this.state.selectedTools}
-                                    numSelectedToolsToRender={2}
+                                    selectedItems={this.state.selectedTools}
+                                    numSelectedItemsToRender={2}
                                 />
                             </div>
                             <Tooltip
@@ -490,15 +489,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         </div>
                         <div className={classes.formRow}>
                             <div className={classes.selector}>
-                                <MaterialsSelector
+                                <RequiredItemsSelector
                                     label='Select Materials Required for this Plan'
-                                    materials={this.state.materials}
+                                    requiredItems={this.state.materials}
                                     loading={false}
                                     onSelect={this.handleMaterialSelected}
-                                    selectedMaterials={
-                                        this.state.selectedMaterials
-                                    }
-                                    numSelectedMaterialsToRender={2}
+                                    selectedItems={this.state.selectedMaterials}
+                                    numSelectedItemsToRender={2}
                                 />
                             </div>
                             <Tooltip

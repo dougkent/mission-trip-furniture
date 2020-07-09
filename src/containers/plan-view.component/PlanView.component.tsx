@@ -8,7 +8,6 @@ import { S3Image } from 'aws-amplify-react';
 
 // Material UI
 import {
-    Chip,
     CircularProgress,
     createStyles,
     IconButton,
@@ -42,6 +41,7 @@ import {
     PlanDelete,
     PlanFavorite,
     PlanDownloadedCount,
+    RequiredItemsViewer,
 } from '../../components';
 import {
     CreateDownloadInput,
@@ -114,16 +114,6 @@ const styles = (theme: Theme) =>
             flexGrow: 1,
             marginBottom: `${theme.spacing(2)}px`,
             display: 'flex',
-        },
-        rowTitle: {
-            marginRight: theme.spacing(1),
-        },
-        requiredItemRow: {
-            flexWrap: 'wrap',
-        },
-        requiredItem: {
-            marginRight: theme.spacing(0.5),
-            marginBottom: theme.spacing(0.5),
         },
         descriptionTitle: {
             marginTop: theme.spacing(3),
@@ -651,42 +641,16 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         />
                     </div>
                     <div className={classes.planContent}>
-                        <div
-                            className={`${classes.row} ${classes.requiredItemRow}`}>
-                            <Typography
-                                variant='subtitle1'
-                                className={classes.rowTitle}>
-                                Materials:
-                            </Typography>
-                            {this.state.plan.requiredMaterials?.map(
-                                (material) => (
-                                    <Chip
-                                        className={classes.requiredItem}
-                                        key={material.id}
-                                        size='small'
-                                        color='secondary'
-                                        label={material.name}
-                                    />
-                                )
-                            )}
-                        </div>
-                        <div
-                            className={`${classes.row} ${classes.requiredItemRow}`}>
-                            <Typography
-                                variant='subtitle1'
-                                className={classes.rowTitle}>
-                                Tools:
-                            </Typography>
-                            {this.state.plan.requiredTools?.map((tool) => (
-                                <Chip
-                                    className={classes.requiredItem}
-                                    key={tool.id}
-                                    size='small'
-                                    color='secondary'
-                                    label={tool.name}
-                                />
-                            ))}
-                        </div>
+                        <RequiredItemsViewer
+                            requiredItems={this.state.plan.requiredMaterials}
+                            saving={this.state.saving}
+                            editing={this.state.editing}
+                        />
+                        <RequiredItemsViewer
+                            requiredItems={this.state.plan.requiredTools}
+                            saving={this.state.saving}
+                            editing={this.state.editing}
+                        />
                         <DescriptionViewer
                             description={this.state.plan.description}
                             saving={this.state.saving}

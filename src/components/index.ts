@@ -3,7 +3,6 @@ export { default as DownloadButton } from './download-button.component/DownloadB
 export { default as ErrorMessage } from './error-message.component/ErrorMessage.component';
 export { default as Filter } from './filter.component/Filter.component';
 export { default as ImageUploader } from './image-uploader.component/ImageUploader.component';
-export { default as MaterialsSelector } from './materials-selector.component/MaterialsSelector.component';
 export { default as MultiLineTextEditor } from './multi-line-text-editor.component/MultiLineTextEditor.component';
 export { default as Nav } from './nav.component/Nav.component';
 export { default as Pager } from './pager.component/Pager.component';
@@ -14,5 +13,6 @@ export { default as PlanDelete } from './plan-delete.component/PlanDelete.compon
 export { default as PlanDownloadedCount } from './plan-downloads-count.component/PlanDownloadedCount.component';
 export { default as PlanFavorite } from './plan-favorite.component/PlanFavorite.component';
 export { default as PlanGrid } from './plan-grid.component/PlanGrid.component';
+export { default as RequiredItemsViewer } from './required-items-viewer.component/RequiredItemsViewer.component';
+export { default as RequiredItemsSelector } from './required-items-selector.component/RequiredItemsSelector.component';
 export { default as Search } from './search.component/Search.component';
-export { default as ToolsSelector } from './tools-selector.component/ToolsSelector.component';
