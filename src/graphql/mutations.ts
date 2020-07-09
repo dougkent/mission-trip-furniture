@@ -43,6 +43,12 @@ export const deletePlanMutation = `mutation DeletePlan($input: DeletePlanInput!)
     }
 }`;
 
+export const updateDownloadMutation = `mutation UpdateDownload($input: UpdateDownloadInput!) {
+    updateDownload(input: $input) {
+        id
+    }
+}`;
+
 export const updatePlanMutation = `mutation UpdatePlan($input: UpdatePlanInput!) {
     updatePlan(input: $input) {
         ${planFields}

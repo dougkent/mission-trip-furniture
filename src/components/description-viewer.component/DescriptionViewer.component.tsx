@@ -67,7 +67,7 @@ const DescriptionViewer: React.FC<DescriptionViewProps> = (
     return (
         <>
             <Typography variant='h5'>Description: </Typography>
-            <div className={editing && classes.editBorder}>
+            <div className={editing ? classes.editBorder : ''}>
                 <MultiLineTextEditor
                     text={description}
                     maxLength={2000}

@@ -1,4 +1,4 @@
-export { default as DescriptionViewer } from './edit-description.component/DescriptionViewer.component';
+export { default as DescriptionViewer } from './description-viewer.component/DescriptionViewer.component';
 export { default as DownloadButton } from './download-button.component/DownloadButton.component';
 export { default as ErrorMessage } from './error-message.component/ErrorMessage.component';
 export { default as Filter } from './filter.component/Filter.component';

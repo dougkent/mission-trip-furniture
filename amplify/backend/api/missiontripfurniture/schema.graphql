@@ -72,10 +72,7 @@ type Favorite
 }
 
 type Download
-    @model(
-        mutations: { create: "createDownload", delete: "deleteDownload" }
-        subscriptions: null
-    )
+    @model(subscriptions: null)
     @key(
         name: "downloadedBy"
         fields: ["planId", "userId"]
@@ -95,6 +92,7 @@ type Download
     id: ID!
     planId: ID!
     userId: ID!
+    downloadedAt: [AWSDateTime!]!
 }
 
 type Material
