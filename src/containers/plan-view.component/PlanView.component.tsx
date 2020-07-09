@@ -524,8 +524,10 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         );
 
         if (planResult?.data?.updatePlan) {
+            const decoratedPlan = this.decoratePlan(planResult.data.updatePlan);
+
             this.setState({
-                plan: planResult.data.updatePlan,
+                plan: decoratedPlan,
                 editing: false,
                 saving: false,
             });
