@@ -51,7 +51,9 @@ import {
     GetDownloadByPlanIdQuery,
     GetFavoriteByPlanIdQuery,
     GetPlanQuery,
+    ModelIdKeyConditionInput,
     Plan,
+    UpdateDownloadInput,
     UpdatePlanInput,
     UpdatePlanMutation,
 } from '../../models/api-models';
@@ -130,7 +132,7 @@ const styles = (theme: Theme) =>
             whiteSpace: 'pre-line',
         },
         buttonRow: {
-            marginTop: theme.spacing(3),
+            marginTop: theme.spacing(2),
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -143,6 +145,9 @@ const styles = (theme: Theme) =>
             justifyContent: 'space-between',
             alignItems: 'center',
             width: theme.spacing(10),
+        },
+        lastDownloadedRow: {
+            marginTop: theme.spacing(1),
         },
     });
 
@@ -159,6 +164,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             tools: props.tools,
             userFavoritedPlanIds: props.userFavoritedPlanIds,
             planId: props.planId,
+            planDownload: null,
             plan: null,
             downloadUrl: null,
             loading: true,
@@ -195,6 +201,32 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 downloadUrl: downloadUrl as string,
                 loading: false,
             });
+
+            if (this.props.userId) {
+                const getPlanDownloadInput: ModelIdKeyConditionInput = {
+                    eq: this.props.userId,
+                };
+
+                const planDownloadResult: GqlQuery<GetDownloadByPlanIdQuery> = await API.graphql(
+                    graphqlOperation(
+                        graphQLQueries.getDownloadByPlanAndUserQuery,
+                        {
+                            planId: this.props.planId,
+                            userId: getPlanDownloadInput,
+                        }
+                    )
+                );
+
+                if (
+                    planDownloadResult?.data?.getDownloadByPlanId?.items.length
+                ) {
+                    this.setState({
+                        planDownload:
+                            planDownloadResult?.data?.getDownloadByPlanId
+                                ?.items[0],
+                    });
+                }
+            }
         } else {
             this.setState({
                 loading: false,
@@ -243,6 +275,16 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         };
     };
 
+    private getLastDownloadedDate = (): string => {
+        const utcString = this.state.planDownload.downloadedAt[
+            this.state.planDownload.downloadedAt.length - 1
+        ];
+
+        const utcDate = new Date(utcString);
+
+        return utcDate.toLocaleDateString();
+    };
+
     private handleClearErrors = () => {
         this.setState({
             errors: [],
@@ -255,17 +297,36 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         });
 
         if (this.state.userId) {
-            const input: CreateDownloadInput = {
-                id: uuid(),
-                planId: this.state.planId,
-                userId: this.state.userId,
-            };
+            if (this.state.planDownload) {
+                console.log(this.state.planDownload);
 
-            API.graphql(
-                graphqlOperation(graphQLMutations.createDownloadMutation, {
-                    input: input,
-                })
-            );
+                const input: UpdateDownloadInput = {
+                    id: this.state.planDownload.id,
+                    downloadedAt: [
+                        ...this.state.planDownload.downloadedAt,
+                        new Date().toISOString(),
+                    ],
+                };
+
+                API.graphql(
+                    graphqlOperation(graphQLMutations.updateDownloadMutation, {
+                        input: input,
+                    })
+                );
+            } else {
+                const input: CreateDownloadInput = {
+                    id: uuid(),
+                    planId: this.state.planId,
+                    userId: this.state.userId,
+                    downloadedAt: [new Date().toISOString()],
+                };
+
+                API.graphql(
+                    graphqlOperation(graphQLMutations.createDownloadMutation, {
+                        input: input,
+                    })
+                );
+            }
         }
 
         await this.setState((prevState) => ({
@@ -329,7 +390,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
 
     private handleDeleteDownloads = async (nextToken: string = null) => {
         const planDownloads: GqlQuery<GetDownloadByPlanIdQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getDownloadByPlanQuery, {
+            graphqlOperation(graphQLQueries.getDownloadsByPlanQuery, {
                 planId: this.state.planId,
                 nextToken: nextToken,
             })
@@ -363,7 +424,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
 
     private handleDeleteFavorites = async (nextToken: string = null) => {
         const planFavorites: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getFavoriteByPlanQuery, {
+            graphqlOperation(graphQLQueries.getFavoritesByPlanQuery, {
                 planId: this.state.planId,
                 nextToken: nextToken,
             })
@@ -663,6 +724,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 />
                             </div>
                         </div>
+                        {this.state.planDownload && (
+                            <div className={classes.lastDownloadedRow}>
+                                Last Downloaded On:&nbsp;
+                                {this.getLastDownloadedDate()}
+                            </div>
+                        )}
                     </div>
                     <PlanDelete
                         planName={this.state.plan.name}

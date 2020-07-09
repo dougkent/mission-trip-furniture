@@ -17,7 +17,17 @@ export const planFields = `
         requiredToolIds`;
 
 //queries
-export const getDownloadByPlanQuery = `query GetDownloadByPlanAndUser($planId: ID!, $nextToken: String) {
+export const getDownloadByPlanAndUserQuery = `query GetDownloadsByPlan($planId: ID!, $userId: ModelIDKeyConditionInput!) {
+    getDownloadByPlanId (planId: $planId, userId: $userId) {
+        nextToken
+        items {
+            id
+            downloadedAt
+        }
+    }
+}`;
+
+export const getDownloadsByPlanQuery = `query GetDownloadsByPlan($planId: ID!, $nextToken: String) {
     getDownloadByPlanId (planId: $planId, nextToken: $nextToken) {
         nextToken
         items {
@@ -34,7 +44,7 @@ export const getFavoriteByPlanAndUserQuery = `query GetFavoriteByPlanAndUser($pl
     }
 }`;
 
-export const getFavoriteByPlanQuery = `query GetFavoriteByPlanAndUser($planId: ID!, $nextToken: String) {
+export const getFavoritesByPlanQuery = `query GetFavoriteByPlanAndUser($planId: ID!, $nextToken: String) {
     getFavoriteByPlanId (planId: $planId, nextToken: $nextToken) {
         nextToken
         items {

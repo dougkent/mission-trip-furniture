@@ -16,6 +16,7 @@ export * from './input-searchable-number-filter.model';
 export * from './input-searchable-plan-filter.model';
 export * from './input-searchable-plan-sort.model';
 export * from './input-searchable-string-filter.model';
+export * from './input-update-download.model';
 export * from './input-update-plan.model';
 export * from './material-connection.model';
 export * from './material.model';

@@ -3,4 +3,5 @@ export interface Download {
     id: string;
     planId: string | null;
     userId: string | null;
+    downloadedAt: string[] | null;
 }
