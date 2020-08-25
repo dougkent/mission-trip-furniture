@@ -9,6 +9,7 @@ export { default as Pager } from './pager.component/Pager.component';
 export { default as PdfUploader } from './pdf-uploader.component/PdfUploader.component';
 export { default as PlanCard } from './plan-card.component/PlanCard.component';
 export { default as PlanDate } from './plan-date.component/PlanDate.component';
+export { default as PlanDetails } from './plan-details.component/PlanDetails.component';
 export { default as PlanDelete } from './plan-delete.component/PlanDelete.component';
 export { default as PlanDownloadedCount } from './plan-downloads-count.component/PlanDownloadedCount.component';
 export { default as PlanFavorite } from './plan-favorite.component/PlanFavorite.component';

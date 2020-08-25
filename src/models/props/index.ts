@@ -15,3 +15,4 @@ export * from './plan-downloaded-count.props';
 export * from './multi-line-text-editor.props';
 export * from './required-items-viewer.props';
 export * from './required-items-selector.props';
+export * from './plan-details.props';

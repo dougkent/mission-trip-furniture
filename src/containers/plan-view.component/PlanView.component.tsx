@@ -35,13 +35,12 @@ import { mtfTheme } from '../../themes';
 import NotFound from '../not-found.component/NotFound.component';
 import {
     DownloadButton,
-    DescriptionViewer,
     ErrorMessage,
     PlanDate,
     PlanDelete,
     PlanFavorite,
     PlanDownloadedCount,
-    RequiredItemsViewer,
+    PlanDetails,
 } from '../../components';
 import {
     CreateDownloadInput,
@@ -59,6 +58,7 @@ import {
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
 import * as graphQLMutations from '../../graphql/mutations';
+import { EditPlan } from '../../models';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -464,7 +464,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         this.setState((prevState) => ({
             ...prevState,
             editing: false,
-            editDescription: prevState.plan.description,
+            editedPlan: null,
         }));
     };
 
@@ -489,22 +489,26 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         });
     };
 
-    private handleSave = async (newDescription: string) => {
+    private handleSave = async (editPlan: EditPlan) => {
         this.setState({
             saving: true,
         });
 
-        if (!newDescription || !newDescription.length) {
+        const errors = this.validatePlan(editPlan);
+
+        if (errors.length > 0) {
             this.setState({
                 saving: false,
-                errors: ['Please enter a description.'],
+                errors: errors,
             });
-            throw Error('Please enter a description');
+            throw Error('Plan validation failed.');
         }
 
         const input: UpdatePlanInput = {
             id: this.state.planId,
-            description: newDescription,
+            description: editPlan.newDescription,
+            requiredMaterialIds: editPlan.newRequiredMaterialIds,
+            requiredToolIds: editPlan.newRequiredToolIds,
         };
 
         const planResult: GqlQuery<UpdatePlanMutation> = await API.graphql(
@@ -570,6 +574,26 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         }
 
         this.props.onPlanFavorite(this.state.planId, toggleFavOn);
+    };
+
+    private validatePlan = (editPlan: EditPlan): string[] => {
+        const errors: string[] = [];
+
+        if (!editPlan.newDescription.length) {
+            errors.push('Please enter a plan description.');
+        }
+
+        if (!editPlan.newRequiredMaterialIds.length) {
+            errors.push(
+                'Please select one or more materials your plan requires.'
+            );
+        }
+
+        if (!editPlan.newRequiredToolIds.length) {
+            errors.push('Please select one or more tools your plan requires.');
+        }
+
+        return errors;
     };
 
     render = () => {
@@ -641,22 +665,17 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         />
                     </div>
                     <div className={classes.planContent}>
-                        <RequiredItemsViewer
-                            requiredItems={this.state.plan.requiredMaterials}
-                            saving={this.state.saving}
-                            editing={this.state.editing}
-                        />
-                        <RequiredItemsViewer
-                            requiredItems={this.state.plan.requiredTools}
-                            saving={this.state.saving}
-                            editing={this.state.editing}
-                        />
-                        <DescriptionViewer
+                        <PlanDetails
                             description={this.state.plan.description}
-                            saving={this.state.saving}
+                            allMaterials={this.state.materials}
+                            requiredMaterials={
+                                this.state.plan.requiredMaterials
+                            }
+                            allTools={this.state.tools}
+                            requiredTools={this.state.plan.requiredTools}
                             editing={this.state.editing}
-                            onCancel={this.handleEditingOff}
                             onSave={this.handleSave}
+                            onCancel={this.handleEditingOff}
                         />
                         <div className={classes.buttonRow}>
                             <DownloadButton

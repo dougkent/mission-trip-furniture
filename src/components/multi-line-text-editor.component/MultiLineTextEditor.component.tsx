@@ -1,5 +1,5 @@
 // React
-import React, { useState } from 'react';
+import React from 'react';
 
 // Material UI
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
@@ -33,45 +33,48 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const MultiLineTextEditor: React.FC<MultiLineTextEditorProps> = (
-    props: MultiLineTextEditorProps
-) => {
-    const classes = useStyles(mtfTheme);
+const isJsonString = (str: string): boolean => {
+    try {
+        JSON.parse(str);
+    } catch {
+        return false;
+    }
+    return true;
+};
 
-    const isJsonString = (str: string): boolean => {
-        try {
-            JSON.parse(str);
-        } catch {
-            return false;
-        }
-        return true;
-    };
+const getDescription = (text: string): string => {
+    let description: string;
 
-    let initialState: string;
-
-    if (!props.text) {
-        initialState = JSON.stringify(
+    if (!text) {
+        description = JSON.stringify(
             convertToRaw(EditorState.createEmpty().getCurrentContent())
         );
-    } else if (!isJsonString(props.text)) {
-        initialState = JSON.stringify(
+    } else if (!isJsonString(text)) {
+        description = JSON.stringify(
             convertToRaw(
                 EditorState.createWithContent(
-                    ContentState.createFromText(props.text)
+                    ContentState.createFromText(text)
                 ).getCurrentContent()
             )
         );
     } else {
-        initialState = props.text;
+        description = text;
     }
 
-    const [textState, setTextState] = useState<string>(initialState);
+    return description;
+};
+
+const MultiLineTextEditor: React.FC<MultiLineTextEditorProps> = (
+    props: MultiLineTextEditorProps
+) => {
+    const classes = useStyles(mtfTheme);
+    const description = getDescription(props.text);
 
     const handleChange = (state: EditorState) => {
         const text: string = JSON.stringify(
             convertToRaw(state.getCurrentContent())
         );
-        setTextState(text);
+
         if (props.onChange) {
             props.onChange(text);
         }
@@ -81,7 +84,7 @@ const MultiLineTextEditor: React.FC<MultiLineTextEditorProps> = (
         <div className={classes.editorContainer}>
             <MUIRichTextEditor
                 label='Description *'
-                defaultValue={textState}
+                defaultValue={description}
                 onChange={handleChange}
                 maxLength={props.maxLength}
                 toolbar={!props.isReadOnly}

@@ -1,9 +1,10 @@
-import { Material } from '../api-models';
 import { RequiredItem } from '../required-item.model';
 
 export interface RequiredItemsViewerProps {
+    label: string;
+    selectorLabel: string;
     requiredItems: RequiredItem[];
-    saving: boolean;
+    selectedItems: RequiredItem[];
     editing: boolean;
-    onChange?: () => void;
+    onChange?: (requiredItems: RequiredItem[]) => void;
 }

@@ -13,6 +13,7 @@ import {
 // MTF
 import { RequiredItemsViewerProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
+import { RequiredItemsSelector } from '../.';
 import { RequiredItem } from '../../models';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
             flexGrow: 1,
             marginBottom: `${theme.spacing(2)}px`,
-            display: 'flex',
+            // display: 'flex',
         },
         requiredItem: {
             marginRight: theme.spacing(0.5),
@@ -39,28 +40,48 @@ const RequiredItemsViewer: React.FC<RequiredItemsViewerProps> = (
 ) => {
     const classes = useStyles(mtfTheme);
 
-    const [requiredItems, setRequiredItems] = useState<RequiredItem[]>(
-        props.requiredItems
+    const [selectedItems, setSelectedItems] = useState<RequiredItem[]>(
+        props.selectedItems
     );
 
     useEffect(() => {
-        setRequiredItems(props.requiredItems);
-    }, [props.requiredItems]);
+        setSelectedItems(props.selectedItems);
+    }, [props.selectedItems]);
+
+    const handleChange = (newSelectedItems: RequiredItem[]) => {
+        props.onChange(newSelectedItems);
+    };
 
     return (
         <div className={classes.requiredItemRow}>
-            <Typography variant='subtitle1' className={classes.rowTitle}>
-                Materials:
-            </Typography>
-            {requiredItems?.map((requiredItem) => (
-                <Chip
-                    className={classes.requiredItem}
-                    key={requiredItem.id}
-                    size='small'
-                    color='secondary'
-                    label={requiredItem.name}
+            {!props.editing && (
+                <>
+                    <Typography
+                        variant='subtitle1'
+                        className={classes.rowTitle}>
+                        {props.label}
+                    </Typography>
+                    {selectedItems?.map((requiredItem) => (
+                        <Chip
+                            className={classes.requiredItem}
+                            key={requiredItem.id}
+                            size='small'
+                            color='secondary'
+                            label={requiredItem.name}
+                        />
+                    ))}
+                </>
+            )}
+            {props.editing && (
+                <RequiredItemsSelector
+                    label={props.selectorLabel}
+                    loading={false}
+                    requiredItems={props.requiredItems}
+                    selectedItems={selectedItems}
+                    numSelectedItemsToRender={2}
+                    onSelect={handleChange}
                 />
-            ))}
+            )}
         </div>
     );
 };

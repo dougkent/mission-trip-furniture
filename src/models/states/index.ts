@@ -6,3 +6,4 @@ export * from './filter.state';
 export * from './plan-list.state';
 export * from './search.state';
 export * from './dashboard.state';
+export * from './plan-details.state';
