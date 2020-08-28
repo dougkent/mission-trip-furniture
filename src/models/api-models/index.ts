@@ -2,7 +2,6 @@ export * from './download-connection.model';
 export * from './download.model';
 export * from './favorite-connection.model';
 export * from './favorite.model';
-export * from './gql-query.model';
 export * from './input-create-download.model';
 export * from './input-create-favorite.model';
 export * from './input-create-plan.model';

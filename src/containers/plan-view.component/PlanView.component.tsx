@@ -4,7 +4,9 @@ import { Redirect } from 'react-router-dom';
 
 // AWS
 import { API, graphqlOperation, Storage } from 'aws-amplify';
-import { S3Image } from 'aws-amplify-react';
+import { GraphQLResult, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
+import { AmplifyS3Image } from '@aws-amplify/ui-react';
+import { AccessLevel } from '@aws-amplify/ui-components';
 
 // Material UI
 import {
@@ -46,7 +48,6 @@ import {
     CreateDownloadInput,
     DeletePlanInput,
     DeletePlanMutation,
-    GqlQuery,
     GetDownloadByPlanIdQuery,
     GetFavoriteByPlanIdQuery,
     GetPlanQuery,
@@ -83,16 +84,16 @@ const styles = (theme: Theme) =>
         },
         image: {
             width: '100%',
-            height: theme.spacing(25),
+            height: '100%',
             marginBottom: theme.spacing(2),
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'hidden',
             [theme.breakpoints.up('sm')]: {
                 width: '50%',
-                height: theme.spacing(25),
             },
-            [theme.breakpoints.up('lg')]: {
-                height: '100%',
-            },
-            '& img': {
+            '& amplify-s3-image': {
+                '--width': '100%',
                 width: '100%',
                 height: theme.spacing(25),
                 objectFit: 'cover',
@@ -103,9 +104,10 @@ const styles = (theme: Theme) =>
         },
         planContent: {
             width: '100%',
-            padding: `0 ${theme.spacing(2)}px`,
+            padding: 0,
             marginBottom: theme.spacing(2),
             [theme.breakpoints.up('sm')]: {
+                padding: `0 ${theme.spacing(3)}px`,
                 width: '50%',
             },
         },
@@ -168,12 +170,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     }
 
     componentDidMount = async () => {
-        const planResult: GqlQuery<GetPlanQuery> = await API.graphql({
+        const planResult = (await API.graphql({
             query: graphQLQueries.getPlanQuery,
             variables: { id: this.props.planId },
-            // @ts-ignore
-            authMode: 'AWS_IAM',
-        });
+            authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
+        })) as GraphQLResult<GetPlanQuery>;
 
         if (planResult?.data?.getPlan) {
             const { getPlan } = planResult.data;
@@ -197,7 +198,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                     eq: this.props.userId,
                 };
 
-                const planDownloadResult: GqlQuery<GetDownloadByPlanIdQuery> = await API.graphql(
+                const planDownloadResult = (await API.graphql(
                     graphqlOperation(
                         graphQLQueries.getDownloadByPlanAndUserQuery,
                         {
@@ -205,7 +206,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             userId: getPlanDownloadInput,
                         }
                     )
-                );
+                )) as GraphQLResult<GetDownloadByPlanIdQuery>;
 
                 if (
                     planDownloadResult?.data?.getDownloadByPlanId?.items.length
@@ -343,11 +344,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             id: this.state.planId,
         };
 
-        const deleteResult: GqlQuery<DeletePlanMutation> = await API.graphql(
+        const deleteResult = (await API.graphql(
             graphqlOperation(graphQLMutations.deletePlanMutation, {
                 input: input,
             })
-        );
+        )) as GraphQLResult<DeletePlanMutation>;
 
         if (deleteResult?.data) {
             await Storage.remove(this.state.plan.imageS3Info.key, {
@@ -379,12 +380,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleDeleteDownloads = async (nextToken: string = null) => {
-        const planDownloads: GqlQuery<GetDownloadByPlanIdQuery> = await API.graphql(
+        const planDownloads = (await API.graphql(
             graphqlOperation(graphQLQueries.getDownloadsByPlanQuery, {
                 planId: this.state.planId,
                 nextToken: nextToken,
             })
-        );
+        )) as GraphQLResult<GetDownloadByPlanIdQuery>;
 
         if (planDownloads?.data) {
             const { getDownloadByPlanId } = planDownloads.data;
@@ -413,12 +414,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleDeleteFavorites = async (nextToken: string = null) => {
-        const planFavorites: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
+        const planFavorites = (await API.graphql(
             graphqlOperation(graphQLQueries.getFavoritesByPlanQuery, {
                 planId: this.state.planId,
                 nextToken: nextToken,
             })
-        );
+        )) as GraphQLResult<GetFavoriteByPlanIdQuery>;
 
         if (planFavorites?.data) {
             const { getFavoriteByPlanId } = planFavorites.data;
@@ -511,11 +512,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             requiredToolIds: editPlan.newRequiredToolIds,
         };
 
-        const planResult: GqlQuery<UpdatePlanMutation> = await API.graphql(
+        const planResult = (await API.graphql(
             graphqlOperation(graphQLMutations.updatePlanMutation, {
                 input: input,
             })
-        );
+        )) as GraphQLResult<UpdatePlanMutation>;
 
         if (planResult?.data?.updatePlan) {
             const decoratedPlan = this.decoratePlan(planResult.data.updatePlan);
@@ -658,8 +659,8 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                         </Typography>
                     </div>
                     <div className={classes.image}>
-                        <S3Image
-                            level='protected'
+                        <AmplifyS3Image
+                            level={AccessLevel.Protected}
                             imgKey={this.state.plan.imageS3Info.key}
                             identityId={this.state.plan.createdBy.id}
                         />

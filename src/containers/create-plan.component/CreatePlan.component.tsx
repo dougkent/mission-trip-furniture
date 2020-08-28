@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 // AWS
 import { API, graphqlOperation, Storage } from 'aws-amplify';
-import { withAuthenticator } from 'aws-amplify-react';
+import { GraphQLResult } from '@aws-amplify/api';
 
 // Material UI
 import {
@@ -38,9 +38,7 @@ import {
     PdfUploader,
     RequiredItemsSelector,
 } from '../../components';
-import { signUpConfig } from '../../models/sign-up-config.model';
 import {
-    GqlQuery,
     CreatePlanMutation,
     Material,
     Tool,
@@ -255,11 +253,11 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             return;
         }
 
-        const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
+        const planResult = (await API.graphql(
             graphqlOperation(graphQLMutations.createPlanMutation, {
                 input: this.state.plan,
             })
-        );
+        )) as GraphQLResult<CreatePlanMutation>;
 
         if (planResult.data.createPlan.id) {
             await this.uploadPdf();
@@ -380,11 +378,11 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     };
 
     private planAlreadyExists = async (): Promise<boolean> => {
-        const planResult: GqlQuery<GetPlanQuery> = await API.graphql(
+        const planResult = (await API.graphql(
             graphqlOperation(graphQLQueries.getPlanIdQuery, {
                 id: this.state.plan.id,
             })
-        );
+        )) as GraphQLResult<GetPlanQuery>;
 
         const { data } = planResult;
 
@@ -550,8 +548,4 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     };
 }
 
-export default withStyles(styles(mtfTheme))(
-    withAuthenticator(CreatePlan, {
-        signUpConfig: signUpConfig,
-    })
-);
+export default withStyles(styles(mtfTheme))(CreatePlan);

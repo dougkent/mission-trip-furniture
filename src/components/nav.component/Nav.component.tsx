@@ -4,7 +4,7 @@ import * as ReactRouter from 'react-router-dom';
 
 // AWS
 import { Hub } from 'aws-amplify';
-import { Authenticator, Greetings } from 'aws-amplify-react';
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 // Material UI
 import {
@@ -15,7 +15,7 @@ import {
     List,
     ListItemText,
     SwipeableDrawer,
-    Divider
+    Divider,
 } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
@@ -23,29 +23,29 @@ import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // MTF
 import { BaseProps } from '../../models/props';
-import { mtfTheme, mtfAmplifyTheme, mtfAmplifyMobileTheme } from '../../themes';
+import { mtfTheme } from '../../themes';
 import { ReactComponent as MtfLogo } from '../../assets/mtf-logo.svg';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         grow: {
-            flexGrow: 1
+            flexGrow: 1,
         },
         flex: {
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center'
+            alignItems: 'center',
         },
         flexLeft: {
-            flexGrow: 0.2
+            flexGrow: 0.2,
         },
         flexRight: {
-            flexGrow: 0.1
+            flexGrow: 0.1,
         },
 
         logo: {
             height: theme.spacing(4),
-            width: theme.spacing(4)
+            width: theme.spacing(4),
         },
         navLink: {
             textDecoration: 'none',
@@ -55,46 +55,46 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'space-between',
             marginRight: theme.spacing(4),
             [theme.breakpoints.up('md')]: {
-                marginRight: theme.spacing(2)
+                marginRight: theme.spacing(2),
             },
             [theme.breakpoints.up('lg')]: {
-                marginRight: theme.spacing(4)
-            }
+                marginRight: theme.spacing(4),
+            },
         },
         mobileMenu: {
-            width: 300
+            width: 300,
         },
         mobileMenuItem: {
-            margin: theme.spacing(4)
+            margin: theme.spacing(4),
         },
         mobileNavLink: {
             textDecoration: 'none',
-            color: 'inherit'
+            color: 'inherit',
         },
         mobileSignOut: {
-            margin: theme.spacing(3)
+            margin: theme.spacing(3),
         },
         sectionDesktop: {
             display: 'none',
             [theme.breakpoints.up('md')]: {
-                display: 'flex'
-            }
+                display: 'flex',
+            },
         },
         sectionMobile: {
             width: '100%',
             justifyContent: 'flex-end',
             [theme.breakpoints.up('md')]: {
-                display: 'none'
-            }
+                display: 'none',
+            },
         },
         homeMenuLink: {
             minWidth: theme.spacing(33),
             [theme.breakpoints.up('md')]: {
-                minWidth: theme.spacing(31)
+                minWidth: theme.spacing(31),
             },
             [theme.breakpoints.up('lg')]: {
-                minWidth: theme.spacing(33)
-            }
+                minWidth: theme.spacing(33),
+            },
         },
 
         signInLink: {
@@ -110,12 +110,12 @@ const useStyles = makeStyles((theme: Theme) =>
             minWidth: 'auto',
             padding: '10px 20px',
             textAlign: 'center',
-            textDecoration: 'none'
+            textDecoration: 'none',
         },
         mobileSignInItem: {
             display: 'flex',
-            justifyContent: 'center'
-        }
+            justifyContent: 'center',
+        },
     })
 );
 
@@ -125,7 +125,7 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
         false
     );
 
-    Hub.listen('auth', data => {
+    Hub.listen('auth', (data) => {
         const { payload } = data;
 
         if (payload.event === 'signOut') {
@@ -222,15 +222,7 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
                                 noWrap
                                 color='primary'
                                 className={classes.mobileSignOut}>
-                                <Authenticator
-                                    hideDefault={true}
-                                    theme={mtfAmplifyMobileTheme}>
-                                    <Greetings
-                                        inGreeting={(
-                                            username: string
-                                        ): string => null}
-                                    />
-                                </Authenticator>
+                                <AmplifySignOut />
                             </Typography>
                         </>
                     );
@@ -242,7 +234,7 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
                             color='primary'
                             className={`${classes.mobileMenuItem} ${classes.mobileSignInItem}`}>
                             <ReactRouter.Link
-                                to='/my-mtf'
+                                to='/sign-in'
                                 className={`${classes.signInLink}  ${classes.mobileNavLink}`}
                                 onClick={handleMobileMenuClose}>
                                 Sign In
@@ -327,18 +319,14 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
                                             variant='h5'
                                             noWrap
                                             color='primary'>
-                                            <Authenticator
-                                                hideDefault={true}
-                                                theme={mtfAmplifyTheme}>
-                                                <Greetings />
-                                            </Authenticator>
+                                            <AmplifySignOut />
                                         </Typography>
                                     </>
                                 );
                             } else {
                                 return (
                                     <ReactRouter.Link
-                                        to='/my-mtf'
+                                        to='/sign-in'
                                         className={classes.signInLink}>
                                         Sign In or Create an Account
                                     </ReactRouter.Link>
