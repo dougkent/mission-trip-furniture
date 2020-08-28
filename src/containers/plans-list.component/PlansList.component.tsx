@@ -3,6 +3,7 @@ import React from 'react';
 
 // AWS
 import { API } from 'aws-amplify';
+import { GraphQLResult, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
 
 // Material UI
 import {
@@ -22,7 +23,6 @@ import { FilterState, PlanListState, SearchState } from '../../models/states';
 import { mtfTheme } from '../../themes';
 import { Filter, PlanGrid, Search } from '../../components';
 import {
-    GqlQuery,
     Plan,
     SearchPlansQuery,
     SearchablePlanFilterInput,
@@ -183,7 +183,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                             eq: material.id,
                         },
                     };
-                },
+                }
             );
 
             if (search?.and) {
@@ -201,7 +201,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                             eq: tool.id,
                         },
                     };
-                },
+                }
             );
 
             if (search?.and) {
@@ -236,14 +236,14 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 ...plan,
                 requiredMaterials: this.state.materials.filter((material) => {
                     return !!plan.requiredMaterialIds.find(
-                        (id) => id === material.id,
+                        (id) => id === material.id
                     );
                 }),
                 requiredTools: this.state.tools.filter((tool) => {
                     return !!plan.requiredToolIds.find((id) => id === tool.id);
                 }),
                 isFavoritedByUser: this.state.userFavoritedPlanIds.some(
-                    (planId) => planId === plan.id,
+                    (planId) => planId === plan.id
                 ),
             };
         });
@@ -283,7 +283,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
 
     private handleTogglePlanFavorite = async (
         planId: string,
-        toggleFavOn: boolean,
+        toggleFavOn: boolean
     ) => {
         ReactGA.event({
             category: 'favorite',
@@ -310,7 +310,7 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
 
         const nextToken: string = isNextPage ? this.state.nextToken : null;
 
-        const result: GqlQuery<SearchPlansQuery> = await API.graphql({
+        const result = (await API.graphql({
             query: graphQLQueries.searchPlansQuery,
             variables: {
                 limit: 10,
@@ -318,9 +318,8 @@ class PlansList extends React.Component<PlanListProps, PlanListState> {
                 sort: sort,
                 nextToken: nextToken,
             },
-            // @ts-ignore
-            authMode: 'AWS_IAM',
-        });
+            authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
+        })) as GraphQLResult<SearchPlansQuery>;
 
         const { searchPlans } = result.data;
 

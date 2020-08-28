@@ -42,8 +42,13 @@ const RequiredItemsSelector: React.FC<RequiredItemsSelectorProps> = (
         return option.name;
     };
 
-    const handleChange = (event: object, value: RequiredItem[]) => {
-        props.onSelect(value);
+    const handleChange = (event: object, value: (string | RequiredItem)[]) => {
+        if (typeof value !== 'string') {
+            const values = value as RequiredItem[];
+            props.onSelect(values);
+        } else {
+            console.error('Could not select required item', value);
+        }
     };
 
     if (props.loading) {

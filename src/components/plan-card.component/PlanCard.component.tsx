@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import * as ReactRouter from 'react-router-dom';
 
 // AWS
-import { S3Image } from 'aws-amplify-react';
+import { AmplifyS3Image } from '@aws-amplify/ui-react';
+import { AccessLevel } from '@aws-amplify/ui-components';
 
 // Material UI
 import {
@@ -36,10 +37,17 @@ const useStyles = makeStyles((theme: Theme) =>
         image: {
             width: '100%',
             height: theme.spacing(25),
-            '& img': {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'hidden',
+            '& amplify-s3-image': {
+                '--width': '100%',
                 width: '100%',
                 height: theme.spacing(25),
-                objectFit: 'cover',
+                '& img': {
+                    objectFit: 'cover',
+                },
             },
         },
         cardContentContainer: {
@@ -213,8 +221,8 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                 <ReactRouter.Link
                     to={`/plans/${planState.id}`}
                     className={classes.cardTitleLink}>
-                    <S3Image
-                        level='protected'
+                    <AmplifyS3Image
+                        level={AccessLevel.Protected}
                         imgKey={planState.imageS3Info.key}
                         identityId={planState.createdBy.id}
                     />

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 // AWS
 import { graphqlOperation, API } from 'aws-amplify';
-import { withAuthenticator } from 'aws-amplify-react';
+import { GraphQLResult } from '@aws-amplify/api';
 
 // Material UI
 import {
@@ -31,15 +31,13 @@ import ReactGA from 'react-ga';
 // MTF
 import { AppProps } from '../../models/props';
 import { DashboardState, DashboardTabsEnum } from '../../models/states';
-import { mtfAmplifyTheme, mtfTheme } from '../../themes';
+import { mtfTheme } from '../../themes';
 import { PlanGrid } from '../../components';
-import { signUpConfig } from '../../models/sign-up-config.model';
 import {
     GetDownloadedByUserIdQuery,
     GetFavoriteByUserIdQuery,
     GetPlanQuery,
     GetUserQuery,
-    GqlQuery,
     Plan,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
@@ -176,13 +174,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     prevProps.userFavoritedPlanIds
             ) {
                 const decoratedCreatedPlans = this.decoratePlans(
-                    this.state.createdPlans,
+                    this.state.createdPlans
                 );
                 const decoratedFavoritedPlans = this.decoratePlans(
-                    this.state.favoritedPlans,
+                    this.state.favoritedPlans
                 );
                 const decoratedDownloadedPlans = this.decoratePlans(
-                    this.state.downloadedPlans,
+                    this.state.downloadedPlans
                 );
 
                 this.setState({
@@ -200,14 +198,14 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 ...plan,
                 requiredMaterials: this.state.materials.filter((material) => {
                     return !!plan.requiredMaterialIds.find(
-                        (id) => id === material.id,
+                        (id) => id === material.id
                     );
                 }),
                 requiredTools: this.state.tools.filter((tool) => {
                     return !!plan.requiredToolIds.find((id) => id === tool.id);
                 }),
                 isFavoritedByUser: this.state.userFavoritedPlanIds.some(
-                    (planId) => planId === plan.id,
+                    (planId) => planId === plan.id
                 ),
             };
         });
@@ -228,7 +226,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     private handleTabChange = (
         event: React.ChangeEvent<{}>,
-        newValue: DashboardTabsEnum,
+        newValue: DashboardTabsEnum
     ) => {
         this.setState({
             currentTab: newValue,
@@ -255,7 +253,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     private handleTogglePlanFavorite = async (
         planId: string,
-        toggleFavOn: boolean,
+        toggleFavOn: boolean
     ) => {
         ReactGA.event({
             category: 'favorite',
@@ -284,13 +282,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             createdPlansLoading: true,
         });
 
-        const result: GqlQuery<GetUserQuery> = await API.graphql(
+        const result = (await API.graphql(
             graphqlOperation(graphQLQueries.getUserQuery, {
                 id: this.state.userId,
                 limit: 5,
                 nextToken: this.state.createdPlansNextToken,
-            }),
-        );
+            })
+        )) as GraphQLResult<GetUserQuery>;
 
         const { createdPlans } = result.data.getUser;
 
@@ -311,13 +309,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             favoritedPlansLoading: true,
         });
 
-        const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
+        const result = (await API.graphql(
             graphqlOperation(graphQLQueries.listFavoritesByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
                 nextToken: this.state.favoritedPlansNextToken,
-            }),
-        );
+            })
+        )) as GraphQLResult<GetFavoriteByUserIdQuery>;
 
         const { getFavoriteByUserId } = result.data;
 
@@ -326,11 +324,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         for (const i in getFavoriteByUserId.items) {
             const planId = getFavoriteByUserId.items[i].planId;
 
-            const result: GqlQuery<GetPlanQuery> = await API.graphql(
+            const result = (await API.graphql(
                 graphqlOperation(graphQLQueries.getPlanQuery, {
                     id: planId,
-                }),
-            );
+                })
+            )) as GraphQLResult<GetPlanQuery>;
 
             favoritedPlans.push(result.data.getPlan);
         }
@@ -352,13 +350,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             downloadedPlansLoading: true,
         });
 
-        const result: GqlQuery<GetDownloadedByUserIdQuery> = await API.graphql(
+        const result = (await API.graphql(
             graphqlOperation(graphQLQueries.listDownloadsByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
                 nextToken: this.state.downloadedPlansNextToken,
-            }),
-        );
+            })
+        )) as GraphQLResult<GetDownloadedByUserIdQuery>;
 
         const { getDownloadedByUserId } = result.data;
 
@@ -367,11 +365,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         for (const i in getDownloadedByUserId.items) {
             const planId = getDownloadedByUserId.items[i].planId;
 
-            const result: GqlQuery<GetPlanQuery> = await API.graphql(
+            const result = (await API.graphql(
                 graphqlOperation(graphQLQueries.getPlanQuery, {
                     id: planId,
-                }),
-            );
+                })
+            )) as GraphQLResult<GetPlanQuery>;
 
             downloadedPlans.push(result.data.getPlan);
         }
@@ -577,9 +575,4 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     };
 }
 
-export default withStyles(styles(mtfTheme))(
-    withAuthenticator(Dashboard, {
-        signUpConfig: signUpConfig,
-        theme: mtfAmplifyTheme,
-    }),
-);
+export default withStyles(styles(mtfTheme))(Dashboard);

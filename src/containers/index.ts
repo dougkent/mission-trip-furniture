@@ -6,3 +6,4 @@ export { default as Home } from './home.component/Home.component';
 export { default as NotFound } from './not-found.component/NotFound.component';
 export { default as PlanView } from './plan-view.component/PlanView.component';
 export { default as PlansList } from './plans-list.component/PlansList.component';
+export { default as SignIn } from './sign-in.component/SignIn.component';
