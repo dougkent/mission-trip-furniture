@@ -14,15 +14,17 @@ import { mtfTheme } from '../../themes';
 
 const styles = (theme: Theme) => createStyles({});
 
-export interface SignInProps extends BaseProps, WithStyles<typeof styles> {}
+export interface SignInProps extends BaseProps, WithStyles<typeof styles> {
+    previousUrl: string;
+}
 
 class SignIn extends React.Component<SignInProps> {
     render() {
         if (this.props.userId) {
-            return <Redirect to={{ pathname: '/my-mtf' }} />;
+            return <Redirect to={this.props.previousUrl} />;
         } else {
             return (
-                <AmplifyAuthenticator className={'test-class'}>
+                <AmplifyAuthenticator>
                     <AmplifySignUp
                         slot='sign-up'
                         formFields={[

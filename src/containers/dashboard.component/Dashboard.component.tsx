@@ -1,6 +1,6 @@
 // React
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 // AWS
 import { graphqlOperation, API } from 'aws-amplify';
@@ -24,6 +24,7 @@ import AddSharpIcon from '@material-ui/icons/AddSharp';
 import CloudDownloadSharpIcon from '@material-ui/icons/CloudDownloadSharp';
 import CreateNewFolderSharpIcon from '@material-ui/icons/CreateNewFolderSharp';
 import FavoriteSharpIcon from '@material-ui/icons/FavoriteSharp';
+import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // Google Analytics
 import ReactGA from 'react-ga';
@@ -51,12 +52,18 @@ const styles = (theme: Theme) =>
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-evenly',
+                flexWrap: 'wrap',
             },
         },
 
         loading: {
             width: 100,
             margin: `${theme.spacing(4)}px auto`,
+        },
+
+        linkBar: {
+            width: '100%',
+            padding: `0px ${theme.spacing(2)}px`,
         },
 
         listContainer: {
@@ -89,9 +96,8 @@ const styles = (theme: Theme) =>
                 display: 'inline-flex',
             },
         },
-        createNewPlanLink: {
+        noDecorationLink: {
             textDecoration: 'none',
-            [theme.breakpoints.up('md')]: {},
         },
         gridItem: {
             width: '100%',
@@ -395,7 +401,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     <Typography variant='h3'>My Plans</Typography>
                     <Link
                         to='/my-mtf/upload-plan'
-                        className={classes.createNewPlanLink}>
+                        className={classes.noDecorationLink}>
                         <AddBoxSharpIcon
                             color='secondary'
                             fontSize='large'
@@ -468,6 +474,10 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         );
     };
 
+    private renderAccountManagement = () => {
+        return <Redirect to='my-mtf/manage-account' />;
+    };
+
     render = () => {
         const { classes } = this.props;
 
@@ -502,6 +512,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                     icon={<CloudDownloadSharpIcon />}
                                     value={DashboardTabsEnum.DOWNLOADED_PLANS}
                                 />
+                                <Tab
+                                    label='Manage My Account'
+                                    icon={<AccountCircleSharpIcon />}
+                                    value={DashboardTabsEnum.ACCOUNT_MANAGEMENT}
+                                />
                             </Tabs>
                         </Hidden>
                         <Hidden xsDown lgUp>
@@ -524,6 +539,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                     label='My Downloaded Plans'
                                     icon={<CloudDownloadSharpIcon />}
                                     value={DashboardTabsEnum.DOWNLOADED_PLANS}
+                                />
+                                <Tab
+                                    label='Manage My Account'
+                                    icon={<AccountCircleSharpIcon />}
+                                    value={DashboardTabsEnum.ACCOUNT_MANAGEMENT}
                                 />
                             </Tabs>
                         </Hidden>
@@ -548,6 +568,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                     icon={<CloudDownloadSharpIcon />}
                                     value={DashboardTabsEnum.DOWNLOADED_PLANS}
                                 />
+                                <Tab
+                                    label='Manage My Account'
+                                    icon={<AccountCircleSharpIcon />}
+                                    value={DashboardTabsEnum.ACCOUNT_MANAGEMENT}
+                                />
                             </Tabs>
                         </Hidden>
                         <div className={classes.fullWidth}>
@@ -560,14 +585,37 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                             {this.state.currentTab ===
                                 DashboardTabsEnum.DOWNLOADED_PLANS &&
                                 this.renderDownloadedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.ACCOUNT_MANAGEMENT &&
+                                this.renderAccountManagement()}
                         </div>
                     </Hidden>
                     <Hidden lgDown>
-                        <div className={classes.dashboardContainer}>
-                            {this.renderCreatedPlansList()}
-                            {this.renderFavoritedPlansList()}
-                            {this.renderDownloadedPlansList()}
-                        </div>
+                        {this.state.currentTab !==
+                            DashboardTabsEnum.ACCOUNT_MANAGEMENT && (
+                            <div className={classes.dashboardContainer}>
+                                <div className={classes.linkBar}>
+                                    <Link
+                                        to='/my-mtf/manage-account'
+                                        className={classes.noDecorationLink}>
+                                        <Button
+                                            variant='contained'
+                                            color='secondary'
+                                            startIcon={
+                                                <AccountCircleSharpIcon />
+                                            }>
+                                            Manage My Account
+                                        </Button>
+                                    </Link>
+                                </div>
+                                {this.renderCreatedPlansList()}
+                                {this.renderFavoritedPlansList()}
+                                {this.renderDownloadedPlansList()}
+                            </div>
+                        )}
+                        {this.state.currentTab ===
+                            DashboardTabsEnum.ACCOUNT_MANAGEMENT &&
+                            this.renderAccountManagement()}
                     </Hidden>
                 </div>
             );

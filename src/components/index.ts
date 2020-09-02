@@ -1,3 +1,4 @@
+export { default as ChangePassword } from './change-password.component/ChangePassword.component';
 export { default as DescriptionViewer } from './description-viewer.component/DescriptionViewer.component';
 export { default as DownloadButton } from './download-button.component/DownloadButton.component';
 export { default as ErrorMessage } from './error-message.component/ErrorMessage.component';
@@ -7,6 +8,7 @@ export { default as MultiLineTextEditor } from './multi-line-text-editor.compone
 export { default as Nav } from './nav.component/Nav.component';
 export { default as Pager } from './pager.component/Pager.component';
 export { default as PdfUploader } from './pdf-uploader.component/PdfUploader.component';
+export { default as PersonalInfo } from './personal-info.component/PersonalInfo.component';
 export { default as PlanCard } from './plan-card.component/PlanCard.component';
 export { default as PlanDate } from './plan-date.component/PlanDate.component';
 export { default as PlanDetails } from './plan-details.component/PlanDetails.component';

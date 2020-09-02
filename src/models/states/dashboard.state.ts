@@ -18,4 +18,5 @@ export enum DashboardTabsEnum {
     CREATED_PLANS,
     FAVORITED_PLANS,
     DOWNLOADED_PLANS,
+    ACCOUNT_MANAGEMENT,
 }
