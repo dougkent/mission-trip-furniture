@@ -31,7 +31,9 @@ const styles = (theme: Theme) =>
     });
 export interface AccountManagementProps
     extends AppProps,
-        WithStyles<typeof styles> {}
+        WithStyles<typeof styles> {
+    onNameUpdate: () => void;
+}
 class AccountManagement extends React.Component<
     AccountManagementProps,
     AccountManagementState
@@ -44,6 +46,7 @@ class AccountManagement extends React.Component<
             emailVerified: true,
             name: '',
             savingPersonalInfo: false,
+            verifyingEmail: false,
             savingPassword: false,
             savePasswordSuccessful: false,
             errors: [],
@@ -58,7 +61,7 @@ class AccountManagement extends React.Component<
         this.setState({
             email: attributes.email,
             name: attributes.name,
-            emailVerified: attributes.emailVerified,
+            emailVerified: attributes.email_verified,
         });
     }
 
@@ -74,6 +77,10 @@ class AccountManagement extends React.Component<
         });
     };
 
+    private requestVerificationCode = () => {
+        Auth.verifyCurrentUserAttribute('email');
+    };
+
     private updateUser = async (email: string, name: string) => {
         this.setState({
             savingPersonalInfo: true,
@@ -85,9 +92,10 @@ class AccountManagement extends React.Component<
             email: email,
             name: name,
         })
-            .then(async (data) => {
-                console.log(data);
-                const user = await Auth.currentAuthenticatedUser();
+            .then(async () => {
+                const user = await Auth.currentAuthenticatedUser({
+                    bypassCache: true,
+                });
 
                 const { attributes } = user;
 
@@ -95,8 +103,10 @@ class AccountManagement extends React.Component<
                     savingPersonalInfo: false,
                     email: attributes.email,
                     name: attributes.name,
-                    emailVerified: attributes.emailVerified,
+                    emailVerified: attributes.email_verified,
                 });
+
+                this.props.onNameUpdate();
             })
             .catch((err) => {
                 this.setState({
@@ -131,6 +141,32 @@ class AccountManagement extends React.Component<
             });
     };
 
+    private verifyEmail = async (verificationCode: string) => {
+        this.setState({
+            verifyingEmail: true,
+        });
+
+        Auth.verifyCurrentUserAttributeSubmit('email', verificationCode)
+            .then(async () => {
+                const user = await Auth.currentAuthenticatedUser({
+                    bypassCache: true,
+                });
+
+                const { attributes } = user;
+
+                this.setState({
+                    verifyingEmail: false,
+                    emailVerified: attributes.email_verified,
+                });
+            })
+            .catch((err) => {
+                this.setState({
+                    errors: [err.message],
+                    verifyingEmail: false,
+                });
+            });
+    };
+
     render() {
         const { classes } = this.props;
 
@@ -145,6 +181,11 @@ class AccountManagement extends React.Component<
                             name={this.state.name}
                             saving={this.state.savingPersonalInfo}
                             onSave={this.updateUser}
+                            verifying={this.state.verifyingEmail}
+                            onVerify={this.verifyEmail}
+                            onRequestVerificationCode={
+                                this.requestVerificationCode
+                            }
                         />
                     </div>
                     <div className={classes.acctMgmtSection}>

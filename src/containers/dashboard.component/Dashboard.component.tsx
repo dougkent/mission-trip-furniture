@@ -52,6 +52,8 @@ const styles = (theme: Theme) =>
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-evenly',
+            },
+            [theme.breakpoints.up('xl')]: {
                 flexWrap: 'wrap',
             },
         },

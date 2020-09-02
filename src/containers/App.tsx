@@ -32,6 +32,7 @@ import {
 import * as graphQLQueries from '../graphql/queries';
 import * as graphQLMutations from '../graphql/mutations';
 import {
+    AccountManagement,
     About,
     Contact,
     CreatePlan,
@@ -45,7 +46,6 @@ import {
 import { Nav } from '../components';
 import { PlanFavoriteService } from '../services';
 import '../themes/mtf-amplify-theme.css';
-import AccountManagement from './account-management.component/AccountManagement.component';
 
 // Configure
 Amplify.configure(aws_exports);
@@ -71,7 +71,11 @@ class App extends React.Component<{}, AppState> {
 
         if (userInfo) {
             const { attributes } = userInfo;
-            this.setState({ userId: userInfo.id, name: attributes.name });
+
+            this.setState({
+                userId: userInfo.id,
+                name: attributes.name,
+            });
         }
     }
 
@@ -143,6 +147,16 @@ class App extends React.Component<{}, AppState> {
 
         this.setState({ userId: createUser.id });
     }
+
+    private handleNameUpdate = async () => {
+        const userInfo = await Auth.currentUserInfo();
+
+        const { attributes } = userInfo;
+
+        this.setState({
+            name: attributes.name,
+        });
+    };
 
     private handleTogglePlanFavorite = async (
         planId: string,
@@ -350,6 +364,7 @@ class App extends React.Component<{}, AppState> {
                                         onPlanFavorite={
                                             this.handleTogglePlanFavorite
                                         }
+                                        onNameUpdate={this.handleNameUpdate}
                                     />
                                 )
                             }
