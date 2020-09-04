@@ -19,3 +19,4 @@ export * from './plan-details.props';
 export * from './personal-info.props';
 export * from './change-password.props';
 export * from './nav.props';
+export * from './delete-account.props';

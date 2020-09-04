@@ -3,6 +3,7 @@ import React from 'react';
 
 // AWS
 import { Auth } from 'aws-amplify';
+import { CognitoUser } from 'amazon-cognito-identity-js';
 
 // Material UI
 import {
@@ -18,7 +19,13 @@ import {
 import { AppProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
 import { AccountManagementState } from '../../models/states';
-import { PersonalInfo, ChangePassword, ErrorMessage } from '../../components';
+import {
+    PersonalInfo,
+    ChangePassword,
+    ErrorMessage,
+    DeleteAccount,
+} from '../../components';
+import { Redirect } from 'react-router-dom';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -49,6 +56,7 @@ class AccountManagement extends React.Component<
             verifyingEmail: false,
             savingPassword: false,
             savePasswordSuccessful: false,
+            deleteUserSuccessful: false,
             errors: [],
         };
     }
@@ -71,6 +79,22 @@ class AccountManagement extends React.Component<
         });
     };
 
+    private handleDelete = async () => {
+        const user: CognitoUser = await Auth.currentAuthenticatedUser();
+
+        user.deleteUser((err) => {
+            if (err) {
+                this.setState({
+                    errors: [err.message],
+                });
+            } else {
+                this.setState({
+                    deleteUserSuccessful: true,
+                });
+            }
+        });
+    };
+
     private handleSetError = (errors: string[]) => {
         this.setState({
             errors: errors,
@@ -86,7 +110,7 @@ class AccountManagement extends React.Component<
             savingPersonalInfo: true,
         });
 
-        const user = await Auth.currentAuthenticatedUser();
+        const user: CognitoUser = await Auth.currentAuthenticatedUser();
 
         Auth.updateUserAttributes(user, {
             email: email,
@@ -124,7 +148,7 @@ class AccountManagement extends React.Component<
             savingPassword: true,
         });
 
-        const user = await Auth.currentAuthenticatedUser();
+        const user: CognitoUser = await Auth.currentAuthenticatedUser();
 
         Auth.changePassword(user, oldPassword, newPassword)
             .then(() => {
@@ -170,39 +194,51 @@ class AccountManagement extends React.Component<
     render() {
         const { classes } = this.props;
 
-        return (
-            <Container maxWidth='sm' className={classes.acctMgmtContainer}>
-                <Typography variant='h2'>Account Management</Typography>
-                <div>
-                    <div className={classes.acctMgmtSection}>
-                        <PersonalInfo
-                            email={this.state.email}
-                            emailVerified={this.state.emailVerified}
-                            name={this.state.name}
-                            saving={this.state.savingPersonalInfo}
-                            onSave={this.updateUser}
-                            verifying={this.state.verifyingEmail}
-                            onVerify={this.verifyEmail}
-                            onRequestVerificationCode={
-                                this.requestVerificationCode
-                            }
-                        />
+        if (this.state.deleteUserSuccessful) {
+            return <Redirect to='/sign-in' />;
+        } else {
+            return (
+                <Container maxWidth='sm' className={classes.acctMgmtContainer}>
+                    <Typography variant='h2'>Account Management</Typography>
+                    <div>
+                        <div className={classes.acctMgmtSection}>
+                            <PersonalInfo
+                                email={this.state.email}
+                                emailVerified={this.state.emailVerified}
+                                name={this.state.name}
+                                saving={this.state.savingPersonalInfo}
+                                onSave={this.updateUser}
+                                verifying={this.state.verifyingEmail}
+                                onVerify={this.verifyEmail}
+                                onRequestVerificationCode={
+                                    this.requestVerificationCode
+                                }
+                            />
+                        </div>
+                        <div className={classes.acctMgmtSection}>
+                            <ChangePassword
+                                saving={this.state.savingPassword}
+                                saveSuccessful={
+                                    this.state.savePasswordSuccessful
+                                }
+                                onSave={this.updatePassword}
+                                onError={this.handleSetError}
+                            />
+                        </div>
+                        <div className={classes.acctMgmtSection}>
+                            <DeleteAccount
+                                deleting={false}
+                                onDelete={this.handleDelete}
+                            />
+                        </div>
                     </div>
-                    <div className={classes.acctMgmtSection}>
-                        <ChangePassword
-                            saving={this.state.savingPassword}
-                            saveSuccessful={this.state.savePasswordSuccessful}
-                            onSave={this.updatePassword}
-                            onError={this.handleSetError}
-                        />
-                    </div>
-                </div>
-                <ErrorMessage
-                    errors={this.state.errors}
-                    onClearErrors={this.handleClearErrors}
-                />
-            </Container>
-        );
+                    <ErrorMessage
+                        errors={this.state.errors}
+                        onClearErrors={this.handleClearErrors}
+                    />
+                </Container>
+            );
+        }
     }
 }
 

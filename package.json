@@ -9,6 +9,7 @@
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.56",
         "@material-ui/pickers": "^3.2.10",
+        "amazon-cognito-identity-js": "^4.3.5",
         "aws-amplify": "^3.0.24",
         "moment": "^2.27.0",
         "mui-rte": "^1.24.0",

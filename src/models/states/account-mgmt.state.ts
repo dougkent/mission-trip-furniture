@@ -6,5 +6,6 @@ export interface AccountManagementState {
     verifyingEmail: boolean;
     savingPassword: boolean;
     savePasswordSuccessful: boolean;
+    deleteUserSuccessful: boolean;
     errors: string[];
 }
