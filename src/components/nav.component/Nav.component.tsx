@@ -22,7 +22,7 @@ import MenuSharpIcon from '@material-ui/icons/MenuSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // MTF
-import { BaseProps } from '../../models/props';
+import { NavProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
 import { ReactComponent as MtfLogo } from '../../assets/mtf-logo.svg';
 
@@ -71,8 +71,12 @@ const useStyles = makeStyles((theme: Theme) =>
             textDecoration: 'none',
             color: 'inherit',
         },
-        mobileSignOut: {
+        mobileGreeting: {
             margin: theme.spacing(3),
+            textAlign: 'center',
+        },
+        mobileSignOut: {
+            margin: `0 ${theme.spacing(3)}px`,
         },
         sectionDesktop: {
             display: 'none',
@@ -119,7 +123,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Nav: React.FC<BaseProps> = (props: BaseProps) => {
+const Nav: React.FC<NavProps> = (props: NavProps) => {
     const classes = useStyles(mtfTheme);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState<boolean>(
         false
@@ -220,6 +224,12 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
                             <Typography
                                 variant='h5'
                                 noWrap
+                                className={classes.mobileGreeting}>
+                                {`Hello, ${props.name}`}
+                            </Typography>
+                            <Typography
+                                variant='h5'
+                                noWrap
                                 color='primary'
                                 className={classes.mobileSignOut}>
                                 <AmplifySignOut />
@@ -304,6 +314,13 @@ const Nav: React.FC<BaseProps> = (props: BaseProps) => {
                             if (props.userId) {
                                 return (
                                     <>
+                                        <Typography
+                                            variant='h5'
+                                            noWrap
+                                            color='primary'
+                                            className={classes.navLink}>
+                                            {`Hello, ${props.name}`}
+                                        </Typography>
                                         <Typography
                                             variant='h5'
                                             noWrap

@@ -1,3 +1,4 @@
+export { default as AccountManagement } from './account-management.component/AccountManagement.component';
 export { default as About } from './about.component/About.component';
 export { default as Contact } from './contact.component/Contact.component';
 export { default as CreatePlan } from './create-plan.component/CreatePlan.component';

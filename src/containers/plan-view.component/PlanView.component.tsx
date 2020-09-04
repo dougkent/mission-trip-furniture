@@ -289,8 +289,6 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
 
         if (this.state.userId) {
             if (this.state.planDownload) {
-                console.log(this.state.planDownload);
-
                 const input: UpdateDownloadInput = {
                     id: this.state.planDownload.id,
                     downloadedAt: [

@@ -32,6 +32,7 @@ import {
 import * as graphQLQueries from '../graphql/queries';
 import * as graphQLMutations from '../graphql/mutations';
 import {
+    AccountManagement,
     About,
     Contact,
     CreatePlan,
@@ -58,6 +59,7 @@ class App extends React.Component<{}, AppState> {
 
         this.state = {
             userId: '',
+            name: '',
             materials: [],
             tools: [],
             userFavoritedPlanIds: [],
@@ -68,13 +70,17 @@ class App extends React.Component<{}, AppState> {
         const userInfo = await Auth.currentUserInfo();
 
         if (userInfo) {
-            this.setState({ userId: userInfo.id });
+            const { attributes } = userInfo;
+
+            this.setState({
+                userId: userInfo.id,
+                name: attributes.name,
+            });
         }
     }
 
     async componentDidMount() {
         onAuthUIStateChange((nextAuthState, authData) => {
-            console.log(nextAuthState);
             this.listenToAuthEvents(nextAuthState);
         });
 
@@ -141,6 +147,16 @@ class App extends React.Component<{}, AppState> {
 
         this.setState({ userId: createUser.id });
     }
+
+    private handleNameUpdate = async () => {
+        const userInfo = await Auth.currentUserInfo();
+
+        const { attributes } = userInfo;
+
+        this.setState({
+            name: attributes.name,
+        });
+    };
 
     private handleTogglePlanFavorite = async (
         planId: string,
@@ -232,14 +248,23 @@ class App extends React.Component<{}, AppState> {
         if (this.state.userId) {
             return component;
         } else {
-            return <Redirect to={{ pathname: '/sign-in' }} />;
+            return (
+                <Redirect
+                    to={{
+                        pathname: '/sign-in',
+                        state: {
+                            referrer: window.location.pathname,
+                        },
+                    }}
+                />
+            );
         }
     };
 
     render() {
         return (
             <Router>
-                <Nav userId={this.state.userId} />
+                <Nav userId={this.state.userId} name={this.state.name} />
                 <Container maxWidth='xl'>
                     <Switch>
                         <Route
@@ -295,7 +320,15 @@ class App extends React.Component<{}, AppState> {
                         />
                         <Route
                             path='/sign-in'
-                            render={() => <SignIn userId={this.state.userId} />}
+                            render={(props) => (
+                                <SignIn
+                                    userId={this.state.userId}
+                                    previousUrl={
+                                        (props.location.state as any)
+                                            ?.referrer ?? '/my-mtf'
+                                    }
+                                />
+                            )}
                         />
                         <Route
                             exact
@@ -312,6 +345,26 @@ class App extends React.Component<{}, AppState> {
                                         onPlanFavorite={
                                             this.handleTogglePlanFavorite
                                         }
+                                    />
+                                )
+                            }
+                        />
+                        <Route
+                            exact
+                            path='/my-mtf/manage-account'
+                            render={() =>
+                                this.renderAuthenticatedComponent(
+                                    <AccountManagement
+                                        userId={this.state.userId}
+                                        materials={this.state.materials}
+                                        tools={this.state.tools}
+                                        userFavoritedPlanIds={
+                                            this.state.userFavoritedPlanIds
+                                        }
+                                        onPlanFavorite={
+                                            this.handleTogglePlanFavorite
+                                        }
+                                        onNameUpdate={this.handleNameUpdate}
                                     />
                                 )
                             }
