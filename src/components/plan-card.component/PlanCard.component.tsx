@@ -2,10 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import * as ReactRouter from 'react-router-dom';
 
-// AWS
-import { AmplifyS3Image } from '@aws-amplify/ui-react';
-import { AccessLevel } from '@aws-amplify/ui-components';
-
 // Material UI
 import {
     Card,
@@ -22,7 +18,12 @@ import {
 // MTF
 import { PlanCardProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
-import { PlanFavorite, PlanDate, PlanDownloadedCount } from '../.';
+import {
+    ImageGallery,
+    PlanFavorite,
+    PlanDate,
+    PlanDownloadedCount,
+} from '../.';
 import { Plan } from '../../models/api-models';
 import { RequiredItem } from '../../models';
 
@@ -34,20 +35,46 @@ const useStyles = makeStyles((theme: Theme) =>
             flexWrap: 'wrap',
             width: '100%',
         },
-        image: {
+        cardImgLink: {
+            display: 'block',
+            width: '100%',
+            height: theme.spacing(25),
+
+            [theme.breakpoints.up('md')]: {
+                height: theme.spacing(30),
+            },
+
+            [theme.breakpoints.up('lg')]: {
+                height: theme.spacing(35),
+            },
+        },
+        gallery: {
             width: '100%',
             height: theme.spacing(25),
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             overflow: 'hidden',
-            '& amplify-s3-image': {
-                '--width': '100%',
-                width: '100%',
-                height: theme.spacing(25),
-                '& img': {
-                    objectFit: 'cover',
-                },
+
+            [theme.breakpoints.up('md')]: {
+                height: theme.spacing(30),
+            },
+
+            [theme.breakpoints.up('lg')]: {
+                height: theme.spacing(35),
+            },
+        },
+        image: {
+            height: theme.spacing(25),
+            width: '100%',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            [theme.breakpoints.up('md')]: {
+                height: theme.spacing(30),
+            },
+
+            [theme.breakpoints.up('lg')]: {
+                height: theme.spacing(35),
             },
         },
         cardContentContainer: {
@@ -217,14 +244,15 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                     />
                 </div>
             </CardActions>
-            <div className={classes.image}>
+            <div className={classes.gallery}>
                 <ReactRouter.Link
                     to={`/plans/${planState.id}`}
-                    className={classes.cardTitleLink}>
-                    <AmplifyS3Image
-                        level={AccessLevel.Protected}
-                        imgKey={planState.imageS3Info.key}
-                        identityId={planState.createdBy.id}
+                    className={classes.cardImgLink}>
+                    <ImageGallery
+                        galleryClassName={classes.gallery}
+                        imageClassName={classes.image}
+                        userId={planState.createdBy.id}
+                        imageS3Keys={planState.imageS3Keys}
                     />
                 </ReactRouter.Link>
             </div>

@@ -37,7 +37,6 @@ export * from './query-list-materials.model';
 export * from './query-list-plans.model';
 export * from './query-list-tools.model';
 export * from './query-search-plans.model';
-export * from './s3-image-info.model';
 export * from './searchable-plan-connection.model';
 export * from './searchable-plan-sortable-fields.enum';
 export * from './searchable-sort-direction.enum';

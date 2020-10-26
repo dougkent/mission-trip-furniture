@@ -5,8 +5,6 @@ import { Redirect } from 'react-router-dom';
 // AWS
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
-import { AmplifyS3Image } from '@aws-amplify/ui-react';
-import { AccessLevel } from '@aws-amplify/ui-components';
 
 // Material UI
 import {
@@ -38,6 +36,7 @@ import NotFound from '../not-found.component/NotFound.component';
 import {
     DownloadButton,
     ErrorMessage,
+    ImageGallery,
     PlanDate,
     PlanDelete,
     PlanFavorite,
@@ -82,24 +81,36 @@ const styles = (theme: Theme) =>
             width: '100%',
             marginBottom: theme.spacing(2),
         },
+        gallery: {
+            width: '100%',
+            height: theme.spacing(25),
+            marginBottom: theme.spacing(2),
+            display: 'flex',
+            [theme.breakpoints.up('sm')]: {
+                height: theme.spacing(35),
+                width: '49%',
+            },
+            [theme.breakpoints.up('md')]: {
+                height: 'auto',
+                alignSelf: 'stretch',
+            },
+        },
         image: {
             width: '100%',
-            height: '100%',
-            marginBottom: theme.spacing(2),
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflow: 'hidden',
+            height: theme.spacing(25),
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
             [theme.breakpoints.up('sm')]: {
-                width: '50%',
+                height: theme.spacing(35),
             },
-            '& amplify-s3-image': {
-                '--width': '100%',
-                width: '100%',
-                height: theme.spacing(25),
-                objectFit: 'cover',
-                [theme.breakpoints.up('lg')]: {
-                    height: '700px',
-                },
+            [theme.breakpoints.up('md')]: {
+                height: 'auto',
+                alignSelf: 'stretch',
+                maxHeight: theme.spacing(55),
+            },
+
+            [theme.breakpoints.up('xl')]: {
+                maxHeight: theme.spacing(90),
             },
         },
         planContent: {
@@ -109,6 +120,10 @@ const styles = (theme: Theme) =>
             [theme.breakpoints.up('sm')]: {
                 padding: `0 ${theme.spacing(3)}px`,
                 width: '50%',
+                minHeight: theme.spacing(50),
+            },
+            [theme.breakpoints.up('xl')]: {
+                minHeight: theme.spacing(90),
             },
         },
         row: {
@@ -349,9 +364,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         )) as GraphQLResult<DeletePlanMutation>;
 
         if (deleteResult?.data) {
-            await Storage.remove(this.state.plan.imageS3Info.key, {
-                level: 'protected',
-            });
+            for (let i = 0; i < this.state.plan.imageS3Keys.length; i++) {
+                await Storage.remove(this.state.plan.imageS3Keys[i], {
+                    level: 'protected',
+                });
+            }
             await Storage.remove(this.state.plan.pdfS3Key, {
                 level: 'protected',
             });
@@ -656,13 +673,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             &nbsp;by&nbsp;{this.state.plan.createdBy.username}
                         </Typography>
                     </div>
-                    <div className={classes.image}>
-                        <AmplifyS3Image
-                            level={AccessLevel.Protected}
-                            imgKey={this.state.plan.imageS3Info.key}
-                            identityId={this.state.plan.createdBy.id}
-                        />
-                    </div>
+                    <ImageGallery
+                        galleryClassName={classes.gallery}
+                        imageClassName={classes.image}
+                        userId={this.state.plan.createdBy.id}
+                        imageS3Keys={this.state.plan.imageS3Keys}
+                    />
                     <div className={classes.planContent}>
                         <PlanDetails
                             description={this.state.plan.description}

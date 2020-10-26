@@ -3,9 +3,7 @@ export const planFields = `
         name
         description
         pdfS3Key
-        imageS3Info {
-            key   
-        }
+        imageS3Keys
         created
         createdBy {
             id

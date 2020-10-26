@@ -46,6 +46,7 @@ import {
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
 import * as graphQLMutations from '../../graphql/mutations';
+import { ImageModel } from '../../models';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -76,6 +77,8 @@ const styles = (theme: Theme) =>
         },
         multiCardRow: {
             display: 'flex',
+            flexWrap: 'wrap',
+            marginTop: theme.spacing(2),
         },
         submitButtonRow: {
             display: 'flex',
@@ -98,14 +101,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         materials: this.props.materials,
         tools: this.props.tools,
         userFavoritedPlanIds: this.props.userFavoritedPlanIds,
-        imageFile: null,
+        imageFiles: [],
         pdfFile: null,
         plan: {
             id: '',
             name: '',
             description: '',
             pdfS3Key: '',
-            imageS3Info: null,
+            imageS3Keys: [],
             created: '',
             favoritedCount: 0,
             downloadedCount: 0,
@@ -169,30 +172,35 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }));
     };
 
-    private handleImageDeselect = () => {
+    private handleImageDeselect = (index: number) => {
         this.setState((prevState) => ({
             ...prevState,
-            imageFile: null,
+            imageFiles: prevState.imageFiles.filter(
+                (imageFile, idx) => idx !== index
+            ),
             plan: {
                 ...prevState.plan,
-                imageS3Info: null,
+                imageS3Keys: prevState.plan.imageS3Keys.filter(
+                    (imageS3Key, idx) => idx !== index
+                ),
             },
         }));
     };
 
-    private handleImageSelect = (file: File) => {
+    private handleImageSelect = (file: File, url: string) => {
         const fileName = `images/${uuid()}`;
+
+        const imageModel: ImageModel = {
+            file: file,
+            url: url,
+        };
 
         this.setState((prevState) => ({
             ...prevState,
-            imageFile: file,
+            imageFiles: [...prevState.imageFiles, imageModel],
             plan: {
                 ...prevState.plan,
-                imageS3Info: {
-                    key: fileName,
-                    width: 200,
-                    height: 200,
-                },
+                imageS3Keys: [...prevState.plan.imageS3Keys, fileName],
             },
         }));
     };
@@ -261,7 +269,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
 
         if (planResult.data.createPlan.id) {
             await this.uploadPdf();
-            await this.uploadImage();
+            await this.uploadImages();
 
             ReactGA.event({
                 category: 'create',
@@ -357,10 +365,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             errors.push('Please select a PDF to upload.');
         }
 
-        if (
-            !this.state.imageFile ||
-            !this.state.imageFile.type.startsWith('image/')
-        ) {
+        if (this.state.imageFiles.length === 0) {
             errors.push('Please select an image to upload.');
         }
 
@@ -389,10 +394,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         return !!data?.getPlan?.id;
     };
 
-    private uploadImage = async () => {
-        Storage.put(this.state.plan.imageS3Info.key, this.state.imageFile, {
-            level: 'protected',
-            metadata: { owner: this.state.plan.planCreatedById },
+    private uploadImages = async () => {
+        this.state.plan.imageS3Keys.forEach((imageS3Key, index) => {
+            const imageFile = this.state.imageFiles[index];
+
+            Storage.put(imageS3Key, imageFile.file, {
+                level: 'protected',
+                contentType: imageFile.file.type,
+                metadata: { owner: this.state.plan.planCreatedById },
+            });
         });
     };
 
@@ -508,18 +518,20 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         <div
                             className={`${classes.formRow} ${classes.multiCardRow}`}>
                             <ImageUploader
-                                image={this.state.imageFile}
+                                imageFiles={this.state.imageFiles}
                                 onDeselect={this.handleImageDeselect}
                                 onSelect={this.handleImageSelect}
+                                tooltip={
+                                    <Tooltip
+                                        className={classes.tooltip}
+                                        title='The image you select here will be the image that is displayed to other users so pick one that represents your plan well. It CANNOT be changed later.'
+                                        placement='right'
+                                        arrow
+                                        enterDelay={500}>
+                                        <InfoSharpIcon />
+                                    </Tooltip>
+                                }
                             />
-                            <Tooltip
-                                className={classes.tooltip}
-                                title='The image you select here will be the image that is displayed to other users so pick one that represents your plan well. It CANNOT be changed later.'
-                                placement='right'
-                                arrow
-                                enterDelay={500}>
-                                <InfoSharpIcon />
-                            </Tooltip>
                         </div>
                         <div
                             className={`${classes.formRow} ${classes.submitButtonRow}`}>

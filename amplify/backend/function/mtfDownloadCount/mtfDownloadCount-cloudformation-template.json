@@ -106,7 +106,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-missiontripfurniture-develop-100059-deployment",
-					"S3Key": "amplify-builds/mtfDownloadCount-32514677633432677971-build.zip"
+					"S3Key": "amplify-builds/mtfDownloadCount-5651314f44675a6a2f76-build.zip"
 				}
 			}
 		},
