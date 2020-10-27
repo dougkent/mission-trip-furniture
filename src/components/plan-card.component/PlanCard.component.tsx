@@ -38,30 +38,27 @@ const useStyles = makeStyles((theme: Theme) =>
         cardImgLink: {
             display: 'block',
             width: '100%',
-            height: theme.spacing(25),
+            height: theme.spacing(27),
 
             [theme.breakpoints.up('md')]: {
-                height: theme.spacing(30),
+                height: theme.spacing(33),
             },
 
             [theme.breakpoints.up('lg')]: {
-                height: theme.spacing(35),
+                height: theme.spacing(38),
             },
         },
         gallery: {
             width: '100%',
-            height: theme.spacing(25),
+            height: theme.spacing(28),
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflow: 'hidden',
 
             [theme.breakpoints.up('md')]: {
-                height: theme.spacing(30),
+                height: theme.spacing(33),
             },
 
             [theme.breakpoints.up('lg')]: {
-                height: theme.spacing(35),
+                height: theme.spacing(38),
             },
         },
         image: {
@@ -84,7 +81,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 flexGrow: 1,
             },
         },
-        cardContent: {},
+        cardContent: {
+            paddingTop: 0,
+        },
         cardActions: {
             width: '100%',
             display: 'flex',

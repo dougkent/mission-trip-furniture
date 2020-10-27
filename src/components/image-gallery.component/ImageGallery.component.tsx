@@ -21,6 +21,16 @@ const useStyles = makeStyles((theme: Theme) =>
         swiper: {
             '& .swiper-container': {
                 width: '100%',
+                alignSelf: 'stretch',
+                '--swiper-pagination-color': theme.palette.primary.main,
+            },
+            '& .swiper-pagination-bullets': {
+                bottom: 2,
+            },
+
+            '& .swiper-pagination-bullet': {
+                width: 6,
+                height: 6,
             },
             '& .swiper-slide': {
                 width: '100%',

@@ -83,11 +83,10 @@ const styles = (theme: Theme) =>
         },
         gallery: {
             width: '100%',
-            height: theme.spacing(25),
-            marginBottom: theme.spacing(2),
+            height: theme.spacing(28),
             display: 'flex',
             [theme.breakpoints.up('sm')]: {
-                height: theme.spacing(35),
+                height: theme.spacing(38),
                 width: '49%',
             },
             [theme.breakpoints.up('md')]: {
@@ -106,11 +105,13 @@ const styles = (theme: Theme) =>
             [theme.breakpoints.up('md')]: {
                 height: 'auto',
                 alignSelf: 'stretch',
+                marginBottom: theme.spacing(3),
                 maxHeight: theme.spacing(55),
             },
 
             [theme.breakpoints.up('xl')]: {
-                maxHeight: theme.spacing(90),
+                maxHeight: theme.spacing(85),
+                marginBottom: theme.spacing(3),
             },
         },
         planContent: {
@@ -123,7 +124,7 @@ const styles = (theme: Theme) =>
                 minHeight: theme.spacing(50),
             },
             [theme.breakpoints.up('xl')]: {
-                minHeight: theme.spacing(90),
+                minHeight: theme.spacing(85),
             },
         },
         row: {
