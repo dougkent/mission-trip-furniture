@@ -1,5 +1,4 @@
 import {
-    S3ImageInfo,
     ModelDownloadConnection,
     ModelFavoriteConnection,
     User,
@@ -13,7 +12,7 @@ export interface Plan {
     name: string;
     description: string;
     pdfS3Key: string;
-    imageS3Info: S3ImageInfo;
+    imageS3Keys: string[];
     created: string;
     createdBy: User;
     favoritedCount: number;

@@ -113,6 +113,9 @@ const styles = (theme: Theme) =>
         verticalTabs: {
             width: '15%',
         },
+        verticalTabBody: {
+            width: '85%',
+        },
         fullWidth: {
             width: '100%',
         },
@@ -492,7 +495,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         } else {
             return (
                 <div className={classes.dashboardContainer}>
-                    <Hidden xlUp>
+                    <Hidden lgUp>
                         <Hidden smUp>
                             <Tabs
                                 value={this.state.currentTab}
@@ -549,35 +552,49 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                 />
                             </Tabs>
                         </Hidden>
-                        <Hidden mdDown>
-                            <Tabs
-                                className={classes.verticalTabs}
-                                value={this.state.currentTab}
-                                onChange={this.handleTabChange}
-                                orientation='vertical'>
-                                <Tab
-                                    label='My Uploaded Plans'
-                                    icon={<CreateNewFolderSharpIcon />}
-                                    value={DashboardTabsEnum.CREATED_PLANS}
-                                />
-                                <Tab
-                                    label='My Favorited Plans'
-                                    icon={<FavoriteSharpIcon />}
-                                    value={DashboardTabsEnum.FAVORITED_PLANS}
-                                />
-                                <Tab
-                                    label='My Downloaded Plans'
-                                    icon={<CloudDownloadSharpIcon />}
-                                    value={DashboardTabsEnum.DOWNLOADED_PLANS}
-                                />
-                                <Tab
-                                    label='Manage My Account'
-                                    icon={<AccountCircleSharpIcon />}
-                                    value={DashboardTabsEnum.ACCOUNT_MANAGEMENT}
-                                />
-                            </Tabs>
-                        </Hidden>
                         <div className={classes.fullWidth}>
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.CREATED_PLANS &&
+                                this.renderCreatedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.FAVORITED_PLANS &&
+                                this.renderFavoritedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.DOWNLOADED_PLANS &&
+                                this.renderDownloadedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.ACCOUNT_MANAGEMENT &&
+                                this.renderAccountManagement()}
+                        </div>
+                    </Hidden>
+                    <Hidden mdDown xlUp>
+                        <Tabs
+                            className={classes.verticalTabs}
+                            value={this.state.currentTab}
+                            onChange={this.handleTabChange}
+                            orientation='vertical'>
+                            <Tab
+                                label='My Uploaded Plans'
+                                icon={<CreateNewFolderSharpIcon />}
+                                value={DashboardTabsEnum.CREATED_PLANS}
+                            />
+                            <Tab
+                                label='My Favorited Plans'
+                                icon={<FavoriteSharpIcon />}
+                                value={DashboardTabsEnum.FAVORITED_PLANS}
+                            />
+                            <Tab
+                                label='My Downloaded Plans'
+                                icon={<CloudDownloadSharpIcon />}
+                                value={DashboardTabsEnum.DOWNLOADED_PLANS}
+                            />
+                            <Tab
+                                label='Manage My Account'
+                                icon={<AccountCircleSharpIcon />}
+                                value={DashboardTabsEnum.ACCOUNT_MANAGEMENT}
+                            />
+                        </Tabs>
+                        <div className={classes.verticalTabBody}>
                             {this.state.currentTab ===
                                 DashboardTabsEnum.CREATED_PLANS &&
                                 this.renderCreatedPlansList()}

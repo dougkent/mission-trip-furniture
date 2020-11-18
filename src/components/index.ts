@@ -4,7 +4,9 @@ export { default as DescriptionViewer } from './description-viewer.component/Des
 export { default as DownloadButton } from './download-button.component/DownloadButton.component';
 export { default as ErrorMessage } from './error-message.component/ErrorMessage.component';
 export { default as Filter } from './filter.component/Filter.component';
+export { default as ImageGallery } from './image-gallery.component/ImageGallery.component';
 export { default as ImageUploader } from './image-uploader.component/ImageUploader.component';
+export { default as Image } from './image.component/Image.component';
 export { default as MultiLineTextEditor } from './multi-line-text-editor.component/MultiLineTextEditor.component';
 export { default as Nav } from './nav.component/Nav.component';
 export { default as Pager } from './pager.component/Pager.component';

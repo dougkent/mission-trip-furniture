@@ -32,7 +32,7 @@ type Plan
     name: String!
     description: String!
     pdfS3Key: String!
-    imageS3Info: S3ImageInfo!
+    imageS3Keys: [String!]!
     created: AWSDateTime!
     createdBy: User! @connection(name: "CreatedBy")
     favoritedCount: Int!
@@ -121,10 +121,4 @@ type Tool
     ) {
     id: ID!
     name: String!
-}
-
-type S3ImageInfo {
-    key: String!
-    width: Int!
-    height: Int!
 }
