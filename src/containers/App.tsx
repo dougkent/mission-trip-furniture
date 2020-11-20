@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
     BrowserRouter as Router,
     Route,
@@ -31,21 +31,34 @@ import {
 } from '../models/api-models';
 import * as graphQLQueries from '../graphql/queries';
 import * as graphQLMutations from '../graphql/mutations';
-import {
-    AccountManagement,
-    About,
-    Contact,
-    CreatePlan,
-    Dashboard,
-    Home,
-    NotFound,
-    PlanView,
-    PlansList,
-    SignIn,
-} from '.';
 import { Nav } from '../components';
 import { PlanFavoriteService } from '../services';
 import '../themes/mtf-amplify-theme.css';
+
+const About = React.lazy(() => import('./about.component/About.component'));
+const AccountManagement = React.lazy(
+    () => import('./account-management.component/AccountManagement.component')
+);
+const Contact = React.lazy(
+    () => import('./contact.component/Contact.component')
+);
+const CreatePlan = React.lazy(
+    () => import('./create-plan.component/CreatePlan.component')
+);
+const Dashboard = React.lazy(
+    () => import('./dashboard.component/Dashboard.component')
+);
+const Home = React.lazy(() => import('./home.component/Home.component'));
+const NotFound = React.lazy(
+    () => import('./not-found.component/NotFound.component')
+);
+const PlansList = React.lazy(
+    () => import('./plans-list.component/PlansList.component')
+);
+const PlanView = React.lazy(
+    () => import('./plan-view.component/PlanView.component')
+);
+const SignIn = React.lazy(() => import('./sign-in.component/SignIn.component'));
 
 // Configure
 Amplify.configure(aws_exports);
@@ -266,76 +279,34 @@ class App extends React.Component<{}, AppState> {
             <Router>
                 <Nav userId={this.state.userId} name={this.state.name} />
                 <Container maxWidth='xl'>
-                    <Switch>
-                        <Route
-                            exact
-                            path='/'
-                            render={() => <Home userId={this.state.userId} />}
-                        />
-                        <Route
-                            exact
-                            path='/about'
-                            render={() => <About userId={this.state.userId} />}
-                        />
-                        <Route
-                            exact
-                            path='/contact'
-                            render={() => (
-                                <Contact userId={this.state.userId} />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path='/plans'
-                            render={() => (
-                                <PlansList
-                                    userId={this.state.userId}
-                                    materials={this.state.materials}
-                                    tools={this.state.tools}
-                                    userFavoritedPlanIds={
-                                        this.state.userFavoritedPlanIds
-                                    }
-                                    onPlanFavorite={
-                                        this.handleTogglePlanFavorite
-                                    }
-                                />
-                            )}
-                        />
-                        <Route
-                            path='/plans/:planId'
-                            render={(props) => (
-                                <PlanView
-                                    userId={this.state.userId}
-                                    planId={props.match.params.planId}
-                                    materials={this.state.materials}
-                                    tools={this.state.tools}
-                                    userFavoritedPlanIds={
-                                        this.state.userFavoritedPlanIds
-                                    }
-                                    onPlanFavorite={
-                                        this.handleTogglePlanFavorite
-                                    }
-                                />
-                            )}
-                        />
-                        <Route
-                            path='/sign-in'
-                            render={(props) => (
-                                <SignIn
-                                    userId={this.state.userId}
-                                    previousUrl={
-                                        (props.location.state as any)
-                                            ?.referrer ?? '/my-mtf'
-                                    }
-                                />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path='/my-mtf'
-                            render={() =>
-                                this.renderAuthenticatedComponent(
-                                    <Dashboard
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Switch>
+                            <Route
+                                exact
+                                path='/'
+                                render={() => (
+                                    <Home userId={this.state.userId} />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path='/about'
+                                render={() => (
+                                    <About userId={this.state.userId} />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path='/contact'
+                                render={() => (
+                                    <Contact userId={this.state.userId} />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path='/plans'
+                                render={() => (
+                                    <PlansList
                                         userId={this.state.userId}
                                         materials={this.state.materials}
                                         tools={this.state.tools}
@@ -346,36 +317,14 @@ class App extends React.Component<{}, AppState> {
                                             this.handleTogglePlanFavorite
                                         }
                                     />
-                                )
-                            }
-                        />
-                        <Route
-                            exact
-                            path='/my-mtf/manage-account'
-                            render={() =>
-                                this.renderAuthenticatedComponent(
-                                    <AccountManagement
+                                )}
+                            />
+                            <Route
+                                path='/plans/:planId'
+                                render={(props) => (
+                                    <PlanView
                                         userId={this.state.userId}
-                                        materials={this.state.materials}
-                                        tools={this.state.tools}
-                                        userFavoritedPlanIds={
-                                            this.state.userFavoritedPlanIds
-                                        }
-                                        onPlanFavorite={
-                                            this.handleTogglePlanFavorite
-                                        }
-                                        onNameUpdate={this.handleNameUpdate}
-                                    />
-                                )
-                            }
-                        />
-                        <Route
-                            exact
-                            path='/my-mtf/upload-plan'
-                            render={() =>
-                                this.renderAuthenticatedComponent(
-                                    <CreatePlan
-                                        userId={this.state.userId}
+                                        planId={props.match.params.planId}
                                         materials={this.state.materials}
                                         tools={this.state.tools}
                                         userFavoritedPlanIds={
@@ -385,16 +334,86 @@ class App extends React.Component<{}, AppState> {
                                             this.handleTogglePlanFavorite
                                         }
                                     />
-                                )
-                            }
-                        />
-                        <Route
-                            path='*'
-                            render={() => (
-                                <NotFound userId={this.state.userId} />
-                            )}
-                        />
-                    </Switch>
+                                )}
+                            />
+                            <Route
+                                path='/sign-in'
+                                render={(props) => (
+                                    <SignIn
+                                        userId={this.state.userId}
+                                        previousUrl={
+                                            (props.location.state as any)
+                                                ?.referrer ?? '/my-mtf'
+                                        }
+                                    />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path='/my-mtf'
+                                render={() =>
+                                    this.renderAuthenticatedComponent(
+                                        <Dashboard
+                                            userId={this.state.userId}
+                                            materials={this.state.materials}
+                                            tools={this.state.tools}
+                                            userFavoritedPlanIds={
+                                                this.state.userFavoritedPlanIds
+                                            }
+                                            onPlanFavorite={
+                                                this.handleTogglePlanFavorite
+                                            }
+                                        />
+                                    )
+                                }
+                            />
+                            <Route
+                                exact
+                                path='/my-mtf/manage-account'
+                                render={() =>
+                                    this.renderAuthenticatedComponent(
+                                        <AccountManagement
+                                            userId={this.state.userId}
+                                            materials={this.state.materials}
+                                            tools={this.state.tools}
+                                            userFavoritedPlanIds={
+                                                this.state.userFavoritedPlanIds
+                                            }
+                                            onPlanFavorite={
+                                                this.handleTogglePlanFavorite
+                                            }
+                                            onNameUpdate={this.handleNameUpdate}
+                                        />
+                                    )
+                                }
+                            />
+                            <Route
+                                exact
+                                path='/my-mtf/upload-plan'
+                                render={() =>
+                                    this.renderAuthenticatedComponent(
+                                        <CreatePlan
+                                            userId={this.state.userId}
+                                            materials={this.state.materials}
+                                            tools={this.state.tools}
+                                            userFavoritedPlanIds={
+                                                this.state.userFavoritedPlanIds
+                                            }
+                                            onPlanFavorite={
+                                                this.handleTogglePlanFavorite
+                                            }
+                                        />
+                                    )
+                                }
+                            />
+                            <Route
+                                path='*'
+                                render={() => (
+                                    <NotFound userId={this.state.userId} />
+                                )}
+                            />
+                        </Switch>
+                    </Suspense>
                 </Container>
             </Router>
         );
