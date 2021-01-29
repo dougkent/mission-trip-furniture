@@ -4,18 +4,14 @@ import React, { useState, useEffect } from 'react';
 // Material UI
 import {
     Button,
-    IconButton,
+    Fab,
     Card,
     makeStyles,
     Theme,
     createStyles,
-    CardActions,
-    CardContent,
-    Typography,
 } from '@material-ui/core';
 import CloudUploadSharpIcon from '@material-ui/icons/CloudUploadSharp';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
-import ImageSharpIcon from '@material-ui/icons/ImageSharp';
 
 // MTF
 import { ImageUploaderProps } from '../../models/props/image-uploader.props';
@@ -30,21 +26,27 @@ const useStyles = makeStyles((theme: Theme) =>
             flexWrap: 'wrap',
             marginBottom: theme.spacing(1),
             width: '100%',
+            position: 'relative',
             [theme.breakpoints.up('sm')]: {
                 flexWrap: 'noWrap',
+                width: '49%',
             },
             [theme.breakpoints.up('lg')]: {
-                width: '48%',
                 marginRight: theme.spacing(1),
             },
         },
         image: {
             width: '100%',
-            height: 200,
+            height: theme.spacing(25),
             objectFit: 'cover',
             [theme.breakpoints.up('sm')]: {
-                width: theme.spacing(25),
-                height: theme.spacing(25),
+                height: theme.spacing(30),
+            },
+            [theme.breakpoints.up('lg')]: {
+                height: theme.spacing(35),
+            },
+            [theme.breakpoints.up('xl')]: {
+                height: theme.spacing(40),
             },
         },
         cardContentContainer: {
@@ -69,10 +71,13 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         cardActions: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+            position: 'absolute',
+            bottom: theme.spacing(1.5),
+            right: theme.spacing(1.5),
+            // display: 'flex',
+            // justifyContent: 'space-between',
+            // alignItems: 'center',
+            // padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
         },
         imageIcon: {
             marginRight: theme.spacing(1),
@@ -124,7 +129,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = (
                         className={classes.image}
                         alt='Plan Cover'
                     />
-                    <div className={classes.cardContentContainer}>
+                    <div className={classes.cardActions}>
+                        <Fab size='small' onClick={handleImageDeselect(index)}>
+                            <DeleteSharpIcon />
+                        </Fab>
+                    </div>
+                    {/* <div className={classes.cardContentContainer}>
                         <CardActions className={classes.cardActions}>
                             <div className={classes.cardTitle}>
                                 <ImageSharpIcon className={classes.imageIcon} />
@@ -148,10 +158,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = (
                                 Image Type: {imageFile.file.type}
                             </Typography>
                         </CardContent>
-                    </div>
+                    </div> */}
                 </Card>
             ))}
-            {imageFiles.length < 3 && (
+            {imageFiles.length < props.maxFilesToUpload && (
                 <div className={classes.btnRow}>
                     <Button
                         color='default'

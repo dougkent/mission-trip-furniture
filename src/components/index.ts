@@ -5,6 +5,7 @@ export { default as DownloadButton } from './download-button.component/DownloadB
 export { default as ErrorMessage } from './error-message.component/ErrorMessage.component';
 export { default as Filter } from './filter.component/Filter.component';
 export { default as ImageGallery } from './image-gallery.component/ImageGallery.component';
+export { default as ImageUpdater } from './image-updater.component/ImageUpdater.component';
 export { default as ImageUploader } from './image-uploader.component/ImageUploader.component';
 export { default as Image } from './image.component/Image.component';
 export { default as MultiLineTextEditor } from './multi-line-text-editor.component/MultiLineTextEditor.component';

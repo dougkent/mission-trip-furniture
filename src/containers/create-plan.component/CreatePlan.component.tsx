@@ -78,6 +78,7 @@ const styles = (theme: Theme) =>
         multiCardRow: {
             display: 'flex',
             flexWrap: 'wrap',
+            justifyContent: 'space-between',
             marginTop: theme.spacing(2),
         },
         submitButtonRow: {
@@ -519,6 +520,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                             className={`${classes.formRow} ${classes.multiCardRow}`}>
                             <ImageUploader
                                 imageFiles={this.state.imageFiles}
+                                maxFilesToUpload={3}
                                 onDeselect={this.handleImageDeselect}
                                 onSelect={this.handleImageSelect}
                                 tooltip={

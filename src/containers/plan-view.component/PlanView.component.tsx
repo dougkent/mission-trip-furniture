@@ -42,6 +42,7 @@ import {
     PlanFavorite,
     PlanDownloadedCount,
     PlanDetails,
+    ImageUpdater,
 } from '../../components';
 import {
     CreateDownloadInput,
@@ -81,10 +82,13 @@ const styles = (theme: Theme) =>
             width: '100%',
             marginBottom: theme.spacing(2),
         },
-        gallery: {
+        planImage: {
             width: '100%',
-            height: theme.spacing(28),
             display: 'flex',
+
+            flexWrap: 'wrap',
+            marginBottom: theme.spacing(3),
+
             [theme.breakpoints.up('sm')]: {
                 height: theme.spacing(38),
                 width: '49%',
@@ -94,13 +98,25 @@ const styles = (theme: Theme) =>
                 alignSelf: 'stretch',
             },
         },
+        gallery: {
+            width: '100%',
+            height: theme.spacing(28),
+            display: 'flex',
+            [theme.breakpoints.up('sm')]: {
+                height: theme.spacing(38),
+            },
+            [theme.breakpoints.up('md')]: {
+                height: 'auto',
+                alignSelf: 'stretch',
+            },
+        },
         image: {
             width: '100%',
-            height: theme.spacing(25),
+            height: theme.spacing(28),
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             [theme.breakpoints.up('sm')]: {
-                height: theme.spacing(35),
+                height: theme.spacing(38),
             },
             [theme.breakpoints.up('md')]: {
                 height: 'auto',
@@ -674,12 +690,23 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             &nbsp;by&nbsp;{this.state.plan.createdBy.username}
                         </Typography>
                     </div>
-                    <ImageGallery
-                        galleryClassName={classes.gallery}
-                        imageClassName={classes.image}
-                        userId={this.state.plan.createdBy.id}
-                        imageS3Keys={this.state.plan.imageS3Keys}
-                    />
+                    <div className={classes.planImage}>
+                        {!this.state.editing && (
+                            <ImageGallery
+                                galleryClassName={classes.gallery}
+                                imageClassName={classes.image}
+                                userId={this.state.plan.createdBy.id}
+                                imageS3Keys={this.state.plan.imageS3Keys}
+                            />
+                        )}
+                        {this.state.editing && (
+                            <ImageUpdater
+                                imageClassName={classes.image}
+                                userId={this.state.plan.createdBy.id}
+                                imageS3Keys={this.state.plan.imageS3Keys}
+                            />
+                        )}
+                    </div>
                     <div className={classes.planContent}>
                         <PlanDetails
                             description={this.state.plan.description}

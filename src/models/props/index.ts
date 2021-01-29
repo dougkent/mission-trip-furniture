@@ -22,3 +22,4 @@ export * from './nav.props';
 export * from './delete-account.props';
 export * from './image.props';
 export * from './image-gallery.props';
+export * from './image-updater.props';

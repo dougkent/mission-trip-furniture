@@ -33,13 +33,15 @@ const Image: React.FC<ImageProps> = (props: ImageProps) => {
 
     const [imageUrl, setImageUrl] = useState<string>('');
 
-    Storage.get(props.imageKey, {
-        level: 'protected',
-        identityId: props.userId,
-    }).then((res) => {
-        setImageUrl(res as string);
-        setLoading(false);
-    });
+    if (!imageUrl) {
+        Storage.get(props.imageKey, {
+            level: 'protected',
+            identityId: props.userId,
+        }).then((res) => {
+            setImageUrl(res as string);
+            setLoading(false);
+        });
+    }
 
     if (loading) {
         return (
