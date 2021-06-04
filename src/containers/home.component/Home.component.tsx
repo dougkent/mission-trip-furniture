@@ -25,7 +25,7 @@ import * as homeBackgroundImage from '../../assets/home-background.jpg';
 const styles = (theme: Theme) =>
     createStyles({
         homeBackground: {
-            background: `url(${homeBackgroundImage})`,
+            background: `url(${homeBackgroundImage.default})`,
             backgroundSize: 'cover',
             height: '100vh',
             width: '100%',
