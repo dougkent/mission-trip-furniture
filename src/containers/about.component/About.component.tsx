@@ -81,7 +81,7 @@ const styles = (theme: Theme) =>
             },
         },
         workingTogetherImage1: {
-            background: `url(${workingTogether1Image})`,
+            background: `url(${workingTogether1Image.default})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
         },
@@ -109,7 +109,7 @@ const styles = (theme: Theme) =>
             },
         },
         workingTogetherImage2: {
-            background: `url(${workingTogether2Image})`,
+            background: `url(${workingTogether2Image.default})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
         },
