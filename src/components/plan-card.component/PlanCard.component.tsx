@@ -2,9 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import * as ReactRouter from 'react-router-dom';
 
-// AWS
-import { S3Image } from 'aws-amplify-react';
-
 // Material UI
 import {
     Card,
@@ -21,7 +18,12 @@ import {
 // MTF
 import { PlanCardProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
-import { PlanFavorite, PlanDate } from '../.';
+import {
+    ImageGallery,
+    PlanFavorite,
+    PlanDate,
+    PlanDownloadedCount,
+} from '../.';
 import { Plan } from '../../models/api-models';
 import { RequiredItem } from '../../models';
 
@@ -33,13 +35,43 @@ const useStyles = makeStyles((theme: Theme) =>
             flexWrap: 'wrap',
             width: '100%',
         },
-        image: {
+        cardImgLink: {
+            display: 'block',
             width: '100%',
+            height: theme.spacing(27),
+
+            [theme.breakpoints.up('md')]: {
+                height: theme.spacing(33),
+            },
+
+            [theme.breakpoints.up('lg')]: {
+                height: theme.spacing(38),
+            },
+        },
+        gallery: {
+            width: '100%',
+            height: theme.spacing(28),
+            display: 'flex',
+
+            [theme.breakpoints.up('md')]: {
+                height: theme.spacing(33),
+            },
+
+            [theme.breakpoints.up('lg')]: {
+                height: theme.spacing(38),
+            },
+        },
+        image: {
             height: theme.spacing(25),
-            '& img': {
-                width: '100%',
-                height: theme.spacing(25),
-                objectFit: 'cover',
+            width: '100%',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            [theme.breakpoints.up('md')]: {
+                height: theme.spacing(30),
+            },
+
+            [theme.breakpoints.up('lg')]: {
+                height: theme.spacing(35),
             },
         },
         cardContentContainer: {
@@ -49,7 +81,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 flexGrow: 1,
             },
         },
-        cardContent: {},
+        cardContent: {
+            paddingTop: 0,
+        },
         cardActions: {
             width: '100%',
             display: 'flex',
@@ -65,6 +99,12 @@ const useStyles = makeStyles((theme: Theme) =>
         cardTitleLink: {
             color: 'inherit',
             textDecoration: 'none',
+        },
+        cardIcons: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: theme.spacing(9),
         },
         row: {
             marginBottom: theme.spacing(1),
@@ -82,7 +122,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 },
             },
         },
-    }),
+    })
 );
 
 const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
@@ -90,7 +130,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
 
     const [planState, setPlanState] = useState<Plan>(props.plan);
     const [isFavoritedByUser, setIsFavoritedByUser] = useState<boolean>(
-        props.isFavoritedByUser,
+        props.isFavoritedByUser
     );
 
     useEffect(() => {
@@ -122,7 +162,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
 
     const renderRequiredItems = (
         label: string,
-        requiredItems: RequiredItem[],
+        requiredItems: RequiredItem[]
     ) => {
         return (
             <div className={classes.row}>
@@ -190,22 +230,28 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                         </Typography>
                     </Tooltip>
                 </div>
-                <PlanFavorite
-                    planId={planState.id}
-                    disabled={!props.userId || props.userId.length === 0}
-                    isFavoritedByUser={isFavoritedByUser}
-                    favoritedCount={planState.favoritedCount}
-                    onToggleFavorite={handleToggleFavorite}
-                />
+                <div className={classes.cardIcons}>
+                    <PlanDownloadedCount
+                        downloadedCount={planState.downloadedCount}
+                    />
+                    <PlanFavorite
+                        planId={planState.id}
+                        disabled={!props.userId || props.userId.length === 0}
+                        isFavoritedByUser={isFavoritedByUser}
+                        favoritedCount={planState.favoritedCount}
+                        onToggleFavorite={handleToggleFavorite}
+                    />
+                </div>
             </CardActions>
-            <div className={classes.image}>
+            <div className={classes.gallery}>
                 <ReactRouter.Link
                     to={`/plans/${planState.id}`}
-                    className={classes.cardTitleLink}>
-                    <S3Image
-                        level='protected'
-                        imgKey={planState.imageS3Info.key}
-                        identityId={planState.createdBy.id}
+                    className={classes.cardImgLink}>
+                    <ImageGallery
+                        galleryClassName={classes.gallery}
+                        imageClassName={classes.image}
+                        userId={planState.createdBy.id}
+                        imageS3Keys={planState.imageS3Keys}
                     />
                 </ReactRouter.Link>
             </div>
@@ -220,7 +266,7 @@ const PlanCard: React.FC<PlanCardProps> = (props: PlanCardProps) => {
                     </div>
                     {renderRequiredItems(
                         'Materials',
-                        planState.requiredMaterials,
+                        planState.requiredMaterials
                     )}
                     {renderRequiredItems('Tools', planState.requiredTools)}
                 </CardContent>

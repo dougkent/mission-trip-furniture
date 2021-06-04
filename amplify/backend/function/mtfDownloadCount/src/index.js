@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
 
         let downloadRecord;
 
-        if (record.eventName === 'INSERT') {
+        if (record.eventName === 'INSERT' || record.eventName === 'MODIFY') {
             downloadRecord = AWS.DynamoDB.Converter.unmarshall(
                 record.dynamodb.NewImage
             );
@@ -48,7 +48,7 @@ exports.handler = async (event, context) => {
                 },
             },
             UpdateExpression:
-                record.eventName === 'INSERT'
+                record.eventName === 'INSERT' || record.eventName === 'MODIFY'
                     ? incrementExpression
                     : decrementExpression,
             ExpressionAttributeNames: {

@@ -1,3 +1,3 @@
 export interface PagerProps {
-    onNextPage(): void;
+    onNextPage: () => void;
 }

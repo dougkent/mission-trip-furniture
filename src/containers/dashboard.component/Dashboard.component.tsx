@@ -1,10 +1,10 @@
 // React
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 // AWS
 import { graphqlOperation, API } from 'aws-amplify';
-import { withAuthenticator } from 'aws-amplify-react';
+import { GraphQLResult } from '@aws-amplify/api';
 
 // Material UI
 import {
@@ -24,6 +24,7 @@ import AddSharpIcon from '@material-ui/icons/AddSharp';
 import CloudDownloadSharpIcon from '@material-ui/icons/CloudDownloadSharp';
 import CreateNewFolderSharpIcon from '@material-ui/icons/CreateNewFolderSharp';
 import FavoriteSharpIcon from '@material-ui/icons/FavoriteSharp';
+import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 
 // Google Analytics
 import ReactGA from 'react-ga';
@@ -31,15 +32,13 @@ import ReactGA from 'react-ga';
 // MTF
 import { AppProps } from '../../models/props';
 import { DashboardState, DashboardTabsEnum } from '../../models/states';
-import { mtfAmplifyTheme, mtfTheme } from '../../themes';
+import { mtfTheme } from '../../themes';
 import { PlanGrid } from '../../components';
-import { signUpConfig } from '../../models/sign-up-config.model';
 import {
     GetDownloadedByUserIdQuery,
     GetFavoriteByUserIdQuery,
     GetPlanQuery,
     GetUserQuery,
-    GqlQuery,
     Plan,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
@@ -54,11 +53,19 @@ const styles = (theme: Theme) =>
                 display: 'flex',
                 justifyContent: 'space-evenly',
             },
+            [theme.breakpoints.up('xl')]: {
+                flexWrap: 'wrap',
+            },
         },
 
         loading: {
             width: 100,
             margin: `${theme.spacing(4)}px auto`,
+        },
+
+        linkBar: {
+            width: '100%',
+            padding: `0px ${theme.spacing(2)}px`,
         },
 
         listContainer: {
@@ -91,9 +98,8 @@ const styles = (theme: Theme) =>
                 display: 'inline-flex',
             },
         },
-        createNewPlanLink: {
+        noDecorationLink: {
             textDecoration: 'none',
-            [theme.breakpoints.up('md')]: {},
         },
         gridItem: {
             width: '100%',
@@ -106,6 +112,9 @@ const styles = (theme: Theme) =>
         },
         verticalTabs: {
             width: '15%',
+        },
+        verticalTabBody: {
+            width: '85%',
         },
         fullWidth: {
             width: '100%',
@@ -176,13 +185,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     prevProps.userFavoritedPlanIds
             ) {
                 const decoratedCreatedPlans = this.decoratePlans(
-                    this.state.createdPlans,
+                    this.state.createdPlans
                 );
                 const decoratedFavoritedPlans = this.decoratePlans(
-                    this.state.favoritedPlans,
+                    this.state.favoritedPlans
                 );
                 const decoratedDownloadedPlans = this.decoratePlans(
-                    this.state.downloadedPlans,
+                    this.state.downloadedPlans
                 );
 
                 this.setState({
@@ -200,14 +209,14 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 ...plan,
                 requiredMaterials: this.state.materials.filter((material) => {
                     return !!plan.requiredMaterialIds.find(
-                        (id) => id === material.id,
+                        (id) => id === material.id
                     );
                 }),
                 requiredTools: this.state.tools.filter((tool) => {
                     return !!plan.requiredToolIds.find((id) => id === tool.id);
                 }),
                 isFavoritedByUser: this.state.userFavoritedPlanIds.some(
-                    (planId) => planId === plan.id,
+                    (planId) => planId === plan.id
                 ),
             };
         });
@@ -228,7 +237,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     private handleTabChange = (
         event: React.ChangeEvent<{}>,
-        newValue: DashboardTabsEnum,
+        newValue: DashboardTabsEnum
     ) => {
         this.setState({
             currentTab: newValue,
@@ -255,7 +264,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     private handleTogglePlanFavorite = async (
         planId: string,
-        toggleFavOn: boolean,
+        toggleFavOn: boolean
     ) => {
         ReactGA.event({
             category: 'favorite',
@@ -284,13 +293,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             createdPlansLoading: true,
         });
 
-        const result: GqlQuery<GetUserQuery> = await API.graphql(
+        const result = (await API.graphql(
             graphqlOperation(graphQLQueries.getUserQuery, {
                 id: this.state.userId,
                 limit: 5,
                 nextToken: this.state.createdPlansNextToken,
-            }),
-        );
+            })
+        )) as GraphQLResult<GetUserQuery>;
 
         const { createdPlans } = result.data.getUser;
 
@@ -311,13 +320,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             favoritedPlansLoading: true,
         });
 
-        const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
+        const result = (await API.graphql(
             graphqlOperation(graphQLQueries.listFavoritesByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
                 nextToken: this.state.favoritedPlansNextToken,
-            }),
-        );
+            })
+        )) as GraphQLResult<GetFavoriteByUserIdQuery>;
 
         const { getFavoriteByUserId } = result.data;
 
@@ -326,11 +335,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         for (const i in getFavoriteByUserId.items) {
             const planId = getFavoriteByUserId.items[i].planId;
 
-            const result: GqlQuery<GetPlanQuery> = await API.graphql(
+            const result = (await API.graphql(
                 graphqlOperation(graphQLQueries.getPlanQuery, {
                     id: planId,
-                }),
-            );
+                })
+            )) as GraphQLResult<GetPlanQuery>;
 
             favoritedPlans.push(result.data.getPlan);
         }
@@ -352,13 +361,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             downloadedPlansLoading: true,
         });
 
-        const result: GqlQuery<GetDownloadedByUserIdQuery> = await API.graphql(
+        const result = (await API.graphql(
             graphqlOperation(graphQLQueries.listDownloadsByUserQuery, {
                 userId: this.state.userId,
                 limit: 5,
                 nextToken: this.state.downloadedPlansNextToken,
-            }),
-        );
+            })
+        )) as GraphQLResult<GetDownloadedByUserIdQuery>;
 
         const { getDownloadedByUserId } = result.data;
 
@@ -367,11 +376,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         for (const i in getDownloadedByUserId.items) {
             const planId = getDownloadedByUserId.items[i].planId;
 
-            const result: GqlQuery<GetPlanQuery> = await API.graphql(
+            const result = (await API.graphql(
                 graphqlOperation(graphQLQueries.getPlanQuery, {
                     id: planId,
-                }),
-            );
+                })
+            )) as GraphQLResult<GetPlanQuery>;
 
             downloadedPlans.push(result.data.getPlan);
         }
@@ -397,7 +406,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     <Typography variant='h3'>My Plans</Typography>
                     <Link
                         to='/my-mtf/upload-plan'
-                        className={classes.createNewPlanLink}>
+                        className={classes.noDecorationLink}>
                         <AddBoxSharpIcon
                             color='secondary'
                             fontSize='large'
@@ -470,6 +479,10 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         );
     };
 
+    private renderAccountManagement = () => {
+        return <Redirect to='my-mtf/manage-account' />;
+    };
+
     render = () => {
         const { classes } = this.props;
 
@@ -482,7 +495,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         } else {
             return (
                 <div className={classes.dashboardContainer}>
-                    <Hidden xlUp>
+                    <Hidden lgUp>
                         <Hidden smUp>
                             <Tabs
                                 value={this.state.currentTab}
@@ -503,6 +516,11 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                     label='My Downloaded Plans'
                                     icon={<CloudDownloadSharpIcon />}
                                     value={DashboardTabsEnum.DOWNLOADED_PLANS}
+                                />
+                                <Tab
+                                    label='Manage My Account'
+                                    icon={<AccountCircleSharpIcon />}
+                                    value={DashboardTabsEnum.ACCOUNT_MANAGEMENT}
                                 />
                             </Tabs>
                         </Hidden>
@@ -527,28 +545,10 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                     icon={<CloudDownloadSharpIcon />}
                                     value={DashboardTabsEnum.DOWNLOADED_PLANS}
                                 />
-                            </Tabs>
-                        </Hidden>
-                        <Hidden mdDown>
-                            <Tabs
-                                className={classes.verticalTabs}
-                                value={this.state.currentTab}
-                                onChange={this.handleTabChange}
-                                orientation='vertical'>
                                 <Tab
-                                    label='My Uploaded Plans'
-                                    icon={<CreateNewFolderSharpIcon />}
-                                    value={DashboardTabsEnum.CREATED_PLANS}
-                                />
-                                <Tab
-                                    label='My Favorited Plans'
-                                    icon={<FavoriteSharpIcon />}
-                                    value={DashboardTabsEnum.FAVORITED_PLANS}
-                                />
-                                <Tab
-                                    label='My Downloaded Plans'
-                                    icon={<CloudDownloadSharpIcon />}
-                                    value={DashboardTabsEnum.DOWNLOADED_PLANS}
+                                    label='Manage My Account'
+                                    icon={<AccountCircleSharpIcon />}
+                                    value={DashboardTabsEnum.ACCOUNT_MANAGEMENT}
                                 />
                             </Tabs>
                         </Hidden>
@@ -562,14 +562,79 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                             {this.state.currentTab ===
                                 DashboardTabsEnum.DOWNLOADED_PLANS &&
                                 this.renderDownloadedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.ACCOUNT_MANAGEMENT &&
+                                this.renderAccountManagement()}
+                        </div>
+                    </Hidden>
+                    <Hidden mdDown xlUp>
+                        <Tabs
+                            className={classes.verticalTabs}
+                            value={this.state.currentTab}
+                            onChange={this.handleTabChange}
+                            orientation='vertical'>
+                            <Tab
+                                label='My Uploaded Plans'
+                                icon={<CreateNewFolderSharpIcon />}
+                                value={DashboardTabsEnum.CREATED_PLANS}
+                            />
+                            <Tab
+                                label='My Favorited Plans'
+                                icon={<FavoriteSharpIcon />}
+                                value={DashboardTabsEnum.FAVORITED_PLANS}
+                            />
+                            <Tab
+                                label='My Downloaded Plans'
+                                icon={<CloudDownloadSharpIcon />}
+                                value={DashboardTabsEnum.DOWNLOADED_PLANS}
+                            />
+                            <Tab
+                                label='Manage My Account'
+                                icon={<AccountCircleSharpIcon />}
+                                value={DashboardTabsEnum.ACCOUNT_MANAGEMENT}
+                            />
+                        </Tabs>
+                        <div className={classes.verticalTabBody}>
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.CREATED_PLANS &&
+                                this.renderCreatedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.FAVORITED_PLANS &&
+                                this.renderFavoritedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.DOWNLOADED_PLANS &&
+                                this.renderDownloadedPlansList()}
+                            {this.state.currentTab ===
+                                DashboardTabsEnum.ACCOUNT_MANAGEMENT &&
+                                this.renderAccountManagement()}
                         </div>
                     </Hidden>
                     <Hidden lgDown>
-                        <div className={classes.dashboardContainer}>
-                            {this.renderCreatedPlansList()}
-                            {this.renderFavoritedPlansList()}
-                            {this.renderDownloadedPlansList()}
-                        </div>
+                        {this.state.currentTab !==
+                            DashboardTabsEnum.ACCOUNT_MANAGEMENT && (
+                            <div className={classes.dashboardContainer}>
+                                <div className={classes.linkBar}>
+                                    <Link
+                                        to='/my-mtf/manage-account'
+                                        className={classes.noDecorationLink}>
+                                        <Button
+                                            variant='contained'
+                                            color='secondary'
+                                            startIcon={
+                                                <AccountCircleSharpIcon />
+                                            }>
+                                            Manage My Account
+                                        </Button>
+                                    </Link>
+                                </div>
+                                {this.renderCreatedPlansList()}
+                                {this.renderFavoritedPlansList()}
+                                {this.renderDownloadedPlansList()}
+                            </div>
+                        )}
+                        {this.state.currentTab ===
+                            DashboardTabsEnum.ACCOUNT_MANAGEMENT &&
+                            this.renderAccountManagement()}
                     </Hidden>
                 </div>
             );
@@ -577,9 +642,4 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     };
 }
 
-export default withStyles(styles(mtfTheme))(
-    withAuthenticator(Dashboard, {
-        signUpConfig: signUpConfig,
-        theme: mtfAmplifyTheme,
-    }),
-);
+export default withStyles(styles(mtfTheme))(Dashboard);

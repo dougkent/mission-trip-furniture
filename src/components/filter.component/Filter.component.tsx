@@ -28,7 +28,7 @@ import MomentUtils from '@date-io/moment';
 import { FilterProps } from '../../models/props';
 import { FilterState } from '../../models/states';
 import { mtfTheme } from '../../themes';
-import { MaterialsSelector, ToolsSelector } from '../.';
+import { RequiredItemsSelector } from '../.';
 import {
     Material,
     Tool,
@@ -155,14 +155,14 @@ const useStyles = makeStyles((theme: Theme) =>
                 width: theme.spacing(50),
             },
         },
-    }),
+    })
 );
 
 const Filter: React.FC<FilterProps> = (props: FilterProps) => {
     const classes = useStyles(mtfTheme);
 
     const [filterState, setFilterState] = useState<FilterState>(
-        props.filterState,
+        props.filterState
     );
 
     const [filterDialogOpen, setFilterDialogOpen] = useState<boolean>(false);
@@ -171,7 +171,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
 
     const getSortDisplayText = (
         sortProperty: SearchablePlanSortableFieldsEnum,
-        sortDirection: SearchableSortDirectionEnum,
+        sortDirection: SearchableSortDirectionEnum
     ): string => {
         switch (sortProperty) {
             case SearchablePlanSortableFieldsEnum.name:
@@ -246,7 +246,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
 
     const handleSortSelect = (
         property: SearchablePlanSortableFieldsEnum,
-        direction: SearchableSortDirectionEnum,
+        direction: SearchableSortDirectionEnum
     ) => () => {
         setFilterState({
             ...filterState,
@@ -322,7 +322,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                         Sort by:&nbsp;
                                         {getSortDisplayText(
                                             filterState.sortProperty,
-                                            filterState.sortDirection,
+                                            filterState.sortDirection
                                         )}
                                     </span>
                                     <ArrowDropDownSharpIcon />
@@ -330,26 +330,24 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                             </div>
                             <div
                                 className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}>
-                                <ToolsSelector
+                                <RequiredItemsSelector
                                     label='Select Tools'
                                     loading={false}
-                                    tools={props.tools}
+                                    requiredItems={props.tools}
                                     onSelect={handleToolSelect}
-                                    selectedTools={filterState.filterTools}
-                                    numSelectedToolsToRender={2}
+                                    selectedItems={filterState.filterTools}
+                                    numSelectedItemsToRender={2}
                                 />
                             </div>
                             <div
                                 className={`${classes.dialogRow} ${classes.dialogFilterItemRow}`}>
-                                <MaterialsSelector
+                                <RequiredItemsSelector
                                     label='Select Materials'
                                     loading={false}
-                                    materials={props.materials}
+                                    requiredItems={props.materials}
                                     onSelect={handleMaterialSelect}
-                                    selectedMaterials={
-                                        filterState.filterMaterials
-                                    }
-                                    numSelectedMaterialsToRender={2}
+                                    selectedItems={filterState.filterMaterials}
+                                    numSelectedItemsToRender={2}
                                 />
                             </div>
                             <div className={`${classes.dialogFilterDateRow}`}>
@@ -360,7 +358,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     </Typography>
                                     <Button
                                         onClick={handleDateChange(
-                                            'filterCreatedAfter',
+                                            'filterCreatedAfter'
                                         )}>
                                         Clear
                                     </Button>
@@ -374,7 +372,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                                     openTo='date'
                                     value={filterState.filterCreatedAfter}
                                     onChange={handleDateChange(
-                                        'filterCreatedAfter',
+                                        'filterCreatedAfter'
                                     )}
                                     className={classes.dialogDatePicker}
                                 />
@@ -408,24 +406,24 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
             <div className={`${classes.desktopDisplay} ${classes.filterBar}`}>
                 <div
                     className={`${classes.filterBarItem} ${classes.filterBarItemFixedWidth}`}>
-                    <ToolsSelector
+                    <RequiredItemsSelector
                         label='Select Tools'
                         loading={false}
-                        tools={props.tools}
+                        requiredItems={props.tools}
                         onSelect={handleToolSelect}
-                        selectedTools={filterState.filterTools}
-                        numSelectedToolsToRender={2}
+                        selectedItems={filterState.filterTools}
+                        numSelectedItemsToRender={2}
                     />
                 </div>
                 <div
                     className={`${classes.filterBarItem} ${classes.filterBarItemFixedWidth}`}>
-                    <MaterialsSelector
+                    <RequiredItemsSelector
                         label='Select Materials'
                         loading={false}
-                        materials={props.materials}
+                        requiredItems={props.materials}
                         onSelect={handleMaterialSelect}
-                        selectedMaterials={filterState.filterMaterials}
-                        numSelectedMaterialsToRender={2}
+                        selectedItems={filterState.filterMaterials}
+                        numSelectedItemsToRender={2}
                     />
                 </div>
                 <div
@@ -453,7 +451,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                             Sort by:&nbsp;
                             {getSortDisplayText(
                                 filterState.sortProperty,
-                                filterState.sortDirection,
+                                filterState.sortDirection
                             )}
                         </Typography>
                         <ArrowDropDownSharpIcon />
@@ -482,35 +480,35 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                 onClose={handleSortMenuClose}>
                 {renderMenuItem(
                     SearchablePlanSortableFieldsEnum.name,
-                    SearchableSortDirectionEnum.asc,
+                    SearchableSortDirectionEnum.asc
                 )}
                 {renderMenuItem(
                     SearchablePlanSortableFieldsEnum.name,
-                    SearchableSortDirectionEnum.desc,
+                    SearchableSortDirectionEnum.desc
                 )}
                 {renderMenuItem(
                     SearchablePlanSortableFieldsEnum.created,
-                    SearchableSortDirectionEnum.asc,
+                    SearchableSortDirectionEnum.asc
                 )}
                 {renderMenuItem(
                     SearchablePlanSortableFieldsEnum.created,
-                    SearchableSortDirectionEnum.desc,
+                    SearchableSortDirectionEnum.desc
                 )}
                 {renderMenuItem(
                     SearchablePlanSortableFieldsEnum.favoritedCount,
-                    SearchableSortDirectionEnum.desc,
+                    SearchableSortDirectionEnum.desc
                 )}
                 {renderMenuItem(
                     SearchablePlanSortableFieldsEnum.favoritedCount,
-                    SearchableSortDirectionEnum.asc,
+                    SearchableSortDirectionEnum.asc
                 )}
                 {renderMenuItem(
                     SearchablePlanSortableFieldsEnum.downloadedCount,
-                    SearchableSortDirectionEnum.desc,
+                    SearchableSortDirectionEnum.desc
                 )}
                 {renderMenuItem(
                     SearchablePlanSortableFieldsEnum.downloadedCount,
-                    SearchableSortDirectionEnum.asc,
+                    SearchableSortDirectionEnum.asc
                 )}
             </Menu>
         );
@@ -518,7 +516,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
 
     const renderMenuItem = (
         property: SearchablePlanSortableFieldsEnum,
-        direction: SearchableSortDirectionEnum,
+        direction: SearchableSortDirectionEnum
     ) => {
         return (
             <MenuItem onClick={handleSortSelect(property, direction)}>

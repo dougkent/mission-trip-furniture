@@ -4,14 +4,13 @@ import { Redirect } from 'react-router-dom';
 
 // AWS
 import { API, graphqlOperation, Storage } from 'aws-amplify';
-import { withAuthenticator } from 'aws-amplify-react';
+import { GraphQLResult } from '@aws-amplify/api';
 
 // Material UI
 import {
     Button,
     CircularProgress,
     createStyles,
-    InputAdornment,
     Paper,
     TextField,
     Theme,
@@ -35,13 +34,11 @@ import { mtfTheme } from '../../themes';
 import {
     ErrorMessage,
     ImageUploader,
-    MaterialsSelector,
+    MultiLineTextEditor,
     PdfUploader,
-    ToolsSelector,
+    RequiredItemsSelector,
 } from '../../components';
-import { signUpConfig } from '../../models/sign-up-config.model';
 import {
-    GqlQuery,
     CreatePlanMutation,
     Material,
     Tool,
@@ -49,6 +46,7 @@ import {
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
 import * as graphQLMutations from '../../graphql/mutations';
+import { ImageModel } from '../../models';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -79,6 +77,8 @@ const styles = (theme: Theme) =>
         },
         multiCardRow: {
             display: 'flex',
+            flexWrap: 'wrap',
+            marginTop: theme.spacing(2),
         },
         submitButtonRow: {
             display: 'flex',
@@ -101,14 +101,14 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         materials: this.props.materials,
         tools: this.props.tools,
         userFavoritedPlanIds: this.props.userFavoritedPlanIds,
-        imageFile: null,
+        imageFiles: [],
         pdfFile: null,
         plan: {
             id: '',
             name: '',
             description: '',
             pdfS3Key: '',
-            imageS3Info: null,
+            imageS3Keys: [],
             created: '',
             favoritedCount: 0,
             downloadedCount: 0,
@@ -152,40 +152,55 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
         }
     };
 
+    private getPlanId = (planName: string) => {
+        return planName.toLowerCase().replace(/\s/g, '-');
+    };
+
     private handleClearErrors = () => {
         this.setState({
             errors: [],
         });
     };
 
-    private getPlanId = (planName: string) => {
-        return planName.toLowerCase().replace(/\s/g, '-');
-    };
-
-    private handleImageDeselect = () => {
+    private handleDescriptionChange = (text: string) => {
         this.setState((prevState) => ({
             ...prevState,
-            imageFile: null,
             plan: {
                 ...prevState.plan,
-                imageS3Info: null,
+                description: text,
             },
         }));
     };
 
-    private handleImageSelect = (file: File) => {
+    private handleImageDeselect = (index: number) => {
+        this.setState((prevState) => ({
+            ...prevState,
+            imageFiles: prevState.imageFiles.filter(
+                (imageFile, idx) => idx !== index
+            ),
+            plan: {
+                ...prevState.plan,
+                imageS3Keys: prevState.plan.imageS3Keys.filter(
+                    (imageS3Key, idx) => idx !== index
+                ),
+            },
+        }));
+    };
+
+    private handleImageSelect = (file: File, url: string) => {
         const fileName = `images/${uuid()}`;
+
+        const imageModel: ImageModel = {
+            file: file,
+            url: url,
+        };
 
         this.setState((prevState) => ({
             ...prevState,
-            imageFile: file,
+            imageFiles: [...prevState.imageFiles, imageModel],
             plan: {
                 ...prevState.plan,
-                imageS3Info: {
-                    key: fileName,
-                    width: 200,
-                    height: 200,
-                },
+                imageS3Keys: [...prevState.plan.imageS3Keys, fileName],
             },
         }));
     };
@@ -230,7 +245,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                 ...prevState.plan,
                 created: new Date().toISOString(),
                 requiredMaterialIds: prevState.selectedMaterials.map(
-                    (material) => material.id,
+                    (material) => material.id
                 ),
                 requiredToolIds: prevState.selectedTools.map((tool) => tool.id),
             },
@@ -246,15 +261,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             return;
         }
 
-        const planResult: GqlQuery<CreatePlanMutation> = await API.graphql(
+        const planResult = (await API.graphql(
             graphqlOperation(graphQLMutations.createPlanMutation, {
                 input: this.state.plan,
-            }),
-        );
+            })
+        )) as GraphQLResult<CreatePlanMutation>;
 
         if (planResult.data.createPlan.id) {
             await this.uploadPdf();
-            await this.uploadImage();
+            await this.uploadImages();
 
             ReactGA.event({
                 category: 'create',
@@ -266,7 +281,7 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                     this.setState({
                         createComplete: true,
                     }),
-                1000,
+                1000
             );
         } else {
             this.setState({
@@ -326,15 +341,15 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             errors.push('Please enter a plan name.');
         } else if (!this.isPlanIdAlphaNumeric()) {
             errors.push(
-                'Plan names can only be alpha-numeric. Please change your plan name to only contain the characters: A-Z, a-z, 0-9, spaces, or hyphens.',
+                'Plan names can only be alpha-numeric. Please change your plan name to only contain the characters: A-Z, a-z, 0-9, spaces, or hyphens.'
             );
         } else if (!this.isPlanIdAlpha()) {
             errors.push(
-                'Plan names need at least one alphabet letter in them (A-Z or a-z).',
+                'Plan names need at least one alphabet letter in them (A-Z or a-z).'
             );
         } else if (await this.planAlreadyExists()) {
             errors.push(
-                'A plan with that same name already exists. Please enter a different name.',
+                'A plan with that same name already exists. Please enter a different name.'
             );
         }
 
@@ -350,16 +365,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
             errors.push('Please select a PDF to upload.');
         }
 
-        if (
-            !this.state.imageFile ||
-            !this.state.imageFile.type.startsWith('image/')
-        ) {
+        if (this.state.imageFiles.length === 0) {
             errors.push('Please select an image to upload.');
         }
 
         if (!this.state.selectedMaterials.length) {
             errors.push(
-                'Please select one or more materials your plan requires.',
+                'Please select one or more materials your plan requires.'
             );
         }
 
@@ -371,21 +383,26 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     };
 
     private planAlreadyExists = async (): Promise<boolean> => {
-        const planResult: GqlQuery<GetPlanQuery> = await API.graphql(
+        const planResult = (await API.graphql(
             graphqlOperation(graphQLQueries.getPlanIdQuery, {
                 id: this.state.plan.id,
-            }),
-        );
+            })
+        )) as GraphQLResult<GetPlanQuery>;
 
         const { data } = planResult;
 
         return !!data?.getPlan?.id;
     };
 
-    private uploadImage = async () => {
-        Storage.put(this.state.plan.imageS3Info.key, this.state.imageFile, {
-            level: 'protected',
-            metadata: { owner: this.state.plan.planCreatedById },
+    private uploadImages = async () => {
+        this.state.plan.imageS3Keys.forEach((imageS3Key, index) => {
+            const imageFile = this.state.imageFiles[index];
+
+            Storage.put(imageS3Key, imageFile.file, {
+                level: 'protected',
+                contentType: imageFile.file.type,
+                metadata: { owner: this.state.plan.planCreatedById },
+            });
         });
     };
 
@@ -416,44 +433,31 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                                 onChange={this.handleTextChange}
                                 label='Name *'
                                 fullWidth
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='start'>
-                                            <Tooltip
-                                                title='This field must be unique across all of the plans uploaded to Mission Trip Furniure. This field is also used heavily in searching so choose something that describes the plan well. It CANNOT be changed later.'
-                                                placement='bottom-end'
-                                                arrow
-                                                enterDelay={500}>
-                                                <InfoSharpIcon />
-                                            </Tooltip>
-                                        </InputAdornment>
-                                    ),
-                                }}
                             />
+                            <Tooltip
+                                className={classes.tooltip}
+                                title='This field must be unique across all of the plans uploaded to Mission Trip Furniure. This field is also used heavily in searching so choose something that describes the plan well. It CANNOT be changed later.'
+                                placement='bottom-end'
+                                arrow
+                                enterDelay={500}>
+                                <InfoSharpIcon />
+                            </Tooltip>
                         </div>
                         <div className={classes.formRow}>
-                            <TextField
-                                inputProps={{ maxLength: 2000 }}
-                                multiline
-                                name='description'
-                                onChange={this.handleTextChange}
-                                label='Description *'
-                                rows='16'
-                                fullWidth
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='start'>
-                                            <Tooltip
-                                                title='This field has a maximum of 2000 characters that can be entered. The longer the description is the more it will assist users in searching for plans.'
-                                                placement='bottom-end'
-                                                arrow
-                                                enterDelay={500}>
-                                                <InfoSharpIcon />
-                                            </Tooltip>
-                                        </InputAdornment>
-                                    ),
-                                }}
+                            <MultiLineTextEditor
+                                text={this.state.plan.description}
+                                maxLength={2000}
+                                isReadOnly={false}
+                                onChange={this.handleDescriptionChange}
                             />
+                            <Tooltip
+                                className={classes.tooltip}
+                                title='This field has a maximum of 2000 characters that can be entered. The longer the description is the more it will assist users in searching for plans.'
+                                placement='bottom-end'
+                                arrow
+                                enterDelay={500}>
+                                <InfoSharpIcon />
+                            </Tooltip>
                         </div>
                         <div
                             className={`${classes.formRow} ${classes.multiCardRow}`}>
@@ -473,13 +477,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         </div>
                         <div className={classes.formRow}>
                             <div className={classes.selector}>
-                                <ToolsSelector
+                                <RequiredItemsSelector
                                     label='Select Tools Required for this Plan'
-                                    tools={this.state.tools}
+                                    requiredItems={this.state.tools}
                                     loading={false}
                                     onSelect={this.handleToolSelected}
-                                    selectedTools={this.state.selectedTools}
-                                    numSelectedToolsToRender={2}
+                                    selectedItems={this.state.selectedTools}
+                                    numSelectedItemsToRender={2}
                                 />
                             </div>
                             <Tooltip
@@ -493,15 +497,13 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         </div>
                         <div className={classes.formRow}>
                             <div className={classes.selector}>
-                                <MaterialsSelector
+                                <RequiredItemsSelector
                                     label='Select Materials Required for this Plan'
-                                    materials={this.state.materials}
+                                    requiredItems={this.state.materials}
                                     loading={false}
                                     onSelect={this.handleMaterialSelected}
-                                    selectedMaterials={
-                                        this.state.selectedMaterials
-                                    }
-                                    numSelectedMaterialsToRender={2}
+                                    selectedItems={this.state.selectedMaterials}
+                                    numSelectedItemsToRender={2}
                                 />
                             </div>
                             <Tooltip
@@ -516,18 +518,20 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
                         <div
                             className={`${classes.formRow} ${classes.multiCardRow}`}>
                             <ImageUploader
-                                image={this.state.imageFile}
+                                imageFiles={this.state.imageFiles}
                                 onDeselect={this.handleImageDeselect}
                                 onSelect={this.handleImageSelect}
+                                tooltip={
+                                    <Tooltip
+                                        className={classes.tooltip}
+                                        title='The image you select here will be the image that is displayed to other users so pick one that represents your plan well. It CANNOT be changed later.'
+                                        placement='right'
+                                        arrow
+                                        enterDelay={500}>
+                                        <InfoSharpIcon />
+                                    </Tooltip>
+                                }
                             />
-                            <Tooltip
-                                className={classes.tooltip}
-                                title='The image you select here will be the image that is displayed to other users so pick one that represents your plan well. It CANNOT be changed later.'
-                                placement='right'
-                                arrow
-                                enterDelay={500}>
-                                <InfoSharpIcon />
-                            </Tooltip>
                         </div>
                         <div
                             className={`${classes.formRow} ${classes.submitButtonRow}`}>
@@ -556,8 +560,4 @@ class CreatePlan extends React.Component<CreatePlanProps, CreatePlanState> {
     };
 }
 
-export default withStyles(styles(mtfTheme))(
-    withAuthenticator(CreatePlan, {
-        signUpConfig: signUpConfig,
-    }),
-);
+export default withStyles(styles(mtfTheme))(CreatePlan);

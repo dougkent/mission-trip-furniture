@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-// Material UI
+// RequiredItem UI
 import {
     Checkbox,
     Chip,
@@ -9,41 +9,46 @@ import {
     createStyles,
     makeStyles,
     Theme,
-    TextField
+    TextField,
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp';
 import CheckBoxSharpIcon from '@material-ui/icons/CheckBoxSharp';
 
 // MTF
-import { MaterialSelectorProps } from '../../models/props';
+import { RequiredItemsSelectorProps } from '../../models/props';
 import { mtfTheme } from '../../themes';
-import { Material } from '../../models/api-models';
+import { RequiredItem } from '../../models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         chip: {
-            margin: 3
+            margin: 3,
         },
         textBox: {
             '& .MuiAutocomplete-inputRoot': {
-                paddingRight: `${theme.spacing(3)}px !important`
-            }
-        }
+                paddingRight: `${theme.spacing(3)}px !important`,
+            },
+        },
     })
 );
 
-const MaterialsSelector: React.FC<MaterialSelectorProps> = (
-    props: MaterialSelectorProps
+const RequiredItemsSelector: React.FC<RequiredItemsSelectorProps> = (
+    props: RequiredItemsSelectorProps
 ) => {
     const classes = useStyles(mtfTheme);
 
-    const getOptionLabel = (option: Material): string => {
+    const getOptionLabel = (option: RequiredItem): string => {
         return option.name;
     };
 
-    const handleChange = (event: object, value: Material[]) => {
-        props.onSelect(value);
+    const handleChange = (event: object, value: (string | RequiredItem)[]) => {
+        if (typeof value !== 'string') {
+            const values = value as RequiredItem[];
+            props.onSelect(values);
+        } else {
+            console.error('Could not select required item', value);
+        }
     };
 
     if (props.loading) {
@@ -56,8 +61,8 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                 multiple
                 disableCloseOnSelect
                 onChange={handleChange}
-                options={props.materials}
-                renderInput={params => (
+                options={props.requiredItems}
+                renderInput={(params) => (
                     <TextField
                         className={classes.textBox}
                         {...params}
@@ -65,7 +70,7 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                         fullWidth
                     />
                 )}
-                renderOption={(material, { selected }) => (
+                renderOption={(requiredItem, { selected }) => (
                     <>
                         <Checkbox
                             icon={
@@ -74,26 +79,26 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                             checkedIcon={<CheckBoxSharpIcon fontSize='small' />}
                             checked={selected}
                         />
-                        {material.name}
+                        {requiredItem.name}
                     </>
                 )}
                 renderTags={(value, getTagProps) => (
                     <>
                         {value
                             .filter(
-                                (material, index) =>
-                                    index < props.numSelectedMaterialsToRender
+                                (requiredItem, index) =>
+                                    index < props.numSelectedItemsToRender
                             )
-                            .map((material, index) => (
+                            .map((requiredItem, index) => (
                                 <Chip
                                     variant='outlined'
                                     color='secondary'
-                                    label={material.name}
+                                    label={requiredItem.name}
                                     size='small'
                                     {...getTagProps({ index })}
                                 />
                             ))}
-                        {value.length > props.numSelectedMaterialsToRender && (
+                        {value.length > props.numSelectedItemsToRender && (
                             <Chip
                                 size='small'
                                 color='secondary'
@@ -103,17 +108,17 @@ const MaterialsSelector: React.FC<MaterialSelectorProps> = (
                                     '+' +
                                     (
                                         value.length -
-                                        props.numSelectedMaterialsToRender
+                                        props.numSelectedItemsToRender
                                     ).toString()
                                 }
                             />
                         )}
                     </>
                 )}
-                value={props.selectedMaterials}
+                value={props.selectedItems}
             />
         );
     }
 };
 
-export default MaterialsSelector;
+export default RequiredItemsSelector;

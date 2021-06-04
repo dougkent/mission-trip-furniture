@@ -8,6 +8,6 @@ export interface PlanGridProps {
     loading: boolean;
     emptyText: string;
     gridItemClassName: string;
-    onNextPage(nextToken: string): void;
-    onTogglePlanFavorite(planId: string, toggleFavOn: boolean): void;
+    onNextPage: (nextToken: string) => void;
+    onTogglePlanFavorite: (planId: string, toggleFavOn: boolean) => void;
 }

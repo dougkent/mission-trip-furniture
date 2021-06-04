@@ -4,11 +4,10 @@ import { Redirect } from 'react-router-dom';
 
 // AWS
 import { API, graphqlOperation, Storage } from 'aws-amplify';
-import { S3Image } from 'aws-amplify-react';
+import { GraphQLResult, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
 
 // Material UI
 import {
-    Chip,
     CircularProgress,
     createStyles,
     IconButton,
@@ -36,26 +35,30 @@ import { mtfTheme } from '../../themes';
 import NotFound from '../not-found.component/NotFound.component';
 import {
     DownloadButton,
-    EditDescription,
     ErrorMessage,
+    ImageGallery,
     PlanDate,
     PlanDelete,
     PlanFavorite,
+    PlanDownloadedCount,
+    PlanDetails,
 } from '../../components';
 import {
     CreateDownloadInput,
     DeletePlanInput,
     DeletePlanMutation,
-    GqlQuery,
     GetDownloadByPlanIdQuery,
     GetFavoriteByPlanIdQuery,
     GetPlanQuery,
+    ModelIdKeyConditionInput,
     Plan,
+    UpdateDownloadInput,
     UpdatePlanInput,
     UpdatePlanMutation,
 } from '../../models/api-models';
 import * as graphQLQueries from '../../graphql/queries';
 import * as graphQLMutations from '../../graphql/mutations';
+import { EditPlan } from '../../models';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -78,32 +81,50 @@ const styles = (theme: Theme) =>
             width: '100%',
             marginBottom: theme.spacing(2),
         },
+        gallery: {
+            width: '100%',
+            height: theme.spacing(28),
+            display: 'flex',
+            [theme.breakpoints.up('sm')]: {
+                height: theme.spacing(38),
+                width: '49%',
+            },
+            [theme.breakpoints.up('md')]: {
+                height: 'auto',
+                alignSelf: 'stretch',
+            },
+        },
         image: {
             width: '100%',
             height: theme.spacing(25),
-            marginBottom: theme.spacing(2),
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
             [theme.breakpoints.up('sm')]: {
-                width: '50%',
-                height: theme.spacing(25),
+                height: theme.spacing(35),
             },
-            [theme.breakpoints.up('lg')]: {
-                height: '100%',
+            [theme.breakpoints.up('md')]: {
+                height: 'auto',
+                alignSelf: 'stretch',
+                marginBottom: theme.spacing(3),
+                maxHeight: theme.spacing(55),
             },
-            '& img': {
-                width: '100%',
-                height: theme.spacing(25),
-                objectFit: 'cover',
-                [theme.breakpoints.up('lg')]: {
-                    height: '700px',
-                },
+
+            [theme.breakpoints.up('xl')]: {
+                maxHeight: theme.spacing(85),
+                marginBottom: theme.spacing(3),
             },
         },
         planContent: {
             width: '100%',
-            padding: `0 ${theme.spacing(2)}px`,
+            padding: 0,
             marginBottom: theme.spacing(2),
             [theme.breakpoints.up('sm')]: {
+                padding: `0 ${theme.spacing(3)}px`,
                 width: '50%',
+                minHeight: theme.spacing(50),
+            },
+            [theme.breakpoints.up('xl')]: {
+                minHeight: theme.spacing(85),
             },
         },
         row: {
@@ -112,16 +133,6 @@ const styles = (theme: Theme) =>
             marginBottom: `${theme.spacing(2)}px`,
             display: 'flex',
         },
-        rowTitle: {
-            marginRight: theme.spacing(1),
-        },
-        requiredItemRow: {
-            flexWrap: 'wrap',
-        },
-        requiredItem: {
-            marginRight: theme.spacing(0.5),
-            marginBottom: theme.spacing(0.5),
-        },
         descriptionTitle: {
             marginTop: theme.spacing(3),
         },
@@ -129,13 +140,22 @@ const styles = (theme: Theme) =>
             whiteSpace: 'pre-line',
         },
         buttonRow: {
-            marginTop: theme.spacing(3),
+            marginTop: theme.spacing(2),
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             [theme.breakpoints.up('md')]: {
                 justifyContent: 'flex-start',
             },
+        },
+        butonRowIcons: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: theme.spacing(10),
+        },
+        lastDownloadedRow: {
+            marginTop: theme.spacing(1),
         },
     });
 
@@ -152,6 +172,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             tools: props.tools,
             userFavoritedPlanIds: props.userFavoritedPlanIds,
             planId: props.planId,
+            planDownload: null,
             plan: null,
             downloadUrl: null,
             loading: true,
@@ -165,12 +186,11 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     }
 
     componentDidMount = async () => {
-        const planResult: GqlQuery<GetPlanQuery> = await API.graphql({
+        const planResult = (await API.graphql({
             query: graphQLQueries.getPlanQuery,
             variables: { id: this.props.planId },
-            // @ts-ignore
-            authMode: 'AWS_IAM',
-        });
+            authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
+        })) as GraphQLResult<GetPlanQuery>;
 
         if (planResult?.data?.getPlan) {
             const { getPlan } = planResult.data;
@@ -188,6 +208,32 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 downloadUrl: downloadUrl as string,
                 loading: false,
             });
+
+            if (this.props.userId) {
+                const getPlanDownloadInput: ModelIdKeyConditionInput = {
+                    eq: this.props.userId,
+                };
+
+                const planDownloadResult = (await API.graphql(
+                    graphqlOperation(
+                        graphQLQueries.getDownloadByPlanAndUserQuery,
+                        {
+                            planId: this.props.planId,
+                            userId: getPlanDownloadInput,
+                        }
+                    )
+                )) as GraphQLResult<GetDownloadByPlanIdQuery>;
+
+                if (
+                    planDownloadResult?.data?.getDownloadByPlanId?.items.length
+                ) {
+                    this.setState({
+                        planDownload:
+                            planDownloadResult?.data?.getDownloadByPlanId
+                                ?.items[0],
+                    });
+                }
+            }
         } else {
             this.setState({
                 loading: false,
@@ -236,37 +282,64 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         };
     };
 
+    private getLastDownloadedDate = (): string => {
+        const utcString = this.state.planDownload.downloadedAt[
+            this.state.planDownload.downloadedAt.length - 1
+        ];
+
+        const utcDate = new Date(utcString);
+
+        return utcDate.toLocaleDateString();
+    };
+
     private handleClearErrors = () => {
         this.setState({
             errors: [],
         });
     };
 
-    private handleCreateDownload = () => {
+    private handleCreateDownload = async () => {
         this.setState({
             saving: true,
         });
 
         if (this.state.userId) {
-            const input: CreateDownloadInput = {
-                id: uuid(),
-                planId: this.state.planId,
-                userId: this.state.userId,
-            };
+            if (this.state.planDownload) {
+                const input: UpdateDownloadInput = {
+                    id: this.state.planDownload.id,
+                    downloadedAt: [
+                        ...this.state.planDownload.downloadedAt,
+                        new Date().toISOString(),
+                    ],
+                };
 
-            API.graphql(
-                graphqlOperation(graphQLMutations.createDownloadMutation, {
-                    input: input,
-                })
-            );
+                API.graphql(
+                    graphqlOperation(graphQLMutations.updateDownloadMutation, {
+                        input: input,
+                    })
+                );
+            } else {
+                const input: CreateDownloadInput = {
+                    id: uuid(),
+                    planId: this.state.planId,
+                    userId: this.state.userId,
+                    downloadedAt: [new Date().toISOString()],
+                };
+
+                API.graphql(
+                    graphqlOperation(graphQLMutations.createDownloadMutation, {
+                        input: input,
+                    })
+                );
+            }
         }
 
-        this.setState((prevState) => ({
+        await this.setState((prevState) => ({
             ...prevState,
             saving: false,
             plan: {
                 ...prevState.plan,
-                downloadsCount: prevState.plan.downloadedCount++,
+                downloadedCount: prevState.plan.downloadedCount + 1,
             },
         }));
 
@@ -285,16 +358,18 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
             id: this.state.planId,
         };
 
-        const deleteResult: GqlQuery<DeletePlanMutation> = await API.graphql(
+        const deleteResult = (await API.graphql(
             graphqlOperation(graphQLMutations.deletePlanMutation, {
                 input: input,
             })
-        );
+        )) as GraphQLResult<DeletePlanMutation>;
 
         if (deleteResult?.data) {
-            await Storage.remove(this.state.plan.imageS3Info.key, {
-                level: 'protected',
-            });
+            for (let i = 0; i < this.state.plan.imageS3Keys.length; i++) {
+                await Storage.remove(this.state.plan.imageS3Keys[i], {
+                    level: 'protected',
+                });
+            }
             await Storage.remove(this.state.plan.pdfS3Key, {
                 level: 'protected',
             });
@@ -321,12 +396,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleDeleteDownloads = async (nextToken: string = null) => {
-        const planDownloads: GqlQuery<GetDownloadByPlanIdQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getDownloadByPlanQuery, {
+        const planDownloads = (await API.graphql(
+            graphqlOperation(graphQLQueries.getDownloadsByPlanQuery, {
                 planId: this.state.planId,
                 nextToken: nextToken,
             })
-        );
+        )) as GraphQLResult<GetDownloadByPlanIdQuery>;
 
         if (planDownloads?.data) {
             const { getDownloadByPlanId } = planDownloads.data;
@@ -355,12 +430,12 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
     };
 
     private handleDeleteFavorites = async (nextToken: string = null) => {
-        const planFavorites: GqlQuery<GetFavoriteByPlanIdQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getFavoriteByPlanQuery, {
+        const planFavorites = (await API.graphql(
+            graphqlOperation(graphQLQueries.getFavoritesByPlanQuery, {
                 planId: this.state.planId,
                 nextToken: nextToken,
             })
-        );
+        )) as GraphQLResult<GetFavoriteByPlanIdQuery>;
 
         if (planFavorites?.data) {
             const { getFavoriteByPlanId } = planFavorites.data;
@@ -406,7 +481,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         this.setState((prevState) => ({
             ...prevState,
             editing: false,
-            editDescription: prevState.plan.description,
+            editedPlan: null,
         }));
     };
 
@@ -431,33 +506,39 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         });
     };
 
-    private handleSave = async (newDescription: string) => {
+    private handleSave = async (editPlan: EditPlan) => {
         this.setState({
             saving: true,
         });
 
-        if (!newDescription || !newDescription.length) {
+        const errors = this.validatePlan(editPlan);
+
+        if (errors.length > 0) {
             this.setState({
                 saving: false,
-                errors: ['Please enter a description.'],
+                errors: errors,
             });
-            throw Error('Please enter a description');
+            throw Error('Plan validation failed.');
         }
 
         const input: UpdatePlanInput = {
             id: this.state.planId,
-            description: newDescription,
+            description: editPlan.newDescription,
+            requiredMaterialIds: editPlan.newRequiredMaterialIds,
+            requiredToolIds: editPlan.newRequiredToolIds,
         };
 
-        const planResult: GqlQuery<UpdatePlanMutation> = await API.graphql(
+        const planResult = (await API.graphql(
             graphqlOperation(graphQLMutations.updatePlanMutation, {
                 input: input,
             })
-        );
+        )) as GraphQLResult<UpdatePlanMutation>;
 
         if (planResult?.data?.updatePlan) {
+            const decoratedPlan = this.decoratePlan(planResult.data.updatePlan);
+
             this.setState({
-                plan: planResult.data.updatePlan,
+                plan: decoratedPlan,
                 editing: false,
                 saving: false,
             });
@@ -495,7 +576,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 plan: {
                     ...prevState.plan,
                     isFavoritedByUser: true,
-                    favoritedCount: prevState.plan.favoritedCount++,
+                    favoritedCount: prevState.plan.favoritedCount + 1,
                 },
             }));
         } else {
@@ -504,7 +585,7 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                 plan: {
                     ...prevState.plan,
                     isFavoritedByUser: false,
-                    favoritedCount: prevState.plan.favoritedCount--,
+                    favoritedCount: prevState.plan.favoritedCount - 1,
                 },
             }));
         }
@@ -512,34 +593,24 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
         this.props.onPlanFavorite(this.state.planId, toggleFavOn);
     };
 
-    private renderDescription = () => {
-        const { classes } = this.props;
+    private validatePlan = (editPlan: EditPlan): string[] => {
+        const errors: string[] = [];
 
-        if (this.state.editing) {
-            return (
-                <EditDescription
-                    description={this.state.plan.description}
-                    saving={this.state.saving}
-                    onCancel={this.handleEditingOff}
-                    onSave={this.handleSave}
-                />
-            );
-        } else {
-            return (
-                <>
-                    <Typography
-                        variant='h5'
-                        className={classes.descriptionTitle}>
-                        Description
-                    </Typography>
-                    <Typography
-                        variant='body1'
-                        className={`${classes.row} ${classes.description}`}>
-                        {this.state.plan.description}
-                    </Typography>
-                </>
+        if (!editPlan.newDescription.length) {
+            errors.push('Please enter a plan description.');
+        }
+
+        if (!editPlan.newRequiredMaterialIds.length) {
+            errors.push(
+                'Please select one or more materials your plan requires.'
             );
         }
+
+        if (!editPlan.newRequiredToolIds.length) {
+            errors.push('Please select one or more tools your plan requires.');
+        }
+
+        return errors;
     };
 
     render = () => {
@@ -603,51 +674,25 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                             &nbsp;by&nbsp;{this.state.plan.createdBy.username}
                         </Typography>
                     </div>
-                    <div className={classes.image}>
-                        <S3Image
-                            level='protected'
-                            imgKey={this.state.plan.imageS3Info.key}
-                            identityId={this.state.plan.createdBy.id}
-                        />
-                    </div>
+                    <ImageGallery
+                        galleryClassName={classes.gallery}
+                        imageClassName={classes.image}
+                        userId={this.state.plan.createdBy.id}
+                        imageS3Keys={this.state.plan.imageS3Keys}
+                    />
                     <div className={classes.planContent}>
-                        <div
-                            className={`${classes.row} ${classes.requiredItemRow}`}>
-                            <Typography
-                                variant='subtitle1'
-                                className={classes.rowTitle}>
-                                Materials:
-                            </Typography>
-                            {this.state.plan.requiredMaterials?.map(
-                                (material) => (
-                                    <Chip
-                                        className={classes.requiredItem}
-                                        key={material.id}
-                                        size='small'
-                                        color='secondary'
-                                        label={material.name}
-                                    />
-                                )
-                            )}
-                        </div>
-                        <div
-                            className={`${classes.row} ${classes.requiredItemRow}`}>
-                            <Typography
-                                variant='subtitle1'
-                                className={classes.rowTitle}>
-                                Tools:
-                            </Typography>
-                            {this.state.plan.requiredTools?.map((tool) => (
-                                <Chip
-                                    className={classes.requiredItem}
-                                    key={tool.id}
-                                    size='small'
-                                    color='secondary'
-                                    label={tool.name}
-                                />
-                            ))}
-                        </div>
-                        {this.renderDescription()}
+                        <PlanDetails
+                            description={this.state.plan.description}
+                            allMaterials={this.state.materials}
+                            requiredMaterials={
+                                this.state.plan.requiredMaterials
+                            }
+                            allTools={this.state.tools}
+                            requiredTools={this.state.plan.requiredTools}
+                            editing={this.state.editing}
+                            onSave={this.handleSave}
+                            onCancel={this.handleEditingOff}
+                        />
                         <div className={classes.buttonRow}>
                             <DownloadButton
                                 downloadUrl={this.state.downloadUrl}
@@ -656,19 +701,36 @@ class PlanView extends React.Component<ViewPlanProps, ViewPlanState> {
                                 }
                                 onDownload={this.handleCreateDownload}
                             />
-                            <PlanFavorite
-                                planId={this.state.planId}
-                                disabled={
-                                    !this.props.userId ||
-                                    this.props.userId.length === 0
-                                }
-                                isFavoritedByUser={
-                                    this.state.plan.isFavoritedByUser
-                                }
-                                favoritedCount={this.state.plan.favoritedCount}
-                                onToggleFavorite={this.handleTogglePlanFavorite}
-                            />
+                            <div className={classes.butonRowIcons}>
+                                <PlanFavorite
+                                    planId={this.state.planId}
+                                    disabled={
+                                        !this.props.userId ||
+                                        this.props.userId.length === 0
+                                    }
+                                    isFavoritedByUser={
+                                        this.state.plan.isFavoritedByUser
+                                    }
+                                    favoritedCount={
+                                        this.state.plan.favoritedCount
+                                    }
+                                    onToggleFavorite={
+                                        this.handleTogglePlanFavorite
+                                    }
+                                />
+                                <PlanDownloadedCount
+                                    downloadedCount={
+                                        this.state.plan.downloadedCount
+                                    }
+                                />
+                            </div>
                         </div>
+                        {this.state.planDownload && (
+                            <div className={classes.lastDownloadedRow}>
+                                Last Downloaded On:&nbsp;
+                                {this.getLastDownloadedDate()}
+                            </div>
+                        )}
                     </div>
                     <PlanDelete
                         planName={this.state.plan.name}

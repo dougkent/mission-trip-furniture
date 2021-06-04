@@ -81,7 +81,7 @@ const styles = (theme: Theme) =>
             },
         },
         workingTogetherImage1: {
-            background: `url(${workingTogether1Image})`,
+            background: `url(${workingTogether1Image.default})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
         },
@@ -109,7 +109,7 @@ const styles = (theme: Theme) =>
             },
         },
         workingTogetherImage2: {
-            background: `url(${workingTogether2Image})`,
+            background: `url(${workingTogether2Image.default})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
         },
@@ -320,25 +320,53 @@ class About extends React.Component<AboutProps, BaseState> {
                         To Upload Your Own Plans
                     </Typography>
                     <div className={classes.actionItem}>
-                        <Link to='/my-mtf' className={classes.actionItemLink}>
-                            <Button
-                                variant='outlined'
-                                color='secondary'
-                                size='large'
-                                className={classes.actionItemButton}>
-                                <Typography
-                                    variant='h5'
-                                    className={classes.actionItemText}>
-                                    {(() => {
-                                        if (this.props.userId) {
-                                            return 'Go To My Dashboard';
-                                        } else {
-                                            return 'Sign In or Create an Account';
-                                        }
-                                    })()}
-                                </Typography>
-                            </Button>
-                        </Link>
+                        {(() => {
+                            if (this.props.userId) {
+                                return (
+                                    <Link
+                                        to='/my-mtf'
+                                        className={classes.actionItemLink}>
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            size='large'
+                                            className={
+                                                classes.actionItemButton
+                                            }>
+                                            <Typography
+                                                variant='h5'
+                                                className={
+                                                    classes.actionItemText
+                                                }>
+                                                Go To My Dashboard
+                                            </Typography>
+                                        </Button>
+                                    </Link>
+                                );
+                            } else {
+                                return (
+                                    <Link
+                                        to='/sign-in'
+                                        className={classes.actionItemLink}>
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            size='large'
+                                            className={
+                                                classes.actionItemButton
+                                            }>
+                                            <Typography
+                                                variant='h5'
+                                                className={
+                                                    classes.actionItemText
+                                                }>
+                                                Sign In or Create an Account
+                                            </Typography>
+                                        </Button>
+                                    </Link>
+                                );
+                            }
+                        })()}
                     </div>
                     <Typography variant='h5' className={classes.actionItem}>
                         or

@@ -3,5 +3,5 @@ export interface PlanFavoriteProps {
     disabled: boolean;
     isFavoritedByUser: boolean;
     favoritedCount: number;
-    onToggleFavorite(toggleFavOn: boolean): void;
+    onToggleFavorite: (toggleFavOn: boolean) => void;
 }

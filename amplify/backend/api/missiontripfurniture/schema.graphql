@@ -32,7 +32,7 @@ type Plan
     name: String!
     description: String!
     pdfS3Key: String!
-    imageS3Info: S3ImageInfo!
+    imageS3Keys: [String!]!
     created: AWSDateTime!
     createdBy: User! @connection(name: "CreatedBy")
     favoritedCount: Int!
@@ -72,10 +72,7 @@ type Favorite
 }
 
 type Download
-    @model(
-        mutations: { create: "createDownload", delete: "deleteDownload" }
-        subscriptions: null
-    )
+    @model(subscriptions: null)
     @key(
         name: "downloadedBy"
         fields: ["planId", "userId"]
@@ -95,6 +92,7 @@ type Download
     id: ID!
     planId: ID!
     userId: ID!
+    downloadedAt: [AWSDateTime!]!
 }
 
 type Material
@@ -123,10 +121,4 @@ type Tool
     ) {
     id: ID!
     name: String!
-}
-
-type S3ImageInfo {
-    key: String!
-    width: Int!
-    height: Int!
 }

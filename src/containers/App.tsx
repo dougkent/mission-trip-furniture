@@ -1,9 +1,16 @@
 // React
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { Suspense } from 'react';
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect,
+} from 'react-router-dom';
 
 // AWS
-import Amplify, { API, graphqlOperation, Auth, Hub } from 'aws-amplify';
+import Amplify, { API, graphqlOperation, Auth } from 'aws-amplify';
+import { GraphQLResult, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
+import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import aws_exports from '../aws-exports';
 
 // Material UI
@@ -15,7 +22,6 @@ import ReactGA from 'react-ga';
 // MTF
 import { AppState } from '../models/states';
 import {
-    GqlQuery,
     CreateUserInput,
     CreateUserMutation,
     GetFavoriteByUserIdQuery,
@@ -25,18 +31,34 @@ import {
 } from '../models/api-models';
 import * as graphQLQueries from '../graphql/queries';
 import * as graphQLMutations from '../graphql/mutations';
-import {
-    About,
-    Contact,
-    CreatePlan,
-    Dashboard,
-    Home,
-    NotFound,
-    PlanView,
-    PlansList,
-} from '.';
 import { Nav } from '../components';
 import { PlanFavoriteService } from '../services';
+import '../themes/mtf-amplify-theme.css';
+
+const About = React.lazy(() => import('./about.component/About.component'));
+const AccountManagement = React.lazy(
+    () => import('./account-management.component/AccountManagement.component')
+);
+const Contact = React.lazy(
+    () => import('./contact.component/Contact.component')
+);
+const CreatePlan = React.lazy(
+    () => import('./create-plan.component/CreatePlan.component')
+);
+const Dashboard = React.lazy(
+    () => import('./dashboard.component/Dashboard.component')
+);
+const Home = React.lazy(() => import('./home.component/Home.component'));
+const NotFound = React.lazy(
+    () => import('./not-found.component/NotFound.component')
+);
+const PlansList = React.lazy(
+    () => import('./plans-list.component/PlansList.component')
+);
+const PlanView = React.lazy(
+    () => import('./plan-view.component/PlanView.component')
+);
+const SignIn = React.lazy(() => import('./sign-in.component/SignIn.component'));
 
 // Configure
 Amplify.configure(aws_exports);
@@ -50,6 +72,7 @@ class App extends React.Component<{}, AppState> {
 
         this.state = {
             userId: '',
+            name: '',
             materials: [],
             tools: [],
             userFavoritedPlanIds: [],
@@ -60,14 +83,18 @@ class App extends React.Component<{}, AppState> {
         const userInfo = await Auth.currentUserInfo();
 
         if (userInfo) {
-            this.setState({ userId: userInfo.id });
+            const { attributes } = userInfo;
+
+            this.setState({
+                userId: userInfo.id,
+                name: attributes.name,
+            });
         }
     }
 
     async componentDidMount() {
-        Hub.listen('auth', (data) => {
-            const { payload } = data;
-            this.listenToAuthEvents(payload);
+        onAuthUIStateChange((nextAuthState, authData) => {
+            this.listenToAuthEvents(nextAuthState);
         });
 
         await this.setUserId();
@@ -75,9 +102,9 @@ class App extends React.Component<{}, AppState> {
         this.loadUserFavoritedPlans();
     }
 
-    private async listenToAuthEvents(payload: any) {
-        switch (payload.event) {
-            case 'signIn':
+    private async listenToAuthEvents(authState: AuthState) {
+        switch (authState) {
+            case AuthState.SignedIn:
                 await this.createUserIfNotExists();
                 this.loadUserFavoritedPlans();
 
@@ -87,20 +114,20 @@ class App extends React.Component<{}, AppState> {
                 });
                 ReactGA.event({ category: 'auth', action: 'User Signed In' });
                 break;
-            case 'signOut':
+            case AuthState.SignedOut:
                 this.setState({ userId: '', userFavoritedPlanIds: [] });
                 ReactGA.event({ category: 'auth', action: 'User Signed Out' });
                 break;
-            case 'signUp':
+            case AuthState.SigningUp:
                 ReactGA.event({ category: 'auth', action: 'User Signed Up' });
                 break;
         }
     }
 
     private async userExists(userId: string): Promise<boolean> {
-        const userResult: GqlQuery<GetUserQuery> = await API.graphql(
-            graphqlOperation(graphQLQueries.getUserIdQuery, { id: userId }),
-        );
+        const userResult = (await API.graphql(
+            graphqlOperation(graphQLQueries.getUserIdQuery, { id: userId })
+        )) as GraphQLResult<GetUserQuery>;
 
         const { getUser } = userResult.data;
 
@@ -123,25 +150,35 @@ class App extends React.Component<{}, AppState> {
             username: username,
         };
 
-        var createUserResult: GqlQuery<CreateUserMutation> = await API.graphql(
+        var createUserResult = (await API.graphql(
             graphqlOperation(graphQLMutations.createUserMutation, {
                 input: createUserInput,
-            }),
-        );
+            })
+        )) as GraphQLResult<CreateUserMutation>;
 
         const { createUser } = createUserResult.data;
 
         this.setState({ userId: createUser.id });
     }
 
+    private handleNameUpdate = async () => {
+        const userInfo = await Auth.currentUserInfo();
+
+        const { attributes } = userInfo;
+
+        this.setState({
+            name: attributes.name,
+        });
+    };
+
     private handleTogglePlanFavorite = async (
         planId: string,
-        toggleFavOn: boolean,
+        toggleFavOn: boolean
     ) => {
         if (toggleFavOn) {
             await this.planFavoriteService.createFavorite(
                 planId,
-                this.state.userId,
+                this.state.userId
             );
 
             this.setState((prevState) => ({
@@ -154,13 +191,13 @@ class App extends React.Component<{}, AppState> {
         } else {
             await this.planFavoriteService.deleteFavorite(
                 planId,
-                this.state.userId,
+                this.state.userId
             );
 
             this.setState((prevState) => ({
                 ...prevState,
                 userFavoritedPlanIds: prevState.userFavoritedPlanIds.filter(
-                    (favPlanId) => favPlanId !== planId,
+                    (favPlanId) => favPlanId !== planId
                 ),
             }));
         }
@@ -169,19 +206,15 @@ class App extends React.Component<{}, AppState> {
     };
 
     private loadMaterialsAndTools = async () => {
-        const materialsResult: GqlQuery<ListMaterialsQuery> = await API.graphql(
-            {
-                query: graphQLQueries.listMaterialsQuery,
-                // @ts-ignore
-                authMode: 'AWS_IAM',
-            },
-        );
+        const materialsResult = (await API.graphql({
+            query: graphQLQueries.listMaterialsQuery,
+            authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
+        })) as GraphQLResult<ListMaterialsQuery>;
 
-        const toolsResult: GqlQuery<ListToolsQuery> = await API.graphql({
+        const toolsResult = (await API.graphql({
             query: graphQLQueries.listToolsQuery,
-            // @ts-ignore
-            authMode: 'AWS_IAM',
-        });
+            authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
+        })) as GraphQLResult<ListToolsQuery>;
 
         this.setState((prevState) => ({
             ...prevState,
@@ -191,7 +224,7 @@ class App extends React.Component<{}, AppState> {
                         ? -1
                         : prevMaterial.name > nextMaterial.name
                         ? 1
-                        : 0,
+                        : 0
             ),
             tools: toolsResult?.data?.listTools?.items.sort(
                 (prevTool, nextTool) =>
@@ -199,20 +232,20 @@ class App extends React.Component<{}, AppState> {
                         ? -1
                         : prevTool.name > nextTool.name
                         ? 1
-                        : 0,
+                        : 0
             ),
         }));
     };
     private loadUserFavoritedPlans = async () => {
         if (this.state.userId) {
-            const result: GqlQuery<GetFavoriteByUserIdQuery> = await API.graphql(
+            const result = (await API.graphql(
                 graphqlOperation(graphQLQueries.getFavoritesByUserQuery, {
                     userId: this.state.userId,
-                }),
-            );
+                })
+            )) as GraphQLResult<GetFavoriteByUserIdQuery>;
 
             const favoritedPlanIds = result.data.getFavoriteByUserId.items.map(
-                (favorite) => favorite.planId,
+                (favorite) => favorite.planId
             );
 
             this.setState((prevState) => ({
@@ -222,104 +255,165 @@ class App extends React.Component<{}, AppState> {
         }
     };
 
+    private renderAuthenticatedComponent = (
+        component: JSX.Element
+    ): JSX.Element => {
+        if (this.state.userId) {
+            return component;
+        } else {
+            return (
+                <Redirect
+                    to={{
+                        pathname: '/sign-in',
+                        state: {
+                            referrer: window.location.pathname,
+                        },
+                    }}
+                />
+            );
+        }
+    };
+
     render() {
         return (
             <Router>
-                <Nav userId={this.state.userId} />
+                <Nav userId={this.state.userId} name={this.state.name} />
                 <Container maxWidth='xl'>
-                    <Switch>
-                        <Route
-                            exact
-                            path='/'
-                            render={() => <Home userId={this.state.userId} />}
-                        />
-                        <Route
-                            exact
-                            path='/about'
-                            render={() => <About userId={this.state.userId} />}
-                        />
-                        <Route
-                            exact
-                            path='/contact'
-                            render={() => (
-                                <Contact userId={this.state.userId} />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path='/plans'
-                            render={() => (
-                                <PlansList
-                                    userId={this.state.userId}
-                                    materials={this.state.materials}
-                                    tools={this.state.tools}
-                                    userFavoritedPlanIds={
-                                        this.state.userFavoritedPlanIds
-                                    }
-                                    onPlanFavorite={
-                                        this.handleTogglePlanFavorite
-                                    }
-                                />
-                            )}
-                        />
-                        <Route
-                            path='/plans/:planId'
-                            render={(props) => (
-                                <PlanView
-                                    userId={this.state.userId}
-                                    planId={props.match.params.planId}
-                                    materials={this.state.materials}
-                                    tools={this.state.tools}
-                                    userFavoritedPlanIds={
-                                        this.state.userFavoritedPlanIds
-                                    }
-                                    onPlanFavorite={
-                                        this.handleTogglePlanFavorite
-                                    }
-                                />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path='/my-mtf'
-                            render={() => (
-                                <Dashboard
-                                    userId={this.state.userId}
-                                    materials={this.state.materials}
-                                    tools={this.state.tools}
-                                    userFavoritedPlanIds={
-                                        this.state.userFavoritedPlanIds
-                                    }
-                                    onPlanFavorite={
-                                        this.handleTogglePlanFavorite
-                                    }
-                                />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path='/my-mtf/upload-plan'
-                            render={() => (
-                                <CreatePlan
-                                    userId={this.state.userId}
-                                    materials={this.state.materials}
-                                    tools={this.state.tools}
-                                    userFavoritedPlanIds={
-                                        this.state.userFavoritedPlanIds
-                                    }
-                                    onPlanFavorite={
-                                        this.handleTogglePlanFavorite
-                                    }
-                                />
-                            )}
-                        />
-                        <Route
-                            path='*'
-                            render={() => (
-                                <NotFound userId={this.state.userId} />
-                            )}
-                        />
-                    </Switch>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Switch>
+                            <Route
+                                exact
+                                path='/'
+                                render={() => (
+                                    <Home userId={this.state.userId} />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path='/about'
+                                render={() => (
+                                    <About userId={this.state.userId} />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path='/contact'
+                                render={() => (
+                                    <Contact userId={this.state.userId} />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path='/plans'
+                                render={() => (
+                                    <PlansList
+                                        userId={this.state.userId}
+                                        materials={this.state.materials}
+                                        tools={this.state.tools}
+                                        userFavoritedPlanIds={
+                                            this.state.userFavoritedPlanIds
+                                        }
+                                        onPlanFavorite={
+                                            this.handleTogglePlanFavorite
+                                        }
+                                    />
+                                )}
+                            />
+                            <Route
+                                path='/plans/:planId'
+                                render={(props) => (
+                                    <PlanView
+                                        userId={this.state.userId}
+                                        planId={props.match.params.planId}
+                                        materials={this.state.materials}
+                                        tools={this.state.tools}
+                                        userFavoritedPlanIds={
+                                            this.state.userFavoritedPlanIds
+                                        }
+                                        onPlanFavorite={
+                                            this.handleTogglePlanFavorite
+                                        }
+                                    />
+                                )}
+                            />
+                            <Route
+                                path='/sign-in'
+                                render={(props) => (
+                                    <SignIn
+                                        userId={this.state.userId}
+                                        previousUrl={
+                                            (props.location.state as any)
+                                                ?.referrer ?? '/my-mtf'
+                                        }
+                                    />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path='/my-mtf'
+                                render={() =>
+                                    this.renderAuthenticatedComponent(
+                                        <Dashboard
+                                            userId={this.state.userId}
+                                            materials={this.state.materials}
+                                            tools={this.state.tools}
+                                            userFavoritedPlanIds={
+                                                this.state.userFavoritedPlanIds
+                                            }
+                                            onPlanFavorite={
+                                                this.handleTogglePlanFavorite
+                                            }
+                                        />
+                                    )
+                                }
+                            />
+                            <Route
+                                exact
+                                path='/my-mtf/manage-account'
+                                render={() =>
+                                    this.renderAuthenticatedComponent(
+                                        <AccountManagement
+                                            userId={this.state.userId}
+                                            materials={this.state.materials}
+                                            tools={this.state.tools}
+                                            userFavoritedPlanIds={
+                                                this.state.userFavoritedPlanIds
+                                            }
+                                            onPlanFavorite={
+                                                this.handleTogglePlanFavorite
+                                            }
+                                            onNameUpdate={this.handleNameUpdate}
+                                        />
+                                    )
+                                }
+                            />
+                            <Route
+                                exact
+                                path='/my-mtf/upload-plan'
+                                render={() =>
+                                    this.renderAuthenticatedComponent(
+                                        <CreatePlan
+                                            userId={this.state.userId}
+                                            materials={this.state.materials}
+                                            tools={this.state.tools}
+                                            userFavoritedPlanIds={
+                                                this.state.userFavoritedPlanIds
+                                            }
+                                            onPlanFavorite={
+                                                this.handleTogglePlanFavorite
+                                            }
+                                        />
+                                    )
+                                }
+                            />
+                            <Route
+                                path='*'
+                                render={() => (
+                                    <NotFound userId={this.state.userId} />
+                                )}
+                            />
+                        </Switch>
+                    </Suspense>
                 </Container>
             </Router>
         );
